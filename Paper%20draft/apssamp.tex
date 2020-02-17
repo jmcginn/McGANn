@@ -1,0 +1,125 @@
+% ****** Start of file apssamp.tex ******
+%
+%   This file is part of the APS files in the REVTeX 4.2 distribution.
+%   Version 4.2a of REVTeX, December 2014
+%
+%   Copyright (c) 2014 The American Physical Society.
+%
+%   See the REVTeX 4 README file for restrictions and more information.
+%
+% TeX'ing this file requires that you have AMS-LaTeX 2.0 installed
+% as well as the rest of the prerequisites for REVTeX 4.2
+%
+% See the REVTeX 4 README file
+% It also requires running BibTeX. The commands are as follows:
+%
+%  1)  latex apssamp.tex
+%  2)  bibtex apssamp
+%  3)  latex apssamp.tex
+%  4)  latex apssamp.tex
+%
+\documentclass[%
+ reprint,
+%superscriptaddress,
+%groupedaddress,
+%unsortedaddress,
+%runinaddress,
+%frontmatterverbose, 
+%preprint,
+%preprintnumbers,
+%nofootinbib,
+%nobibnotes,
+%bibnotes,
+ amsmath,amssymb,
+ aps,
+%pra,
+%prb,
+%rmp,
+%prstab,
+%prstper,
+%floatfix,
+]{revtex4-2}
+
+\usepackage{graphicx}% Include figure files
+\usepackage{dcolumn}% Align table columns on decimal point
+\usepackage{bm}% bold math
+%\usepackage{hyperref}% add hypertext capabilities
+%\usepackage[mathlines]{lineno}% Enable numbering of text and display math
+%\linenumbers\relax % Commence numbering lines
+
+%\usepackage[showframe,%Uncomment any one of the following lines to test 
+%%scale=0.7, marginratio={1:1, 2:3}, ignoreall,% default settings
+%%text={7in,10in},centering,
+%%margin=1.5in,
+%%total={6.5in,8.75in}, top=1.2in, left=0.9in, includefoot,
+%%height=10in,a5paper,hmargin={3cm,0.8in},
+%]{geometry}
+
+\begin{document}
+
+\preprint{APS/123-QED}
+
+\title{Generalised gravitational burst searches \\with Generative Adverserial Networks}% Force line breaks with \\
+\thanks{A footnote to the article title}%
+
+%\author{Jordan McGinn, Chris Messenger, Ik Siong Heng}
+ \altaffiliation[Also at ]{Physics Department, XYZ University.}%Lines break automatically or can be forced with \\
+
+ \email{}
+\affiliation{%
+School of Physics \& Astronomy\\
+University of Glasgow \\
+Glasgow G12 8QQ, United Kingdom
+}%
+
+
+\date{\today}% It is always \today, today,
+             %  but any date may be explicitly specified
+
+\begin{abstract}
+As the field of gravitational wave astronomy expands and as detectors become more sensitive, there is a need for fast and efficient detection of various sources. Gravitational wave bursts are a family of signals that remain unmodeled, therefore, they have a low detection sensitivity to standard detection schemes. This report examines the use of Generative Adversarial Networks as a detection pipeline for gravitational wave burst signals. BurstGAN is trained to detect three classes of burst signals: sine-Gaussian, Ring-downs and white-noise bursts contained in white Gaussian noise. The resulting sensitivity curves show that sine-Gaussian and Ring-downs are confidently detectable at SNRs > while white-noise bursts require SNRs of >.
+%\begin{description}
+%\item[Usage]
+%Secondary publications and information retrieval purposes.
+%\item[Structure]
+%You may use the \texttt{description} environment to structure your abstract;
+%use the optional argument of the \verb+\item+ command to give the category of each item. 
+%\end{description}
+\end{abstract}
+
+%\keywords{Suggested keywords}%Use showkeys class option if keyword
+                              %display desired
+\maketitle
+
+%\tableofcontents
+
+\section{Introduction}
+
+The detections of gravitational waves by Advanced Laser Interferometer Gravitational wave Observatory (aLIGO) and Advanced Virgo [1–5], have opened up new avenues to explore the Universe. Astrophysical sources of transient gravitational waves include the merging of compact binary star systems like black holes and/or neutron stars [6], core-collapse supernova [7], pulsar glitches [8] and other events involving accelerating massive objects.
+Gravitational wave bursts (GWBs) are an exciting area of research as the emissions process of such waves is not well understood. The waveforms often depend on complicated orbital dynamics and equations of state which limit the sensitivity on searching for burst sources. Typically, the duration of burst signals are short with amplitudes that can be greater than the detector noise. Burst searches look for excess power contained in a time-frequency plot and rely on consistent arrival times, waveform shapes and frequencies between detectors. We focus on utilising an unsupervised form of machine learning called Generative Adversarial Networks [9] as a generalised GW transient search. A two detector case is considered such that the signals retain their form between detections and a defined time delay between detections relating to the sky orientation of the source.
+
+\section{Background}
+Generative adversarial networks (GANs) have seen considerable success in recent years as a generative machine learning model. GANs work to train two competing neural networks, consisting of a discriminator D that is trained to distinguish between real and fake data and a generator G that produces synthetic reproductions of the real data. The original GAN method has G perform a mapping from an input noise vector z to its representation of the data and D maps its input x to a probability [0,1] that the input came form either the training data or G. Both networks compete in turn to trick the other and after training, G produces accurate distributions and D can detect forgeries. During training, D s given a batch of samples that contains one half real data (labelled as 1) and one half fake data (labelled as 0) which it then makes predictions on. The loss on D is calculated by comparing its predictions to the labels through a defined loss function. (talk about binary cross entropy). The training process of a GAN alternatively updates the weights of the D and G based on information on its competitors loss function. This loss of D is used to update the weights of G to produce more realistic samples of the input distribution, the loss of G encourages the D to update its classification abilities. Both networks compete in a minimax game that is tied to a value function V (D, G) which G is trying minimise and D is trying to maximise:
+\begin{multline}
+\mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\bold{x} \sim p_{\text{r}}(\bold{x})} [\text{log} D(\bold{x})] \\ + \mathbb{E}_{\bold{z} \sim p_{\text{z}}(\bold{z})} [\text{log}(1-D(G(\bold{z})))]
+\label{equation:GANloss}
+\end{multline}
+In theory this will eventually lead to the local Nash equilibrium [18] where both neural networks are trained optimally. In practice, however, GANs are notoriously difficult to train. Such difficulties include: Non-convergence, where the model parameters oscillate and the loss never converges. Mode collapse where G produces a limited diversity of samples, and the diminishing gradient problem when applying the gradient descent algorithm to a non-continuous function. 
+\\ To overcome some of these difficulties [blank] proposed adding structure to the latent space by providing G with a class label. This has the effect of making a point in latent space conditional on a provided class. [blank] extends this idea further by requiring D to output a probability of the data belonging to each class. 
+
+\section{Method}
+To simulate gravitational burst sources, three GW signal morphologies, spanning a range of frequencies, duration and time delays were tested. The three families are:\\
+
+time delay/antenna pattern/lalsuite etc \\
+
+archetecture/hyperparameters
+
+\section{Results}
+
+
+
+\bibliography{apssamp}% Produces the bibliography via BibTeX.
+
+\end{document}
+%
+% ****** End of file apssamp.tex ******
