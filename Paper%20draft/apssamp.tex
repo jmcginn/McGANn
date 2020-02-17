@@ -43,6 +43,8 @@
 \usepackage{graphicx}% Include figure files
 \usepackage{dcolumn}% Align table columns on decimal point
 \usepackage{bm}% bold math
+\usepackage{color}
+\usepackage{acronym}
 %\usepackage{hyperref}% add hypertext capabilities
 %\usepackage[mathlines]{lineno}% Enable numbering of text and display math
 %\linenumbers\relax % Commence numbering lines
@@ -55,11 +57,16 @@
 %%height=10in,a5paper,hmargin={3cm,0.8in},
 %]{geometry}
 
+\newcommand{\jordan}[1]{\textbf{\textcolor{red}{JORDAN: #1}}}
+\newcommand{\siong}[1]{\textbf{\textcolor{blue}{SIONG: #1}}}
+\newcommand{\chris}[1]{\textbf{\textcolor{green}{CHRIS: #1}}}
+
 \begin{document}
 
 \preprint{APS/123-QED}
 
-\title{Generalised gravitational burst searches \\with Generative Adverserial Networks}% Force line breaks with \\
+\title{Generalised gravitational burst searches with Generative Adverserial
+Networks~\chris{Need to change the title if we don't search}}% Force line breaks with \\
 \thanks{A footnote to the article title}%
 
 %\author{Jordan McGinn, Chris Messenger, Ik Siong Heng}
@@ -77,14 +84,21 @@ Glasgow G12 8QQ, United Kingdom
              %  but any date may be explicitly specified
 
 \begin{abstract}
-As the field of gravitational wave astronomy expands and as detectors become more sensitive, there is a need for fast and efficient detection of various sources. Gravitational wave bursts are a family of signals that remain unmodeled, therefore, they have a low detection sensitivity to standard detection schemes. This report examines the use of Generative Adversarial Networks as a detection pipeline for gravitational wave burst signals. BurstGAN is trained to detect three classes of burst signals: sine-Gaussian, Ring-downs and white-noise bursts contained in white Gaussian noise. The resulting sensitivity curves show that sine-Gaussian and Ring-downs are confidently detectable at SNRs > while white-noise bursts require SNRs of >.
-%\begin{description}
-%\item[Usage]
-%Secondary publications and information retrieval purposes.
-%\item[Structure]
-%You may use the \texttt{description} environment to structure your abstract;
-%use the optional argument of the \verb+\item+ command to give the category of each item. 
-%\end{description}
+As the field of gravitational wave astronomy expands and as detectors become
+more sensitive, there is a need for fast and efficient detection of various
+sources. Gravitational wave bursts are a family of signals that remain
+unmodeled, therefore, they have a low detection sensitivity to standard
+detection schemes. This report examines the use of Generative Adversarial
+Networks as a detection pipeline for gravitational wave burst signals. BurstGAN
+is trained to detect three classes of burst signals: sine-Gaussian, Ring-downs
+and white-noise bursts contained in white Gaussian noise. The resulting
+sensitivity curves show that sine-Gaussian and Ring-downs are confidently
+detectable at SNRs > while white-noise bursts require SNRs of >.~\chris{we'll
+fix the abstract at the end}
+%\begin{description} \item[Usage] Secondary publications and information
+%retrieval purposes.  \item[Structure] You may use the \texttt{description}
+%environment to structure your abstract; use the optional argument of the
+%\verb+\item+ command to give the category of each item.  \end{description}
 \end{abstract}
 
 %\keywords{Suggested keywords}%Use showkeys class option if keyword
@@ -93,30 +107,141 @@ As the field of gravitational wave astronomy expands and as detectors become mor
 
 %\tableofcontents
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-The detections of gravitational waves by Advanced Laser Interferometer Gravitational wave Observatory (aLIGO) and Advanced Virgo [1–5], have opened up new avenues to explore the Universe. Astrophysical sources of transient gravitational waves include the merging of compact binary star systems like black holes and/or neutron stars [6], core-collapse supernova [7], pulsar glitches [8] and other events involving accelerating massive objects.
-Gravitational wave bursts (GWBs) are an exciting area of research as the emissions process of such waves is not well understood. The waveforms often depend on complicated orbital dynamics and equations of state which limit the sensitivity on searching for burst sources. Typically, the duration of burst signals are short with amplitudes that can be greater than the detector noise. Burst searches look for excess power contained in a time-frequency plot and rely on consistent arrival times, waveform shapes and frequencies between detectors. We focus on utilising an unsupervised form of machine learning called Generative Adversarial Networks [9] as a generalised GW transient search. A two detector case is considered such that the signals retain their form between detections and a defined time delay between detections relating to the sky orientation of the source.
+\begin{itemize}
+\item Need to introduce GWs - the current state of the field e.g. detections
+and LVC papers
+\item Introduce burst searches - what's the point of burst searches - lots of references
+\item Discuss the family of burst waveforms currently used and why - not in detail, just
+an introduction
+\item Introduce ML techniques in GWs - lots of references
+\item What this paper does on GANs in 1 paragraph
+\item Describe the structure of the paper 
+\end{itemize}
 
-\section{Background}
-Generative adversarial networks (GANs) have seen considerable success in recent years as a generative machine learning model. GANs work to train two competing neural networks, consisting of a discriminator D that is trained to distinguish between real and fake data and a generator G that produces synthetic reproductions of the real data. The original GAN method has G perform a mapping from an input noise vector z to its representation of the data and D maps its input x to a probability [0,1] that the input came form either the training data or G. Both networks compete in turn to trick the other and after training, G produces accurate distributions and D can detect forgeries. During training, D s given a batch of samples that contains one half real data (labelled as 1) and one half fake data (labelled as 0) which it then makes predictions on. The loss on D is calculated by comparing its predictions to the labels through a defined loss function. (talk about binary cross entropy). The training process of a GAN alternatively updates the weights of the D and G based on information on its competitors loss function. This loss of D is used to update the weights of G to produce more realistic samples of the input distribution, the loss of G encourages the D to update its classification abilities. Both networks compete in a minimax game that is tied to a value function V (D, G) which G is trying minimise and D is trying to maximise:
+The detections of gravitational waves by Advanced Laser Interferometer
+Gravitational wave Observatory (aLIGO) and Advanced Virgo [1–5], have opened up
+new avenues to explore the Universe. Astrophysical sources of transient
+gravitational waves include the merging of compact binary star systems like
+black holes and/or neutron stars [6], core-collapse supernova [7], pulsar
+glitches [8] and other events involving accelerating massive objects.
+Gravitational wave bursts (GWBs) are an exciting area of research as the
+emissions process of such waves is not well understood. The waveforms often
+depend on complicated orbital dynamics and equations of state which limit the
+sensitivity on searching for burst sources. Typically, the duration of burst
+signals are short with amplitudes that can be greater than the detector noise.
+Burst searches look for excess power contained in a time-frequency plot and
+rely on consistent arrival times, waveform shapes and frequencies between
+detectors. We focus on utilising an unsupervised form of machine learning
+called Generative Adversarial Networks [9] as a generalised GW transient
+search. A two detector case is considered such that the signals retain their
+form between detections and a defined time delay between detections relating to
+the sky orientation of the source.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Generative Adversarial Networks}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+\item Describe GANs in detail but really focus on the fact that the reader is a
+GW data analyst - not a computer scientist
+\item A diagram would be very useful
+\item Do not discuss our specific case here - just stay general
+\item A subsection on the specific advanced flavour of GAN that you are using
+here - motivate this choice.
+\end{itemize}
+
+Generative adversarial networks (GANs) have seen considerable success in recent
+years as a generative machine learning model. GANs work to train two competing
+neural networks, consisting of a discriminator D that is trained to distinguish
+between real and fake data and a generator G that produces synthetic
+reproductions of the real data. The original GAN method has G perform a mapping
+from an input noise vector z to its representation of the data and D maps its
+input x to a probability [0,1] that the input came form either the training
+data or G. Both networks compete in turn to trick the other and after training,
+G produces accurate distributions and D can detect forgeries. During training,
+D s given a batch of samples that contains one half real data (labelled as 1)
+and one half fake data (labelled as 0) which it then makes predictions on. The
+loss on D is calculated by comparing its predictions to the labels through a
+defined loss function. (talk about binary cross entropy). The training process
+of a GAN alternatively updates the weights of the D and G based on information
+on its competitors loss function. This loss of D is used to update the weights
+of G to produce more realistic samples of the input distribution, the loss of G
+encourages the D to update its classification abilities. Both networks compete
+in a minimax game that is tied to a value function V (D, G) which G is trying
+minimise and D is trying to maximise:
+
 \begin{multline}
 \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\bold{x} \sim p_{\text{r}}(\bold{x})} [\text{log} D(\bold{x})] \\ + \mathbb{E}_{\bold{z} \sim p_{\text{z}}(\bold{z})} [\text{log}(1-D(G(\bold{z})))]
 \label{equation:GANloss}
 \end{multline}
-In theory this will eventually lead to the local Nash equilibrium [18] where both neural networks are trained optimally. In practice, however, GANs are notoriously difficult to train. Such difficulties include: Non-convergence, where the model parameters oscillate and the loss never converges. Mode collapse where G produces a limited diversity of samples, and the diminishing gradient problem when applying the gradient descent algorithm to a non-continuous function. 
-\\ To overcome some of these difficulties [blank] proposed adding structure to the latent space by providing G with a class label. This has the effect of making a point in latent space conditional on a provided class. [blank] extends this idea further by requiring D to output a probability of the data belonging to each class. 
 
+In theory this will eventually lead to the local Nash equilibrium [18] where
+both neural networks are trained optimally. In practice, however, GANs are
+notoriously difficult to train. Such difficulties include: Non-convergence,
+where the model parameters oscillate and the loss never converges. Mode
+collapse where G produces a limited diversity of samples, and the diminishing
+gradient problem when applying the gradient descent algorithm to a
+non-continuous function.  \\ To overcome some of these difficulties [blank]
+proposed adding structure to the latent space by providing G with a class
+label. This has the effect of making a point in latent space conditional on a
+provided class. [blank] extends this idea further by requiring D to output a
+probability of the data belonging to each class. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Method}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+\item Need to introduce the scheme you propose to use
+\item A paragraph or subsection on the data generation being very clear on all
+5 waveform models and the prior parameter space for each
+\item A subsection on the design of the network architecture
+\item A subsection on the "box" and why we implement it
+\item A subsection on the training of the network - give rough timings and rule
+of thumb decisions made
+\item Do not discuss the results here 
+\end{itemize}
+
 To simulate gravitational burst sources, three GW signal morphologies, spanning a range of frequencies, duration and time delays were tested. The three families are:\\
 
 time delay/antenna pattern/lalsuite etc \\
 
 archetecture/hyperparameters
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\begin{itemize}
+\item Begin by outlining the type of results you will be presenting
+\item A subsection on the general quality of generated waveforms - we may need
+to have overlaps between generated wavefoms and training data (maybe)
+\item A subsection on the descriminator - maybe a confusion matrix?
+\item a subsection on the latent space varaition within each class - fixed
+class, sliding in latent space.
+\item A subsection on the class space variation - fixed latent space and
+sliding in the class space.
+\item A final subsection on the general waveform model based on random latent
+and class space locations.
+\item Make no conclusions.
+\end{itemize}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conclusions}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{itemize}
+\item Summarise the paper
+\item Dedicate a paragraph to each of the key results discussed in the previous
+section
+\item Have at least one paragraph on the future directions of this work
+\item Conclude with a positive paragrpah about the potential uses and impact of
+the approach.
+\end{itemize}
 
 \bibliography{apssamp}% Produces the bibliography via BibTeX.
 
