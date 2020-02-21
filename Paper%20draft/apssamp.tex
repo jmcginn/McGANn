@@ -45,6 +45,7 @@
 \usepackage{bm}% bold math
 \usepackage{color}
 \usepackage{acronym}
+\usepackage{comment}
 %\usepackage{hyperref}% add hypertext capabilities
 %\usepackage[mathlines]{lineno}% Enable numbering of text and display math
 %\linenumbers\relax % Commence numbering lines
@@ -60,6 +61,7 @@
 \newcommand{\jordan}[1]{\textbf{\textcolor{red}{JORDAN: #1}}}
 \newcommand{\siong}[1]{\textbf{\textcolor{blue}{SIONG: #1}}}
 \newcommand{\chris}[1]{\textbf{\textcolor{green}{CHRIS: #1}}}
+\newcommand{\michael}[1]{\textbf{\textcolor{orange}{MICHAEL: #1}}}
 
 \begin{document}
 
@@ -122,6 +124,19 @@ an introduction
 \item Describe the structure of the paper 
 \end{itemize}
 
+Gravitational-wave (GW) astronomy is now an established field, starting with the first detection of a binary black hole merger \cite{} on September 2015. Following this, the first and second observations runs (O1 and O2) of Advanced LIGO and Advanced Virgo reported several more mergers \cite{}. On August 2017 a binary neutron star merger was observed alongside its electron-magnetic counterpart for the first time, giving rise to multimessenger gravitational wave astronomy. 
+
+GW bursts are transient signals of typically short duration ($<$ 1s) whose waveforms are not accurately modelled or are complex to re-produce. Astrophysical sources for such transients include: \jordan{should i include a list of these?}. Since GW bursts are un-modelled they are not sensitive to template based detection schemes such as matched-filtering \cite{}, instead, detection involves distinguishing the signal from detector noise. This is only possible if the detector noise is well characterised and the candidate signal can be differentiated from system or environmental glitches. As such, GW burst searches rely on an astrophysical burst signature appearing in multiple detectors. \jordan{how deep should i go? with coherent WaveBurst etc?}
+
+Many GW burst algorithms \cite{cite the shit outta this} are tested and tuned using model waveforms that may or may not have astrophysical significance but have easy to define parameters and share characteristics of real bursts that is enough to simulate coincident non-stationary deviations between detectors. Such waveforms may have long-duration, short bandwidth (ringdowns), long-duration, large bandwidth (inspirals) and many algorithms make use of sine-Gaussians: a Gaussian modulated sine wave that is characterised by it's central frequency and narrow bandwidth. This makes it a great tool for diagnosing LIGOs sensitivity to frequency. 
+
+We aim to explore the use of machine learning in generating and interpreting these mock GW burst signals. Neural networks have shown to replicate the sensitivities of matched filtering in GW detection \cite{} and rapid parameter estimation \cite{}, however these methods have primarily been focused on binary black hole signals and have not yet expanded to burst examples. A subset of deep learning that has seen fruitful development in recent years \cite{} is Generative Adversarial Networks (GANs). These unsupervised algorithms learn patterns in a given training data set using an adversarial process. The generations from GANs are state-of-the-art in fields such as high quality image fidelity, image and text-to-image translation and video prediciton \cite{} and there is notable works on time series generations /cite. 
+
+
+
+
+
+\begin{comment}
 The detections of gravitational waves by Advanced Laser Interferometer
 Gravitational wave Observatory (aLIGO) and Advanced Virgo [1–5], have opened up
 new avenues to explore the Universe. Astrophysical sources of transient
@@ -140,6 +155,7 @@ called Generative Adversarial Networks [9] as a generalised GW transient
 search. A two detector case is considered such that the signals retain their
 form between detections and a defined time delay between detections relating to
 the sky orientation of the source.
+\end{comment}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generative Adversarial Networks}
