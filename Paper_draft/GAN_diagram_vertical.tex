@@ -1,0 +1,34 @@
+%\documentclass{article}
+%\usepackage{comment}
+%\usepackage{tikz}
+%\usetikzlibrary{shapes.geometric, arrows, calc}
+
+%\begin{document}
+    
+\begin{tikzpicture}[node distance=2cm]
+
+\tikzstyle{zinput} = [rectangle, rounded corners, text centered, draw=black]%, fill=red!30]
+\tikzstyle{generator} = [rectangle, rounded corners, text centered, draw=black]%, fill=red!30]
+\tikzstyle{X real} = [rectangle, rounded corners, text centered, draw=black]%, fill=red!30]
+\tikzstyle{X fake} = [rectangle, rounded corners, text centered, draw=black]%, fill=red!30]
+\tikzstyle{X real} = [rectangle, rounded corners, text centered, draw=black]%, fill=red!30]
+\tikzstyle{discriminator} = [rectangle, rounded corners, text centered, draw=black]%, fill=red!30]
+\tikzstyle{real/fake} = [rectangle, rounded corners, text centered, draw=black]%, fill=red!30]
+
+\tikzstyle{arrow} = [thick,->,>=stealth]
+
+\node (r) [X real] {\textbf{X} real};
+\node (f) [X fake, right of = r] {\textbf{X} fake};
+\node (G) [generator,above of = f, scale = 2] {\textbf{G}};
+\node (z) [zinput] [zinput, above of = G] {\textbf{z} (noise)};
+\node (D) [discriminator, below of = f, xshift = -1cm, scale = 2] {\textbf{D}};
+\node (rf) [real/fake, below of = D] {real/fake};
+
+\draw [arrow] (z) -- (G);
+\draw [arrow] (G) -- (f);
+\draw [arrow] (r) edge[out=270,in=90] (D);
+\draw [arrow] (f) edge[out=270,in=90] (D);
+\draw [arrow] (D) -- (rf);
+
+\end{tikzpicture}
+%\end{document}
