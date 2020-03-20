@@ -43,9 +43,11 @@
 \usepackage{xcolor}
 \usepackage{pifont}
 \usepackage{comment}
-\usepackage{subcaption}
+%\usepackage{subcaption}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows, calc}
+\expandafter\let\csname equation*\endcsname\relax 
+\expandafter\let\csname endequation*\endcsname\relax 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \newcommand{\gguide}{{\it Preparing graphics for IOP Publishing journals}}
@@ -152,20 +154,16 @@ label. This has the effect of making a point in latent space conditional on a
 provided class. [blank] extends this idea further by requiring D to output a
 probability of the data belonging to each class. 
 
-\begin{figure}
+\begin{figure}[h!]
     \centering
-    \begin{subfigure}[h]{0.5\textwidth}
-        \centering
-        \input{GAN_diagram_vertical}%     without .tex extension
-        \caption{Vanilla GAN}
-        \label{fig:GAN}
-    \end{subfigure}\hfill
-    \begin{subfigure}[h]{0.5\textwidth}
-        \centering
-        \input{ACGAN_diagram_vertical}%     without .tex extension
-        \caption{AC-GAN}
-        \label{fig:ACGAN}
-    \end{subfigure}\hfill
+    %\begin{subfigure}[h]{0.5\textwidth}
+        %\centering
+        \input{figures/GAN_diagram_vertical}%     without .tex extension
+    %\end{subfigure}\hfill
+    %\begin{subfigure}[h]{0.5\textwidth}
+       % \centering
+        \input{figures/ACGAN_diagram_vertical}%     without .tex extension
+    %\end{subfigure}\hfill
     \caption{Comparison of the original GAN method and the Auxiliary Conditional-GAN method }
 \end{figure}
 
@@ -177,8 +175,8 @@ probability of the data belonging to each class.
 \item Need to introduce the scheme you propose to use
 \item A paragraph or subsection on the data generation being very clear on all
 5 waveform models and the prior parameter space for each \ding{51}
-\item A subsection on the design of the network architecture
-\item A subsection on the "box" and why we implement it
+\item A subsection on the design of the network architecture \ding{51}
+\item A subsection on the "box" and why we implement it \ding{51}
 \item A subsection on the training of the network - give rough timings and rule
 of thumb decisions made
 \item Do not discuss the results here 
@@ -205,11 +203,12 @@ To simulate gravitational burst sources, five GW signal morphologies, spanning a
 	talk about bbh gen, lalsimulatino package Timedoman waveform. Priors like mass range and f min. 
 \end{itemize}
 \jordan{Could be a table rather than a list?}
+
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{images/train.png}
+    \includegraphics[width=\textwidth]{figures/train.png}
     \caption{Examples of burst training signals from left to right: sine-gaussian, ringdown, white-noise burst, Gaussian, binary-black hole merger}
-    \label{fig:my_label}
+    \label{fig:train}
 \end{figure}
 
 \subsection{Architecture details}
@@ -237,6 +236,16 @@ and class space locations.
 \item Make no conclusions.
 \end{itemize}
 
+\subsection{Waveform quality}
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/gen_zoom_signals.png}
+    \caption{Top row: Output of generator when given latent vector and class integer. Bottom row: Detailed view of the same output}
+    \label{fig:gen_signals}
+\end{figure}
+\subsection{Classifier}
+\subsection{Latent space interpolation}
+\subsection{Class space interpolation}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
