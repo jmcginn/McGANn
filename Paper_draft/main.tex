@@ -44,13 +44,14 @@
 \usepackage{xcolor}
 \usepackage{pifont}
 \usepackage{comment}
-%\usepackage{subcaption}
+%\usepackage{subcaptncluon}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows, calc}
 \expandafter\let\csname equation*\endcsname\relax 
 \expandafter\let\csname endequation*\endcsname\relax 
 \usepackage{amsmath}
 \usepackage{amssymb}
+\usepackage{hyperref}
 \newcommand{\gguide}{{\it Preparing graphics for IOP Publishing journals}}
 %Uncomment next line if AMS fonts required
 %\usepackage{iopams}  
@@ -60,9 +61,9 @@
 \newcommand{\michael}[1]{\textbf{\textcolor{orange}{MICHAEL: #1}}}
 \begin{document}
 
-\title{Generalised gravitational burst waveform generation with Generative Adversarial Networks}
+\title{Generalised gravitational burst generation with Generative Adversarial Networks}
 
-\author{J. McGinn}
+\author{J. McGinn, C. Messenger, I.S. Heng}
 
 \address{University of Glasgow, Physics \& Astronomy Department, Glasgow G12 8QQ, UK}
 %\ead{jordan.mcginn@glasgow.ac.uk}
@@ -72,7 +73,7 @@
 \end{indented}
 
 \begin{abstract}
-
+The next generation of Gravitational wave detectors will accelerate the number of gravitational wave detection's such that we can gain new in site into the physics behind the sources causing the phenomena. Numerical simulations and matched filtering are the standard for detecting gravitational waves for know sources such as binary-black hole mergers. Other sources of gravitational waves that remain elusive to standard modelling techniques and are expected to be detectable, however, there must be a way to characterise them in order to build a model template. Here we construct a unmodeled burst generation scheme using Generative adversarial networks - a powerful class of machine learning. 
 \end{abstract}
 
 %
@@ -107,9 +108,11 @@ an introduction \ding{51}
 \end{comment}
 
 Gravitational-wave (GW) astronomy is now an established field, starting with the first detection of a binary black hole merger \cite{Abbott2016} on September 2015. Following this, the first and second observations runs (O1 and O2) of Advanced LIGO and Advanced Virgo reported several more mergers \cite{Abbott2016a, Abbott2017, Abbott2017a, Abbott2017b}. On August 2017 a binary neutron star merger was observed alongside its electron-magnetic counterpart for the first time, giving rise to multimessenger gravitational wave astronomy. 
-GW bursts are transient signals of typically short duration ($<$ 1s) whose waveforms are not accurately modelled or are complex to re-produce. Astrophysical sources for such transients include: Core collapse supernova, Neutron star instabilities, Fallback accretion onto a neutron star, Non axisymetric deformation in magnetars, Pulsar glitches, Neutron star post-mergers.
+
+GW bursts are transient signals of typically short duration ($<$ 1s) whose waveforms are not accurately modelled or are complex to re-produce. Astrophysical sources for such transients include: Core collapse supernova, Neutron star instabilities, Fallback accretion onto a neutron star, Non axisymetric deformation in magnetars, Pulsar glitches and Neutron star post-mergers.
 As GW bursts are un-modelled they are not sensitive to template based detection schemes such as matched-filtering \cite{Owen1998}, instead, detection involves distinguishing the signal from detector noise. This is only possible if the detector noise is well characterised and the candidate signal can be differentiated from system or environmental glitches. As such, GW burst searches rely on an astrophysical burst signature appearing in multiple detectors.
 Many GW burst algorithms \cite{Klimenko_2008, Aso_2008} are tested and tuned using model waveforms that may or may not have astrophysical significance but have easy to define parameters and share characteristics of real bursts that is enough to simulate coincident non-stationary deviations between detectors. Such waveforms may have long-duration, short bandwidth (ringdowns), long-duration, large bandwidth (inspirals) and many algorithms make use of sine-Gaussians: a Gaussian modulated sine wave that is characterised by it's central frequency and narrow bandwidth. This makes it a great tool for diagnosing LIGOs sensitivity to frequency. 
+
 We aim to explore the use of machine learning in generating and interpreting these mock GW burst signals. Neural networks have shown to replicate the sensitivities of matched filtering in GW detection \cite{Gabbard2017} and rapid parameter estimation \cite{gabbard2019bayesian}, however these methods have primarily been focused on binary black hole signals and have not yet expanded to burst examples. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -128,8 +131,8 @@ here - motivate this choice. \ding{51}
 \end{comment}
 
 A subset of deep learning that has seen fruitful development in recent years \cite{Goodfellow2014} is Generative Adversarial Networks (GANs). These unsupervised algorithms learn patterns in a given training data set using an adversarial process. The generations from GANs are state-of-the-art in fields such as high quality image fidelity \cite{brock2018large,karras2019analyzing}, text-to-image translation \cite{reed2016generative} and video prediction \cite{liang2017dual} as well as time series generations \cite{esteban2017realvalued}. 
-GANs train two competing neural networks, consisting of a discriminator that is set up to distinguish
-between real and fake data and a generator that produces synthetic
+
+GANs train two competing neural networks, consisting of a discriminator that is set up to distinguish between real and fake data and a generator that produces synthetic
 reproductions of the real data. The generator performs a mapping
 from an input noise vector \textbf{z} to its representation of the data and the discriminator  maps its
 input \textbf{x} to a probability that the input came form either the training
@@ -154,17 +157,19 @@ notoriously difficult to train. Such difficulties include: Non-convergence,
 where the model parameters oscillate and the loss never converges, mode
 collapse where G produces a limited diversity of samples, and diminishing
 gradients when applying gradient descent to a
-non-continuous function. To overcome some of these difficulties, a conditional-GAN (CGANs) \cite{cgan}
+non-continuous function. 
+
+To overcome some of these difficulties, a conditional varient of GANs named Conditional-GAN (CGANs) \cite{cgan}
 adds structure to the latent space by providing the generator with a class or attribute
-label. This has the effect of making a point in latent space conditional on a
-provided class. This idea was extended further with auxiliary conditional GANs (ACGANs) \cite{odena2016conditional} that require the discriminator to output a
-probability of data belonging to each class. A pictorial representation on the differences between these approaches is show below. 
+label. The generator learns to segment the latent space by clustering distributions which have similar properties, making a point in latent space conditional on a class. This idea was extended further with auxiliary conditional GANs (ACGANs) \cite{odena2016conditional} that require the discriminator to output a
+probability of data belonging to each class. A pictorial representation on the differences between these approaches in Figure \ref{fig:gan_comparison}. 
 
 \begin{figure}
     \centering
         \input{figures/GAN_diagram_vertical}%     without .tex extension
         \input{figures/ACGAN_diagram_vertical}%     without .tex extension
     \caption{Comparison of the original GAN method and the Auxiliary Conditional-GAN method. For ACGANs the training data requires a label denoting its class that is also fed to the generator which then learns to generate waveforms based on the input label. Additionaly, the discrminator learns to classify which class the signal belongs to.}
+    \label{fig:gan_comparison}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -202,23 +207,27 @@ of thumb decisions made
 	\item Gaussian:\\
 	A simple Gasssian waveform with $t_0$ ranging from 0.2s to 0.8s and $\tau$ between  100$^{-1}$ and 20$^{-1}$
 	\item Binary black holes (BBH): \\
-	BBH signals are simulated using IMRPhenomD waveform routine from LALSuite which models the inspiral, merger and ringdown of a BBH waveform. The component masses lie in the range of [5,70]M$_0$ with zero spins and we fix m$_1$1$>$m$_2$. The mass distribution is approximated by a power law with index of 1.6 https://arxiv.org/abs/1811.12940. The signals are generated using random right ascensions and declinations uniform over the sky and the inclinations are drawn from the cosine of a uniform distribution in the range [-1,1]. The peaks of the waveforms are set to be within [0.75,0.95]s of the 1s time interval. 
+	BBH signals are simulated using IMRPhenomD waveform routine from LALSuite which models the inspiral, merger and ringdown of a BBH waveform. The component masses lie in the range of [5,70]M$_0$ with zero spins and we fix m$_1$ $>$ m$_2$. The mass distribution is approximated by a power law with index of 1.6 https://arxiv.org/abs/1811.12940. The signals are generated using random right ascensions and declinations uniform over the sky and the inclinations are drawn from the cosine of a uniform distribution in the range [-1,1]. The peaks of the waveforms are set to be within [0.75,0.95]s of the 1s time interval. 
 \end{itemize}
 
 \begin{figure}
     \centering
-    \includegraphics[scale=0.7]{figures/training.pdf}
-    \caption{Examples of burst training signals. From left to right: sine-gaussian, ringdown, white-noise burst, Gaussian, binary-black hole merger.}
+    \includegraphics[width=\textwidth]{figures/train_gen.pdf}
+    \caption{Examples of simulated burst gravitational wave signals. Top row shows examples from the training set. From left to right: Sine-Gaussian, Ringdown, White-noise burst, Gaussian, Binary black hole merger. The bottom row shows the conditional generations from the GAN. }
     \label{fig:train}
 \end{figure}
 
-\subsection{Applying Antenna responses}
-We consider a two detector case in which the generator is trained to output two identical signals with a physical time shift representing the time of flight between detectors and the suppression of amplitudes due to interaction with the detector. To achieve this, the generator is trained to output a single waveform that is then put through a non-trainable ``response" layer as the final layer of the generator. This layer creates a copy of its input, shifts it along in time and applies antenna responses to both the input and shifted signal. The result is a 2x1024 times series waveform representing an overlay data stream from two detector outputs. An example of each signal family is shown in Fig. \ref{fig:train}.
-
 \subsection{Architecture details}
-We base the architecture on deep convolutional generative adversarial networks \cite{Radford2015} and adopt the suggestions of \cite{DBLP:journals/corr/abs-1809-11096} lengthening one-dimensional convolution kernels on both the generator and discriminator. The class label is interpreted as an additional channel early in the generator model. This is achieved by projecting the class inputs as a learned embedding layer, into a fully connected layer which can then be concatenated channel-wise to $\textbf{z}$. The rest of the model is fully convolutional, upsampled using strided transposed convolutions with batchnormalisation in the first layer and ReLU activations throughout with the exception of Tanh for the output layer. Each transposed convolutional layer uses a kernel size of 18x1 and stride 2.
-The discriminator network mirrors that of the generator without batch normalization, using LeakyReLU activations, SpatialDropout, and a 2-stride convolution for downsampling. The main difference is that the discriminator has two output layers: the first output is a single node activated by a Sigmoid that can be interpreted as the realness of the the signal, the second output is 5 nodes activated using the softmax function predicting the class of the input. This model is trained with binary cross entropy for the first output and sparse categorical cross-entropy for the second output.
-Neural networks and subsequently GANs have multiple parameters a developer can tune when designing the model referred to as hyperparameters. The final network design used in this work comes from the use of trial and error and the initial designs influenced by the available literature. After tuning the multiple hyperparamters (Table \ref{Tab:hyperparameters}), the GAN is trained for 600000 iterations which in real time is $\Or$(1) day.
+Extensions to the original GAN method such as  DCGANs \cite{Radford2015} have been widely praised for building a stable GAN architecture. Modern GAN research favours a fully convolution neural network which replace upsampling procedures like maxpooling to strided convolutions. Convolutional neural networks (CNNs) are designed to work with grid-like structures that exhibit strong local spatial dependencies.  Although most work with CNNs involve image based data, they can be applied to other spatially adjacent data types such as time-series and text items. Audio synthesis work \cite{DBLP:journals/corr/abs-1809-11096} has showed that GANs can achieve recognisable audio within a few hours. We adopt the suggestions of these papers, lengthening one-dimensional convolution kernels on both the generator and discriminator. The Generator model is fully convolutional, upsampled using strided transposed convolutions with batchnormalisation in the first layer and ReLU activations throughout with the exception of Tanh for the output layer. Each transposed convolutional layer uses a kernel size of 18x1 and stride 2. The discriminator network mirrors that of the generator without batch normalization, using LeakyReLU activations, SpatialDropout, and a 2-stride convolution for downsampling. The discriminator has two output layers: the first output is a single node activated by a Sigmoid that can be interpreted as the realness of the the signal, the second output is 5 nodes activated using the softmax function predicting the class of the input. This model is trained with binary cross entropy for the first output and sparse categorical cross-entropy for the second output.
+
+Neural networks and subsequently GANs have multiple parameters a developer can tune when designing the model referred to as hyperparameters. The final network design used in this work comes from the use of trial and error and the initial designs influenced by the available literature. After tuning the multiple hyperparamters (Table \ref{Tab:hyperparameters}), the GAN was trained for 600000 iterations and takes $\Or$(1) day to train.
+
+\subsection{Class labels and embedding}
+A learned embedding is an efficient way of representing categorical or class based data. In contrast to traditional "one-hot encoding" where each class is represented by a binary sparse vector, embeddings map each class to its own distinct vector of a given size. The elements of these vectors are initialized randomly and tuned during training just like weights. This reduces computational cost as the sparse vectors containing mostly zeros are not needed and allows related classes to cluster together. Once the networks are trained the learned embedding vectors can be extracted from the model and used as inputs to the generator. The benefit here is that the former integer class labels are replaced by higher dimensional vector representations allowing for finer experimenting in other applications. The class label is interpreted as an additional channel early in the generator model. This is achieved by projecting the class inputs as a learned embedding layer, into a fully connected layer or "dense" layer which can then be concatenated channel-wise to $\textbf{z}$. 
+
+\subsection{Applying a time shift and antenna responses}
+We consider a two detector case in which the generator is trained to output two identical signals with a physical time shift representing the time of flight between detectors and the suppression of amplitudes due to interaction with the detector. To achieve this, the generator is trained to output a single waveform that is then put through a non-trainable ``response" layer before the output of the generator. This layer creates a copy of its input, shifts it along in time and applies antenna responses to both the input and shifted signal. The time shift is achieved by converting the waveform to frequency space, multiplying by $e^{2 \pi i f dt}$, where $dt$ is the time shift and converting back to the time domain. After which both original and shifted signals are multiplied by the antenna responses. Both dt and the antenna responses are calculated using the LALSimulation \cite{lalsuite} package and we choose Hanford and Livingston as detection points. The result is a 2x1024 times series waveform representing an overlay data stream from two detector outputs. This scheme is also used in generating the training set. 
+
 \begin{comment}
 include Plot_NN to show generator architecture
 \end{comment}
@@ -243,55 +252,105 @@ and class space locations.
 \end{itemize}
 \end{comment}
 
-Given a 100 dimensional vector drawn from a normal distribution, an integer class label and sky localisation information, the GAN is able to generate burst-like waveforms  generalised from the training set. We set out by describing the quality of generated waveforms and how they compare to the training set. We then explore the structure of the latent and class spaces by interpolating between points in these spaces. We test vector arithmetic that can be used to generate a new breed of signal by merging two or more families together. Finally, we discuss the capacity of the discriminator as a GW burst classifier and the auxiliary component of this work. 
+Given a 100 dimensional vector drawn from a normal distribution, a class label and sky localisation information, the GAN is able to generate burst-like waveforms  generalised from the training set. We set out by describing the quality of generated waveforms and how they compare to the training set. We then explore the structure of the latent and class spaces by interpolating between points in these spaces. We test vector arithmetic that can be used to generate a new breed of signal by merging two or more families together. Finally, we discuss the capacity of the discriminator as a GW burst classifier and the auxiliary component of this work. 
 
 \subsection{Waveform quality}
-The generator network is a function G : $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ $\in$ $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024\times2}$, where $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ are the latent vector, class vector and sky positions respectively. Given a latent vector randomly sampled from a normal distribution with zero mean and unit variance, a class label which is represented by a 120 dimensional vector for each class and antenna responses, the results from the generator can be seen in Fig. \ref{fig:gen_signals}. Depending on the orientation of the detector with respect to a hypothetical signal in the sky, the waveforms may appear inverted, shifted in time and their strain attenuated. Each plot shows the output of the generator after given randomised $z$, $s$ and one of the five class vectors.
+The generator network is a function G : $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ $\in$ $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024\times2}$, where $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ are the latent vector, class embedding vector and sky positions respectively. Given a latent vector randomly sampled from a normal distribution with zero mean and unit variance, a class label which is represented by a 120 dimensional vector for each class and antenna responses, the results from the generator can be seen in Figure \ref{fig:gen_signals}. Depending on the orientation of the detector with respect to a hypothetical signal in the sky, the waveforms may appear inverted, shifted in time and their strain attenuated. Each plot shows the output of the generator after given randomised $\mathbf{z}, \mathbb{\textbf{s}}$ and one of the five class vectors $\mathbf{c}$.
 
-\begin{figure}[h]
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth]{figures/generations.pdf}
-    \caption{Generated waveforms after training and conditioning on five classes. The generator will output 2 identical waveforms shifted in time (shown by light and dark blue lines) and their amplitudes reduced by detector response. The generator is able to capture the characteristics of each waveform and structure the class space to give control over which waveform to generate. Each row shows a random assortment of one of the five classes the GAN is trained on. }
+    \includegraphics[width=\textwidth]{figures/conditional_gens.pdf}
+    \caption{Generated waveforms after training and conditioning on five classes. The generator will output two waveforms as seen by detectors in Hanford (red) and Livingston (blue). The generator is able to capture the characteristics of each waveform and structure the class space to give control over which waveform to generate. Each row shows a random assortment of one of the five classes the GAN is trained on. }
     \label{fig:gen_signals}
 \end{figure}
 
+\subsection{Interpolation}
+Machine learning algorithms are often described as universal function approximators. In the generators case it maps samples drawn from a 100 dimensional Gaussian space to its representation of the training set. As with any function, there should be a one to one mapping from the domain and co-domain to allow for smooth transitions across the latent space. One advantage of using GANs as a waveform generator is that once it is trained, it can perform rapid generations faster than more intricate and computationally expensive algorithms. For complicated data sets, the network architecture must be diverse and dense enough to capture distinct variations from the training set. Most GANs perform well on relatively low resolution image generations, however, higher resolutions demand larger networks and long training times. GANs attempting to replicate complicated structures and do not have the necessary architecture either struggle to produce results at all or fall into the common failure mode know as mode collapse; where the generator produces a small variety of samples or simply memorises the training set. To test this, we perform linear interpolations in the latent and class space. 
+
 \subsection{Latent space interpolation}
-In this section we explore the latent space formed by the generator by interpolation. Keeping the class space fixed and interpolating between to points in z we can see the full effect shown in Fig. \ref{fig:z_interp}. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth space unlike the discrete training case. Additionally as each class is given the same latent points to interpolate over, we can see that the waveforms cluster together with respect to their parameters. Visually, the sing-gaussian and ring-down waveforms share similar frequencies and the other signals show similar decays and starting epochs. The only exception is BBH waveforms, which is expected as they were trained with more variety of parameters and coinsitently have their peaks in the last quarter of the time series.
-\begin{figure}[h]
+In this section we explore the latent space formed by the generator by interpolation. We take two random points in the latent space and linearly interpolate between them (six times inclusive). These new latent space vectors can now be fed into the generator to make predictions on while keeping the class vectors constant. The third input, the response values are kept constant for each class. The full effect shown in Figure \ref{fig:z_interp}. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth space unlike the discrete training case. Additionally as each class is given the same latent points to interpolate over, we can see that the waveforms cluster together with respect to their parameters. Visually, the sine-gaussian and ring-down waveforms share similar frequencies and the other signals show similar decays and starting epochs. The only exception is BBH waveforms, which is expected as they were trained with more variety of parameters and consistently have their peaks in the last quarter of the time series.
+
+\begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth]{figures/fix_c_interp_z.pdf}
-    \caption{Interpolations between two random latent points in z. Each row uniformly interpolates between two points in $\mathbf{z}$ keeping the class fixed. Each subplot shows the next interpolated signal (dark line) and the fixed point in $\mathbf{z}$ (light line). }
+    \includegraphics[width=\textwidth]{figures/z_interp_fix_c.pdf}
+    \caption{Interpolations between two random latent points in z. Each row uniformly interpolates between two points in $\mathbf{z}$ keeping the class fixed. Only a single waveform from the generator is plotted and each signal is re-scaled to [-1,1] effectively removing the antenna responses for clarity.}
     \label{fig:z_interp}
 \end{figure}
+
 \subsection{Class space interpolation}
-In order to explore the class space we keep the latent vector held constant and interpolate through the 5 classes. We construct a path between the 5 waveforms and show that the space is populated enough to allow for smooth transitions between classes. 
+In order to explore the class space we keep the latent vector held constant and interpolate through the 5 classes. We construct a path between the 5 waveforms and show that the space is populated enough to allow for transitions between classes. Sine-Gaussian to ringdown performs well in interpolation with each signal being a plausible burst GW. It is obvious that the embedding layer has clustered these two groups during training as they share many characteristics. The other signals have sharper transitions but still retain plausible looking waveforms.  
+
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/fix_z_interp_c.pdf}
-    \caption{Class space interpolation with latent space held constant throughout. }
+    \includegraphics[width=\textwidth]{figures/4_c_interp.pdf}
+    \caption{Class space interpolation with latent space held constant throughout. The plots show a zoomed in section of the 1s time interval. Top row: Sine-Gaussian class to ringdown class, Middle Row: Sine-Gaussian class to whitenoise burst class, Bottom row: Sine-Gaussian class to Gaussian class.}
     \label{fig:c_interp}
 \end{figure}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/sg_bbh_interp.pdf}
+    \caption{Class space interpolation with latent space held constant throughout. The full 1s interval is plotted for class based interpolations between a Sine-Gaussian and a BBH in spiral.}
+    \label{fig:sgbbh_interp}
+\end{figure}
+
+\begin{comment}
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/4_corners.pdf}
     \caption{We generate the four corners of the grid, then interpolate between both the z and c vectors. Although the network was only trained on binary attributes for c, interpolation results show that the computed latent space is smooth between attributes, and not simply discrete to those shown in the training set.}
     \label{fig:4_c_interp}
 \end{figure}
+\end{comment}
 
 \subsection{Vector Arithmetic}
+In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity face generation. They kept points in the latent space and performed simple vector arithmetic to generate new images. This allows for intuitive and targeted generation of images. However, the authors realised that single images vectors were unstable and there was a need to average three vectors before any arithmetic. DCGANs is unconditional, therefore, the vectors used were chosen empirically, generating many faces and choosing the attributes for study. Here, we show that this GAN only needs a single vector representation and due to conditioning we can have more control over which vectors to use in the arithmetic. In Figure \ref{fig:arithmetic} we generate a whitenoise burst and a BBH insprial using their respective class labels and use a randomised latent point and response. Keeping the latent point and response, we average the two class vectors and use this as input to the generator. Figure \ref{fig:arithmetic} (c) shows the generation based on the combined class vectors which visually looks similar to a supernova waveform. Supernova waveform generations require expensive numerical relativity simulations and various assumptions about the collapse of its parent star. Here, we are able to produce similar waves at a fraction of the expense and we are able to further modify the resultant by using different latent space samples. \jordan{this is the adding noise thing but i need to work out the correct way to do it with the directional vector}. 
+
+\begin{figure}
+  \centering
+  \begin{tabular}[b]{c}
+    \includegraphics[width=0.9\textwidth]{figures/wn+bbh.pdf} \\
+    \small ~~~~~~~~~(a)
+  \end{tabular} %\qquad
+  
+  \begin{tabular}[b]{c}
+    \includegraphics[width=0.46\textwidth]{figures/ambient_result.pdf} \\
+    \small ~~~~~~~~(b)
+  \end{tabular}
+ \begin{tabular}[b]{c}
+    \includegraphics[width=0.44\textwidth]{figures/arithmetic_result.pdf} \\
+    \small ~~~~~~~~(c)
+  \end{tabular}
+  \caption{Conditional vector arithmetic. (a) Generated samples of a whitenoise burst and BBH insprial. (c) Effect of naively adding the components from (a) in the time domain. \jordan{just adding the two signals post generation} (c) Generation from the combined class vectors. }
+  \label{fig:arithmetic}
+\end{figure}
+
+
+\begin{comment}
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/adding.png}
-    \caption{Vector arithmetic for unmodelled waveforms. Keeping the z vectors constant and generating two classes of signals, their class embedding vectors can the be summed to give a new waveform that is comprised of the two classes.}
+    \includegraphics[width=\textwidth]{figures/arithm.pdf}
+    \caption{Vector arithmetic for unmodelled waveforms. Keeping the z vectors constant and generating two classes of signals, their class embedding vectors can then be averaged to produce a new class. The generator produces a waveform of this hybrid class (middle of right plot). For the surrounding 8 plots we add a small variance of Gaussian noise to the new class. }
     \label{fig:add}
 \end{figure}
+\end{comment}
 \subsection{Classifier}
+\jordan{I'm working on this part and how to present the auxiliary part.}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+In this work we present the potential of Generative Adversarial Networks for burst gravitational wave analysis. We have shown that GANs have the ability to generate 5 class varieties of modelled burst GW signals that can be generated at whim. The latent and class spaces were explored through interpolation and suggest that the space provides smooth translations between classes and overall waveform shape. We then showed targeted waveform generation by mixing classes to produce new unmodlled waveform varieties that can be used to test current burst search pipelines. \jordan{couple of sentences about classifier}. 
+
+In order to extend this work to a viable burst wave generator and classifier a few points require further research. In principle it is trivial to add another detector inside the response layer \jordan{response is the wrong thing to say since the time delay isnt really a response, extrinsic layer? just non trainable layer? The box?}, however, as this now 3 dimensional signal is feed to the discriminator this will no doubt require further tweaking of the network. We can add more burst-like wave forms in the training set, like detector glitches which would similarly require further network design. The work presented here is noise free. To havea complete generation and detection package we would like to train the network on signals hidden in additive Gaussian noise and test the ability of the auxiliary classifier. 
+
+The approach shown in this work shows promise in generating unmodelled burst waveforms from exotic sources. Having the ability to quickly generate new waveforms is essential to test current detection schemes and their susceptibilty to unmodelled sources. We belive that GANs have the ability to generate high fidelity waveforms at a fraction of the computational expense and do not rely on large prior parameter space. Having banks of these waveforms at hand can aid in our understand of the physics processes behind these non-standard gravitational wave emitters.  
+
+\jordan{I want to include a link to the github etc but also a google collab scrip like the one for BigGANs: \\
+\url{https://colab.research.google.com/github/tensorflow/hub/blob/master/examples/colab/biggan_generation_with_tf_hub.ipynb.} 
+It's fun and gives a better feel for the interpolating that static images.}
+
 \begin{comment}
 \begin{itemize}
 \item Summarise the paper
@@ -303,7 +362,6 @@ the approach.
 \end{itemize}
 \end{comment}
 
-\newpage
 \section*{References}
 \bibliography{iopart-num}
 
@@ -355,6 +413,8 @@ the approach.
 \label{Tab:hyperparameters}
 \end{table}
 \normalsize
+
+\section{Many more generated examples}
 
 \end{document}
 
