@@ -103,9 +103,11 @@ Generative adversarial networks - a powerful class of machine learning.
 %
 
 \acrodef{GW}[GW]{gravitational wave}
-\acrodef{GAN}[GAN]{generative adversarial networks}
-\acrodef{CGAN}[CGAN]{conditional generative adversarial networks}
-\acrodef{ACGAN}[ACGAN]{auxilliary conditional generative adversarial networks}
+\acrodef{GAN}[GAN]{generative adversarial network}
+\acrodef{CGAN}[CGAN]{conditional generative adversarial network}
+\acrodef{ACGAN}[ACGAN]{auxilliary conditional generative adversarial network}
+\acrodef{DCGAN}[DCGAN]{deep convolutional generative adversarial network}
+\acrodef{CNN}[CNN]{convolutional neural networks}
 \acrodef{BBH}[BBH]{binary black hole}
 
 
@@ -411,19 +413,123 @@ the same. Should they? They may wonder why is there only one waveform and not
 one per detector?} } \label{fig:train} \end{figure}
 
 \subsection{Architecture details}
-Extensions to the original GAN method such as  DCGANs \cite{Radford2015} have been widely praised for building a stable GAN architecture. Modern GAN research favours a fully convolution neural network which replace upsampling procedures like maxpooling to strided convolutions. Convolutional neural networks (CNNs) are designed to work with grid-like structures that exhibit strong local spatial dependencies.  Although most work with CNNs involve image based data, they can be applied to other spatially adjacent data types such as time-series and text items. Audio synthesis work \cite{DBLP:journals/corr/abs-1809-11096} has showed that GANs can achieve recognisable audio within a few hours. We adopt the suggestions of these papers, lengthening one-dimensional convolution kernels on both the generator and discriminator. The Generator model is fully convolutional, upsampled using strided transposed convolutions with batchnormalisation in the first layer and ReLU activations throughout with the exception of Tanh for the output layer. Each transposed convolutional layer uses a kernel size of 18x1 and stride 2. The discriminator network mirrors that of the generator without batch normalization, using LeakyReLU activations, SpatialDropout, and a 2-stride convolution for downsampling. The discriminator has two output layers: the first output is a single node activated by a Sigmoid that can be interpreted as the realness of the the signal, the second output is 5 nodes activated using the softmax function predicting the class of the input. This model is trained with binary cross entropy for the first output and sparse categorical cross-entropy for the second output.
 
-Neural networks and subsequently GANs have multiple parameters a developer can tune when designing the model referred to as hyperparameters. The final network design used in this work comes from the use of trial and error and the initial designs influenced by the available literature. After tuning the multiple hyperparamters (Table \ref{Tab:hyperparameters}), the GAN was trained for 600000 iterations and takes $\Or$(1) day to train.
+% Introduce some architecture features
+%
+Extensions to the original \ac{GAN} method such as the
+\ac{DCGAN}~\cite{Radford2015} have been widely praised for
+building~\chris{enabling?} a stable \ac{GAN} architecture. Modern \ac{GAN}
+research~\chris{isn't all GAN research modern?} favours a fully convolution
+neural network which replace upsampling procedures like maxpooling to strided
+convolutions~\chris{a couple of things here. Max pooling and striding hasn't
+been introduced, and why do max-pooling and striding upsample? I thought they
+downsampled, don't they? }. \acp{CNN} are designed to work with grid-like
+structures that exhibit strong local spatial dependencies~\chris{great but that
+sounds like a computer science paper. Make it easier for the physicists to
+understand.}. Although most work with \acp{CNN} involve image based data, they
+can be applied to other spatially adjacent data types such as time-series and
+text items. Audio synthesis work~\cite{DBLP:journals/corr/abs-1809-11096} has
+showed that \acp{GAN} can achieve recognisable audio within a few
+hours~\chris{ambiguous. A few hours of training?}. 
+
+% specifically define our architecture
+%
+We adopt the suggestions of these papers~\chris{which papers?}, lengthening
+one-dimensional convolution kernels on both the generator and discriminator.
+The Generator model is fully convolutional, upsampled using strided transposed
+convolutions with batch normalisation in the first layer and ReLU activations
+throughout with the exception of Tanh for the output layer. Each transposed
+convolutional layer uses a kernel size of $18\times 1$ and stride of 2. The
+discriminator network mirrors that of the generator without batch
+normalization, using LeakyReLU activations, SpatialDropout, and a 2-stride
+convolution for downsampling. The discriminator has two output layers: the
+first output is a single node activated by a Sigmoid that can be interpreted as
+the realness of the the signal, the second output is 5 nodes activated using
+the softmax function predicting the class of the input.  This model is trained
+with binary cross entropy for the first output and sparse categorical
+cross-entropy for the second output.~\chris{OK, very technically tight but too
+computer sciencey. Try to make it human readbale for a physicist and refer to
+the table of parameters in the appendix.}
+
+% describe the hyperparameter tunings
+%
+Neural networks and subsequently \acp{GAN} have multiple parameters a developer
+can tune when designing the model and these are referred to as hyperparameters.
+The final network design used in this work comes from the use of trial and
+error and the initial designs influenced by the available literature. After
+tuning the multiple hyperparamters (Table~\ref{Tab:hyperparameters}), the GAN
+was trained for $6\times 10^5$ iterations~\chris{what is an iteration here?
+It's not an epoch right?} and takes $\Or$(1) day to train~\chris{trained on
+what? Were there any major decisions made based on the trial and error process?
+Anything that was learned from your mistakes that might be useful to others?}.
 
 \subsection{Class labels and embedding}
-A learned embedding is an efficient way of representing categorical or class based data. In contrast to traditional "one-hot encoding" where each class is represented by a binary sparse vector, embeddings map each class to its own distinct vector of a given size. The elements of these vectors are initialized randomly and tuned during training just like weights. This reduces computational cost as the sparse vectors containing mostly zeros are not needed and allows related classes to cluster together. Once the networks are trained the learned embedding vectors can be extracted from the model and used as inputs to the generator. The benefit here is that the former integer class labels are replaced by higher dimensional vector representations allowing for finer experimenting in other applications. The class label is interpreted as an additional channel early in the generator model. This is achieved by projecting the class inputs as a learned embedding layer, into a fully connected layer or "dense" layer which can then be concatenated channel-wise to $\textbf{z}$. 
+
+% explain embedding
+%
+A learned embedding is an efficient way of representing categorical or class
+based data. In contrast to traditional "one-hot encoding" where each class is
+represented by a binary sparse vector, embeddings map each class to its own
+distinct vector of a given size. The elements of these vectors are initialized
+randomly and tuned during training just like weights~\chris{I thought that they
+weren't trained. Are they definitely trained? Is this not just a single fully
+connected layer that turns 5 numbers into 120? How is it any different to
+that?}. This reduces computational cost as the sparse vectors containing mostly
+zeros are not needed and allows related classes to cluster together. Once the
+networks are trained the learned embedding vectors can be extracted from the
+model and used as inputs to the generator. The benefit here is that the former
+integer class labels are replaced by higher dimensional vector representations
+allowing for finer experimenting in other applications. The class label is
+interpreted as an additional channel early in the generator model. This is
+achieved by projecting the class inputs as a learned embedding layer, into a
+fully connected layer or "dense" layer which can then be concatenated
+channel-wise to $\textbf{z}$.~\chris{very nice but still a bit too technical
+without consideration for lowly astrophysicists. Can you soften it a bit to
+make it more accessible. Explain more of the concepts when you introduce them.} 
+
+\chris{Also, it isn't clear where this comes into your analysis and why it's
+important. I'm not sure that the definition of "signal class" has been made
+anywhere.}
 
 \subsection{Applying a time shift and antenna responses}
-We consider a two detector case in which the generator is trained to output two identical signals with a physical time shift representing the time of flight between detectors and the suppression of amplitudes due to interaction with the detector. To achieve this, the generator is trained to output a single waveform that is then put through a non-trainable ``response" layer before the output of the generator. This layer creates a copy of its input, shifts it along in time and applies antenna responses to both the input and shifted signal. The time shift is achieved by converting the waveform to frequency space, multiplying by $e^{2 \pi i f dt}$, where $dt$ is the time shift and converting back to the time domain. After which both original and shifted signals are multiplied by the antenna responses. Both dt and the antenna responses are calculated using the LALSimulation \cite{lalsuite} package and we choose Hanford and Livingston as detection points. The result is a 2x1024 times series waveform representing an overlay data stream from two detector outputs. This scheme is also used in generating the training set. 
+
+% Explain the effect of the sky position 
+%
+\chris{Why is this not described in the section defining the signal waveforms?
+There may be a good reason so it may well fit best here. I'm not sure} We
+consider a two detector case~\chris{why 2 detector and not 3?} in which the
+generator is trained to output two identical signals with a physical time shift
+representing the time of flight between detectors and the
+suppression~\chris{not a supression. It's just the antenna response.} of
+amplitudes due to interaction with the detector. To achieve this, the generator
+is trained to output a single waveform that is then put through a non-trainable
+``response" layer before the output of the generator. This layer creates a copy
+of its input, shifts it along in time and applies antenna responses to both the
+input and shifted signal. The time shift is achieved by converting the waveform
+to the frequency domain, multiplying by $e^{2 \pi i f \Delta t}$, where $\Delta
+t$ is the time shift and converting~\chris{converting? what do you mean?} back
+to the time domain. After which, both original and shifted signals are
+multiplied by their respective  antenna responses. Both $\Delta t$ and the
+antenna responses are calculated using the LALSimulation~\cite{lalsuite}
+package and we choose Hanford and Livingston as detection points~\chris{just
+say the detectors}. The result is a $2\times 1024$ times series waveform
+representing an overlay data stream~\chris{what the hell is an overlay data
+stream?} from two detector outputs. This scheme is also used in generating the
+training set.~\chris{OK, first of all you should define some equations here
+rather than just saying everything in words. Why is it here that you reveal the
+data sampling rate? Surely that is an important quantity that shouldn't just be
+stated in this subsection. What about the random sky position that is input to
+the "box"? How is the sky sampled? What about the wrapping from the tim shift?
+Don't you apply a window? The "box" or "response" layer should be visible in
+the network diagram.} 
 
 \begin{comment}
 include Plot_NN to show generator architecture
 \end{comment}
+
+~\chris{In general I find this section to read like un-connected statements in
+the sense that they are un-connected to each other and un-connected to the main
+GW problem. Try to make it more like a recipe for doing this analysis.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
