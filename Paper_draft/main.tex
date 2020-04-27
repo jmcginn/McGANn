@@ -44,6 +44,7 @@
 \usepackage{xcolor}
 \usepackage{pifont}
 \usepackage{comment}
+\usepackage{acronym}
 %\usepackage{subcaptncluon}
 \usepackage{tikz}
 \usetikzlibrary{shapes.geometric, arrows, calc}
@@ -59,6 +60,8 @@
 \newcommand{\siong}[1]{\textbf{\textcolor{blue}{SIONG: #1}}}
 \newcommand{\chris}[1]{\textbf{\textcolor{green}{CHRIS: #1}}}
 \newcommand{\michael}[1]{\textbf{\textcolor{orange}{MICHAEL: #1}}}
+\newcommand{\dcc}{LIGO-PXXXXXXX}
+\input{tag.tex}
 \begin{document}
 
 \title{Generalised gravitational burst generation with Generative Adversarial Networks}
@@ -69,11 +72,19 @@
 %\ead{jordan.mcginn@glasgow.ac.uk}
 \vspace{10pt}
 \begin{indented}
-\item[]March 2020
+\item[]\commitDATE\\\mbox{\small \commitID}\\\mbox{\dcc}
 \end{indented}
 
 \begin{abstract}
-The next generation of Gravitational wave detectors will accelerate the number of gravitational wave detection's such that we can gain new in site into the physics behind the sources causing the phenomena. Numerical simulations and matched filtering are the standard for detecting gravitational waves for know sources such as binary-black hole mergers. Other sources of gravitational waves that remain elusive to standard modelling techniques and are expected to be detectable, however, there must be a way to characterise them in order to build a model template. Here we construct a unmodeled burst generation scheme using Generative adversarial networks - a powerful class of machine learning. 
+The next generation of Gravitational wave detectors will accelerate the number
+of gravitational wave detection's such that we can gain new in site into the
+physics behind the sources causing the phenomena. Numerical simulations and
+matched filtering are the standard for detecting gravitational waves for know
+sources such as binary-black hole mergers. Other sources of gravitational waves
+that remain elusive to standard modelling techniques and are expected to be
+detectable, however, there must be a way to characterise them in order to build
+a model template. Here we construct a unmodeled burst generation scheme using
+Generative adversarial networks - a powerful class of machine learning.
 \end{abstract}
 
 %
@@ -91,6 +102,11 @@ The next generation of Gravitational wave detectors will accelerate the number o
 %\ioptwocol
 %
 
+\acrodef{GW}[GW]{gravitational wave}
+\acrodef{GAN}[GAN]{generative adversarial networks}
+\acrodef{CGAN}[CGAN]{conditional generative adversarial networks}
+\acrodef{ACGAN}[ACGAN]{auxilliary conditional generative adversarial networks}
+\acrodef{BBH}[BBH]{binary black hole}
 
 
 \section{Introduction}
@@ -107,13 +123,76 @@ an introduction \ding{51}
 \end{itemize}
 \end{comment}
 
-Gravitational-wave (GW) astronomy is now an established field, starting with the first detection of a binary black hole merger \cite{Abbott2016} on September 2015. Following this, the first and second observations runs (O1 and O2) of Advanced LIGO and Advanced Virgo reported several more mergers \cite{Abbott2016a, Abbott2017, Abbott2017a, Abbott2017b}. On August 2017 a binary neutron star merger was observed alongside its electron-magnetic counterpart for the first time, giving rise to multimessenger gravitational wave astronomy. 
+% introduce \ac{GW} astrophsyics
+%
+\ac{GW} astronomy is now an established field, starting with the first
+detection of a binary black hole merger \cite{Abbott2016} in September 2015.
+Following this, the first and second observations runs (O1 and O2) of Advanced
+LIGO and Advanced Virgo~\chris{need refs for the detectors, see here
+https://pnp.ligo.org/ppcomm/standard\_references.html} reported several more
+mergers \cite{Abbott2016a, Abbott2017, Abbott2017a, Abbott2017b}. On August
+2017 a binary neutron star merger was observed alongside its electromagnetic
+counterpart for the first time, giving rise to multimessenger gravitational
+wave astronomy. 
 
-GW bursts are transient signals of typically short duration ($<$ 1s) whose waveforms are not accurately modelled or are complex to re-produce. Astrophysical sources for such transients include: Core collapse supernova, Neutron star instabilities, Fallback accretion onto a neutron star, Non axisymetric deformation in magnetars, Pulsar glitches and Neutron star post-mergers.
-As GW bursts are un-modelled they are not sensitive to template based detection schemes such as matched-filtering \cite{Owen1998}, instead, detection involves distinguishing the signal from detector noise. This is only possible if the detector noise is well characterised and the candidate signal can be differentiated from system or environmental glitches. As such, GW burst searches rely on an astrophysical burst signature appearing in multiple detectors.
-Many GW burst algorithms \cite{Klimenko_2008, Aso_2008} are tested and tuned using model waveforms that may or may not have astrophysical significance but have easy to define parameters and share characteristics of real bursts that is enough to simulate coincident non-stationary deviations between detectors. Such waveforms may have long-duration, short bandwidth (ringdowns), long-duration, large bandwidth (inspirals) and many algorithms make use of sine-Gaussians: a Gaussian modulated sine wave that is characterised by it's central frequency and narrow bandwidth. This makes it a great tool for diagnosing LIGOs sensitivity to frequency. 
+% introduce burst searches
+%
+GW bursts are transient signals of typically short duration ($<$ 1s) whose
+waveforms are not accurately modelled or are complex to re-produce.
+Astrophysical sources for such transients include: Core collapse supernova,
+Neutron star instabilities, Fallback accretion onto a neutron star, Non
+axisymetric deformation in magnetars, Pulsar glitches and Neutron star
+post-mergers.  As \ac{GW} bursts are un-modelled they are not sensitive to
+template based detection schemes~\chris{OK, but logically dodgy. You make it
+sound like we could use a template scheme but it would be insensitive. The
+point is that we don't have templates in the first place.} such as
+matched-filtering \cite{Owen1998}, instead, detection involves distinguishing
+the signal from detector noise. This is only possible if the detector noise is
+well characterised and the candidate signal can be differentiated from
+systematic or environmental glitches. As such, \ac{GW} burst searches rely on
+an astrophysical burst signature appearing in multiple detectors~\chris{at
+similar times?}.  
 
-We aim to explore the use of machine learning in generating and interpreting these mock GW burst signals. Neural networks have shown to replicate the sensitivities of matched filtering in GW detection \cite{Gabbard2017} and rapid parameter estimation \cite{gabbard2019bayesian}, however these methods have primarily been focused on binary black hole signals and have not yet expanded to burst examples. 
+% Discuss the family of burst waveforms currently used and why - not in detail, just
+% an introduction 
+%
+Many \ac{GW} burst algorithms \cite{Klimenko_2008, Aso_2008}~\chris{many? needs
+more than 2 refs for many.} are tested and tuned using model waveforms that may
+or may not have astrophysical significance but have easy to define parameters
+and share characteristics of real bursts that is enough to simulate coincident
+non-stationary deviations~\chris{fancy sounding but I'm not sure what
+non-stationary deviations means.} between detectors. Such waveforms may have
+long-duration, short bandwidth (ringdowns), long-duration, large bandwidth
+(inspirals) and many algorithms make use of sine-Gaussians: a Gaussian
+modulated sine wave that is characterised by it's central frequency and narrow
+bandwidth.~\chris{not the time to try to describe the types of burst waveforms.
+Also, be careful with satying things like ringdowns have narrow bandwidth. I
+know we specify a single frequency but becuase of the short duration, the
+signal is broad band. Look at the FFT} This makes it a great tool for
+diagnosing LIGOs sensitivity to frequency.~\chris{strange unfinished sentence.} 
+
+% Introduce ML techniques in GWs
+%
+\chris{Introduce ML techniques in GWs}
+
+% What this paper does on GANs in 1 paragraph
+%
+\chris{What this paper does on GANs in 1 paragraph}
+
+% the point of the paper
+%
+\chris{describe the structure of the paper}
+We aim to explore the use of machine learning in generating and interpreting
+these mock \ac{GW} burst signals. Neural networks have shown to replicate the
+sensitivities of matched filtering in \ac{GW} detection \cite{Gabbard2017} and rapid
+parameter estimation \cite{gabbard2019bayesian}, however these methods have
+primarily been focused on binary black hole signals and have not yet expanded
+to burst examples.~\chris{OK, thanks for the referdndes but you should probably
+have more refs to other ML GW papers. I think you should dedicate at least one
+paragrpah to GW ML efforts. The final paragrapgh of the section should
+introduce the paper structure. The penultimate paragraph should expain what the
+point of this paper is - in non technical terms. This is all outlined in the
+bullet points (hidden) at the start of this section.} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generative Adversarial Networks}
@@ -130,52 +209,105 @@ here - motivate this choice. \ding{51}
 \end{itemize}
 \end{comment}
 
-A subset of deep learning that has seen fruitful development in recent years \cite{Goodfellow2014} is Generative Adversarial Networks (GANs). These unsupervised algorithms learn patterns in a given training data set using an adversarial process. The generations from GANs are state-of-the-art in fields such as high quality image fidelity \cite{brock2018large,karras2019analyzing}, text-to-image translation \cite{reed2016generative} and video prediction \cite{liang2017dual} as well as time series generations \cite{esteban2017realvalued}. 
+% introduce GANs
+%
+A subset of deep learning that has seen fruitful development in recent years
+\cite{Goodfellow2014} is \acp{GAN}. These unsupervised algorithms learn
+patterns in a given training data set using an adversarial process. The
+generations from \acp{GAN} are state-of-the-art in fields such as high quality image
+fidelity \cite{brock2018large,karras2019analyzing}, text-to-image translation
+\cite{reed2016generative} and video prediction \cite{liang2017dual} as well as
+time series generations \cite{esteban2017realvalued}. 
 
-GANs train two competing neural networks, consisting of a discriminator that is set up to distinguish between real and fake data and a generator that produces synthetic
-reproductions of the real data. The generator performs a mapping
-from an input noise vector \textbf{z} to its representation of the data and the discriminator  maps its
-input \textbf{x} to a probability that the input came form either the training
-data or generator.  During training, the discriminator is given a batch of samples that contains one half real data
-and one half fake data which it then makes predictions on. The
-loss for discriminator  is calculated by comparing its predictions to the labelled data through the binary cross-entropy function. The training process
-of a GAN alternatively updates the weights of the discriminator  and generator based on information
-on its competitors loss function. This loss of discriminator  is used to update the weights
-of generator to produce more realistic samples of the input distribution, the loss of G
-encourages discriminator  to update its classification abilities. Both networks compete
-in a minimax game which generator is trying
-minimise and the discriminator is trying to maximise:
-
+% How a GAN works
+%
+\acp{GAN} train two competing neural networks, consisting of a discriminator
+that is set up to distinguish between real and fake data and a generator that
+produces synthetic reproductions of the real data. The generator performs a
+mapping from an input noise vector $\mathbf{z}$ to its representation of the
+data and the discriminator maps its input $\mathbf{x}$ to a probability that
+the input came form either the training data or generator.  During training,
+the discriminator is given a batch of samples that contains one half real data
+and one half fake data which it then makes predictions on. The loss for the
+discriminator is calculated by comparing its predictions to the labelled data
+through the binary cross-entropy function. The training process of a \ac{GAN}
+alternatively updates the weights~\chris{too much knowledge assumed - what are
+weights, they haven't been defined} of the discriminator and generator based on
+information on its competitors loss function. This loss of discriminator is
+used to update the weights of the generator to produce more realistic samples
+of the input distribution, the loss of G~\chris{what is G?} encourages the
+discriminator to update its classification abilities. Both networks compete in
+a minimax game~\chris{what is a minimax game? references?} which the generator
+is trying to minimise and the discriminator is trying to
+maximise:~\chris{nicely written, however, it needs an extra 25\% explanation
+for people not familar with ML or GANs in particular. Try to spell things out
+more. Also refer to Fig 1 somewhere in this section.}
+%
 \begin{equation}
 \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x} \sim p_{\text{r}}(\mathbf{x})} [\text{log} D(\mathbf{x})] \\ + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z})} [\text{log}(1-D(G(\mathbf{z})))]
 \label{equation:GANloss}
 \end{equation}
-\subsection{Auxiliary conditional GANs}
-In theory, the adversarial process will eventually lead to the local Nash equilibrium \cite{Nash1950} whereby
-both neural networks are trained optimally. In practice, however, GANs are
-notoriously difficult to train. Such difficulties include: Non-convergence,
-where the model parameters oscillate and the loss never converges, mode
-collapse where G produces a limited diversity of samples, and diminishing
-gradients when applying gradient descent to a
-non-continuous function. 
+%
+~\chris{In line with explanding the explanation a bit more, really take the time
+to state what controls the functions and also deine ALL mathematical variables.
+What are $D, G, V\ldots$ Why are you taking the logs? What situation so you
+start with? What do you end up with? This is a nice start but beef it up.}
 
-To overcome some of these difficulties, a conditional varient of GANs named Conditional-GAN (CGANs) \cite{cgan}
-adds structure to the latent space by providing the generator with a class or attribute
-label. The generator learns to segment the latent space by clustering distributions which have similar properties, making a point in latent space conditional on a class. This idea was extended further with auxiliary conditional GANs (ACGANs) \cite{odena2016conditional} that require the discriminator to output a
-probability of data belonging to each class. A pictorial representation on the differences between these approaches in Figure \ref{fig:gan_comparison}. 
+\subsection{Auxiliary conditional GANs}
+
+% describing the problems with GANs 
+%
+In theory, the adversarial process will eventually lead to the local Nash
+equilibrium \cite{Nash1950} whereby both neural networks are trained
+optimally~\chris{this statement and this paragraph should be stated in the
+previous section}.  In practice, however, \acp{GAN} are notoriously difficult
+to train. Such difficulties include: Non-convergence, where the model
+parameters~\chris{you haven't stated what the model parameters are yet}
+oscillate and the loss~\chris{the reader soes not know what the loss is and
+what the point of it is} never converges, mode collapse where G produces a
+limited diversity of samples~\chris{samples of what?}, and diminishing
+gradients when applying gradient descent to a non-continuous
+function~\chris{not sure about what non-continuous means here but in general
+you are bringing in too many concepts without explanation e.g., gradient
+descent, why is that relevant? the reader does not know.}. 
+
+% introduce CGANs and ACGANs
+%
+To overcome some of these difficulties, a conditional variant of \acp{GAN}
+named \acp{CGAN}~\cite{cgan} adds structure to the latent space~\chris{what is
+the latent space - you called it an input noise vector before} by providing the
+generator with a class or attribute label. The generator learns to segment the
+latent space by clustering distributions which have similar properties, making
+a point in latent space conditional on a class~\chris{are we sure about this?
+all classes share the same latent space and I don't think that the space gets
+segmented into areas corresponding to different classes - I do think that it
+gets broken down into spaces with different intrinsic physical properties e.g.,
+high frequency, long duration, etc...}. This idea was extended further with
+\acp{ACGAN}~\cite{odena2016conditional} that require the discriminator to
+output a probability of data belonging to each class. A pictorial
+representation on the differences between these approaches is shown in
+Fig.~\ref{fig:gan_comparison}. 
 
 \begin{figure}
     \centering
         \input{figures/GAN_diagram_vertical}%     without .tex extension
         \input{figures/ACGAN_diagram_vertical}%     without .tex extension
-    \caption{Comparison of the original GAN method and the Auxiliary Conditional-GAN method. For ACGANs the training data requires a label denoting its class that is also fed to the generator which then learns to generate waveforms based on the input label. Additionaly, the discrminator learns to classify which class the signal belongs to.}
-    \label{fig:gan_comparison}
+    \caption{Comparison of the original GAN method and the Auxiliary
+Conditional-GAN method. For ACGANs the training data requires a label denoting
+its class that is also fed to the generator which then learns to generate
+waveforms based on the input label. Additionaly, the discrminator learns to
+classify which class the signal belongs to.} \label{fig:gan_comparison}
 \end{figure}
+
+\chris{this section is supposed to be on ACGANs but it only mentions them in
+the final sentence. Again, like the previous section, a bit more explanation
+would be good. Does ths maths change? Could you have a new version of Eq 1 for
+CGANs and ACGANs? Also, if would be good to have a statement that you will be
+using one of these methods in this paper.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methodology}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-GW burst signals remain an unmodelled phenomenon, as such, current detection algorithms focus on waveform reconstruction reliant on coincident signals within multiple detectors. We propose a signal generation scheme utilizing GANs trained on burst-like waveforms. The GAN is trained on five signal morphology's spanning a range of prior parameters. The families are:
 
 \begin{comment}
 \begin{itemize}
@@ -190,32 +322,93 @@ of thumb decisions made
 \end{itemize}
 \end{comment}
 
+% introduce the training data
+%
+\ac{GW} burst signals remain an unmodelled phenomenon, as such, current
+detection algorithms focus on waveform reconstruction reliant on coincident
+signals within multiple detectors~\chris{burst detection algorithms do not need
+waveform reconstruction for searches - it is an add on feature.}. We propose a
+signal generation scheme utilizing~\chris{utilizing certainly is fancier than
+using. Dont go overboard with the language.} \acp{GAN} trained on burst-like
+waveforms. The \ac{GAN}~\chris{is it a GAN or is it a CGAN or an ACGAN? Be
+clearer} is trained on five signal morphology's spanning a range of prior
+parameters. The families are:~\chris{I know they don't all share the same
+parameters but it might be sensible to make a table of the prior ranges rather
+than haviong it all stated in text.}
+%
 \begin{itemize}
-	\item Sine-Gaussian:
-		\begin{equation}
-		\label{eqn:sg}
-			h(t) = A \exp\bigg[ - \frac{(t-t_{0})^2}{\tau^2} \bigg] \sin (2 \pi f_0 (t-t_0))
-		\end{equation}	
-		where $f_0$ is the central frequency that takes values between 30 Hz - 50 Hz. $\tau$ is the decay parameter chosen to be between 60s$^{-1}$  and 15s$^{-1}$ and the starting epoch chosen between 0.2s - 0.8s. Sine-Gaussian waveforms have a similar form to those produced by the merger of two black holes. Although binary mergers tend to be longer in duration.  		
-	\item Ring-down:
-		\begin{equation}
-			h(t) = A \exp \bigg[-\frac{(t-t_0)}{\tau}\bigg]\sin(2 \pi f_0 (t-t_0))
-		\end{equation}
-		For ring-down signals the parameters for $f_0, \tau, t_0$ are chosen between; 30 Hz-50Hz, 0.02-0.1 and 0.1s-0.8s respectfully. These signals aim to replicate the post-merger late stages of binary coalescence.
-	\item White-noise bursts:\hfill \\
-	These signals are produced by inserting samples of random Gaussian noise with zero mean and a variance of 0.1 at a random point between 0.2s - 0.8s. The source of this signal type can be attributed to core-collapse supernova. 
-	\item Gaussian:\\
-	A simple Gasssian waveform with $t_0$ ranging from 0.2s to 0.8s and $\tau$ between  100$^{-1}$ and 20$^{-1}$
-	\item Binary black holes (BBH): \\
-	BBH signals are simulated using IMRPhenomD waveform routine from LALSuite which models the inspiral, merger and ringdown of a BBH waveform. The component masses lie in the range of [5,70]M$_0$ with zero spins and we fix m$_1$ $>$ m$_2$. The mass distribution is approximated by a power law with index of 1.6 https://arxiv.org/abs/1811.12940. The signals are generated using random right ascensions and declinations uniform over the sky and the inclinations are drawn from the cosine of a uniform distribution in the range [-1,1]. The peaks of the waveforms are set to be within [0.75,0.95]s of the 1s time interval. 
+%
+\item Sine-Gaussian:\\
+\chris{don't just start things with an equation}		
+%
+\begin{equation}
+\label{eqn:sg}
+h(t) = A \exp\bigg[ - \frac{(t-t_{0})^2}{\tau^2} \bigg] \sin (2 \pi f_0 (t-t_0))
+\end{equation}	
+%		
+where $f_0$ is the central frequency that takes values between 30 Hz - 50 Hz.
+$\tau$ is the decay parameter chosen to be between 60s$^{-1}$  and 15s$^{-1}$
+and the starting epoch chosen between 0.2s - 0.8s. Sine-Gaussian waveforms have
+a similar form to those produced by the merger of relatively high mass binary
+black holes for which the inspiral phase occurs at frequencies below
+ground-based detector sensitivities.
+%
+\item Ring-down:\\
+\chris{don't just start things with an equation}
+%
+\begin{equation}
+h(t) = A \exp \bigg[-\frac{(t-t_0)}{\tau}\bigg]\sin(2 \pi f_0 (t-t_0))
+\end{equation}
+%		
+For ring-down signals the parameters for $f_0, \tau, t_0$ are chosen between;
+30 Hz-50Hz, 0.02-0.1 and 0.1s-0.8s respectfully. These signals aim to replicate
+the post-merger late stages of binary coalescence.
+%
+\item White-noise bursts:\\
+\chris{where is the waveform equation?}
+These signals are produced by inserting samples of random Gaussian noise with
+zero mean and a variance of 0.1 at a random point between 0.2s - 0.8s. The
+source of this signal type can be attributed to core-collapse
+supernova~\chris{is this correct? these waveofms are approximations so best not
+to say that they correspond directly to physical phenomena}.
+%
+\item Gaussian pulse:\\
+\chris{where is the waveform equation?}
+A simple Gasssian pulse waveform with $t_0$ ranging from 0.2s to 0.8s and
+$\tau$ between  100$^{-1}$ and 20$^{-1}$
+	
+\item Binary black holes (BBH): \\
+\ac{BBH} signals are simulated using IMRPhenomD waveform routine from
+LALSuite~\chris{references for both the waveofrm and lalsuite} which models the
+inspiral, merger and ringdown of a \ac{BBH} waveform. The component masses lie
+in the range of [5,70]M$_0$~\chris{not $M_0$ but $M_{\odot}$} with zero spins
+and we fix m$_1$ $>$ m$_2$. The mass distribution is approximated by a power
+law with index of 1.6 https://arxiv.org/abs/1811.12940~\chris{correct;ly
+reference this}. The signals are generated using random right ascensions and
+declinations uniform over the sky and the inclinations are drawn from the
+cosine of a uniform distribution in the range [-1,1]. The peaks of the
+waveforms are set to be within [0.75,0.95]s of the 1s time interval.~\chris{for
+all the signal models please check that the prior ranges and distributions are
+consistent with the presented results.} 
+%
 \end{itemize}
+
+\chris{you seem to be missing a description of the antenna patterns and time
+delay that you apply to each waveform. It should go here. You should also
+include all other technical information like how you normalise the amplitudes
+and how you select random sky positions, how the data is represented to the
+network (as an image or as channels) how many detectors do you use? etc... }
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/train_gen.pdf}
-    \caption{Examples of simulated burst gravitational wave signals. Top row shows examples from the training set. From left to right: Sine-Gaussian, Ringdown, White-noise burst, Gaussian, Binary black hole merger. The bottom row shows the conditional generations from the GAN. }
-    \label{fig:train}
-\end{figure}
+    \caption{Examples of simulated \ac{GW} burst signals. Top row shows
+examples from the training set. From left to right: Sine-Gaussian, Ringdown,
+White-noise burst, Gaussian pulse, Binary black hole merger. The bottom row
+shows the conditional generations from the GAN.~\chris{slightly more
+explanation. The reader may be concerned that the top and bottom do not look
+the same. Should they? They may wonder why is there only one waveform and not
+one per detector?} } \label{fig:train} \end{figure}
 
 \subsection{Architecture details}
 Extensions to the original GAN method such as  DCGANs \cite{Radford2015} have been widely praised for building a stable GAN architecture. Modern GAN research favours a fully convolution neural network which replace upsampling procedures like maxpooling to strided convolutions. Convolutional neural networks (CNNs) are designed to work with grid-like structures that exhibit strong local spatial dependencies.  Although most work with CNNs involve image based data, they can be applied to other spatially adjacent data types such as time-series and text items. Audio synthesis work \cite{DBLP:journals/corr/abs-1809-11096} has showed that GANs can achieve recognisable audio within a few hours. We adopt the suggestions of these papers, lengthening one-dimensional convolution kernels on both the generator and discriminator. The Generator model is fully convolutional, upsampled using strided transposed convolutions with batchnormalisation in the first layer and ReLU activations throughout with the exception of Tanh for the output layer. Each transposed convolutional layer uses a kernel size of 18x1 and stride 2. The discriminator network mirrors that of the generator without batch normalization, using LeakyReLU activations, SpatialDropout, and a 2-stride convolution for downsampling. The discriminator has two output layers: the first output is a single node activated by a Sigmoid that can be interpreted as the realness of the the signal, the second output is 5 nodes activated using the softmax function predicting the class of the input. This model is trained with binary cross entropy for the first output and sparse categorical cross-entropy for the second output.
@@ -252,7 +445,7 @@ and class space locations.
 \end{itemize}
 \end{comment}
 
-Given a 100 dimensional vector drawn from a normal distribution, a class label and sky localisation information, the GAN is able to generate burst-like waveforms  generalised from the training set. We set out by describing the quality of generated waveforms and how they compare to the training set. We then explore the structure of the latent and class spaces by interpolating between points in these spaces. We test vector arithmetic that can be used to generate a new breed of signal by merging two or more families together. Finally, we discuss the capacity of the discriminator as a GW burst classifier and the auxiliary component of this work. 
+Given a 100 dimensional vector drawn from a normal distribution, a class label and sky localisation information, the GAN is able to generate burst-like waveforms  generalised from the training set. We set out by describing the quality of generated waveforms and how they compare to the training set. We then explore the structure of the latent and class spaces by interpolating between points in these spaces. We test vector arithmetic that can be used to generate a new breed of signal by merging two or more families together. Finally, we discuss the capacity of the discriminator as a \ac{GW} burst classifier and the auxiliary component of this work. 
 
 \subsection{Waveform quality}
 The generator network is a function G : $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ $\in$ $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024\times2}$, where $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ are the latent vector, class embedding vector and sky positions respectively. Given a latent vector randomly sampled from a normal distribution with zero mean and unit variance, a class label which is represented by a 120 dimensional vector for each class and antenna responses, the results from the generator can be seen in Figure \ref{fig:gen_signals}. Depending on the orientation of the detector with respect to a hypothetical signal in the sky, the waveforms may appear inverted, shifted in time and their strain attenuated. Each plot shows the output of the generator after given randomised $\mathbf{z}, \mathbb{\textbf{s}}$ and one of the five class vectors $\mathbf{c}$.
@@ -341,7 +534,7 @@ In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In this work we present the potential of Generative Adversarial Networks for burst gravitational wave analysis. We have shown that GANs have the ability to generate 5 class varieties of modelled burst GW signals that can be generated at whim. The latent and class spaces were explored through interpolation and suggest that the space provides smooth translations between classes and overall waveform shape. We then showed targeted waveform generation by mixing classes to produce new unmodlled waveform varieties that can be used to test current burst search pipelines. \jordan{couple of sentences about classifier}. 
+In this work we present the potential of Generative Adversarial Networks for burst gravitational wave analysis. We have shown that GANs have the ability to generate 5 class varieties of modelled burst \ac{GW} signals that can be generated at whim. The latent and class spaces were explored through interpolation and suggest that the space provides smooth translations between classes and overall waveform shape. We then showed targeted waveform generation by mixing classes to produce new unmodlled waveform varieties that can be used to test current burst search pipelines. \jordan{couple of sentences about classifier}. 
 
 In order to extend this work to a viable burst wave generator and classifier a few points require further research. In principle it is trivial to add another detector inside the response layer \jordan{response is the wrong thing to say since the time delay isnt really a response, extrinsic layer? just non trainable layer? The box?}, however, as this now 3 dimensional signal is feed to the discriminator this will no doubt require further tweaking of the network. We can add more burst-like wave forms in the training set, like detector glitches which would similarly require further network design. The work presented here is noise free. To havea complete generation and detection package we would like to train the network on signals hidden in additive Gaussian noise and test the ability of the auxiliary classifier. 
 
