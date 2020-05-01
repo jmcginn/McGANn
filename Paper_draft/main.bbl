@@ -1,0 +1,117 @@
+\providecommand{\newblock}{}
+\begin{thebibliography}{10}
+\expandafter\ifx\csname url\endcsname\relax
+  \def\url#1{{\tt #1}}\fi
+\expandafter\ifx\csname urlprefix\endcsname\relax\def\urlprefix{URL }\fi
+\providecommand{\eprint}[2][]{\url{#2}}
+% Bibliography created with iopart-num v2.0
+% /biblio/bibtex/contrib/iopart-num
+
+\bibitem{Abbott2016}
+Abbott B {\em et~al.\/} 2016 {\em Physical Review Letters\/} {\bf 116} 061102
+  ISSN 0031-9007
+
+\bibitem{Prospects-dets}
+Abbott B {\em et~al.\/} (KAGRA, LIGO Scientific, VIRGO) 2018 {\em Living Rev.
+  Rel.\/} {\bf 21} 3 (\textit{Preprint} \eprint{1304.0670})
+
+\bibitem{AdvLIGO}
+Aasi J {\em et~al.\/} (LIGO Scientific) 2015 {\em Class. Quant. Grav.\/} {\bf
+  32} 074001 (\textit{Preprint} \eprint{1411.4547})
+
+\bibitem{AdvLIGO2}
+Harry G~M (LIGO Scientific) 2010 {\em Class. Quant. Grav.\/} {\bf 27} 084006
+
+\bibitem{AdvVIRGO}
+Acernese F {\em et~al.\/} (VIRGO) 2015 {\em Class. Quant. Grav.\/} {\bf 32}
+  024001 (\textit{Preprint} \eprint{1408.3978})
+
+\bibitem{Abbott2016a}
+Abbott B {\em et~al.\/} 2016 {\em Physical Review Letters\/} {\bf 116} 241103
+  ISSN 0031-9007
+
+\bibitem{Abbott2017}
+Abbott B~P {\em et~al.\/} 2017 {\em The Astrophysical Journal Letters\/} {\bf
+  851} L35 ISSN 2041-8205
+
+\bibitem{Abbott2017a}
+Abbott B {\em et~al.\/} 2017 {\em Physical Review Letters\/} {\bf 118} 221101
+  ISSN 0031-9007
+
+\bibitem{Abbott2017b}
+Abbott B {\em et~al.\/} 2017 {\em Physical Review Letters\/} {\bf 119} 161101
+  ISSN 0031-9007
+
+\bibitem{Owen1998}
+Owen B~J and Sathyaprakash B~S 1998 {\em {Matched filtering of gravitational
+  waves from inspiraling compact binaries: Computational cost and template
+  placement}\/} (\textit{Preprint} \eprint{9808076})
+
+\bibitem{Klimenko_2008}
+Klimenko S {\em et~al.\/} 2008 {\em Classical and Quantum Gravity\/} {\bf 25}
+  114029
+
+\bibitem{Aso_2008}
+Aso Y {\em et~al.\/} 2008 {\em Classical and Quantum Gravity\/} {\bf 25} 114039
+
+\bibitem{Gabbard2017}
+Gabbard H {\em et~al.\/} 2017 {\em {Matching matched filtering with deep
+  networks in gravitational-wave astronomy}\/} (\textit{Preprint}
+  \eprint{1712.06041})
+
+\bibitem{gabbard2019bayesian}
+Gabbard H {\em et~al.\/} 2019 Bayesian parameter estimation using conditional
+  variational autoencoders for gravitational-wave astronomy (\textit{Preprint}
+  \eprint{1909.06296})
+
+\bibitem{Goodfellow2014}
+Goodfellow I {\em et~al.\/} 2014 {\em Advances in Neural Information Processing
+  Systems 27\/} ISSN 10495258
+
+\bibitem{brock2018large}
+Brock A, Donahue J and Simonyan K 2018 Large scale gan training for high
+  fidelity natural image synthesis (\textit{Preprint} \eprint{1809.11096})
+
+\bibitem{karras2019analyzing}
+Karras T {\em et~al.\/} 2019 Analyzing and improving the image quality of
+  stylegan (\textit{Preprint} \eprint{1912.04958})
+
+\bibitem{reed2016generative}
+Reed S {\em et~al.\/} 2016 Generative adversarial text to image synthesis
+  (\textit{Preprint} \eprint{1605.05396})
+
+\bibitem{liang2017dual}
+Liang X {\em et~al.\/} 2017 Dual motion gan for future-flow embedded video
+  prediction (\textit{Preprint} \eprint{1708.00284})
+
+\bibitem{esteban2017realvalued}
+Esteban C, Hyland S~L and Rätsch G 2017 Real-valued (medical) time series
+  generation with recurrent conditional gans (\textit{Preprint}
+  \eprint{1706.02633})
+
+\bibitem{Nash1950}
+Nash J~F 1950 {\em Proceedings of the National Academy of Sciences\/} {\bf 36}
+  48--49 ISSN 0027-8424
+
+\bibitem{cgan}
+Mirza M and Osindero S 2014 {\em CoRR\/} {\bf abs/1411.1784} (\textit{Preprint}
+  \eprint{1411.1784})
+
+\bibitem{odena2016conditional}
+Odena A, Olah C and Shlens J 2016 Conditional image synthesis with auxiliary
+  classifier gans (\textit{Preprint} \eprint{1610.09585})
+
+\bibitem{Radford2015}
+Radford A, Metz L and Chintala S 2015 {\em {Unsupervised Representation
+  Learning with Deep Convolutional Generative Adversarial Networks}\/}
+  (\textit{Preprint} \eprint{1511.06434})
+
+\bibitem{DBLP:journals/corr/abs-1809-11096}
+Brock A, Donahue J and Simonyan K 2018 {\em CoRR\/} {\bf abs/1809.11096}
+  (\textit{Preprint} \eprint{1809.11096})
+
+\bibitem{lalsuite}
+{LIGO Scientific Collaboration} 2018 {LIGO} {A}lgorithm {L}ibrary - {LALS}uite
+  free software (GPL)
+
+\end{thebibliography}

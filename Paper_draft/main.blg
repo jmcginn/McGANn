@@ -1,0 +1,48 @@
+This is BibTeX, Version 0.99d (TeX Live 2019)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: main.aux
+The style file: iopart-num_custom.bst
+Database file #1: iopart-num.bib
+Reallocated str_pool (elt_size=1) to 130000 items from 65000.
+Reallocated wiz_functions (elt_size=4) to 6000 items from 3000.
+You've used 26 entries,
+            3031 wiz_defined-function locations,
+            781 strings with 100481 characters,
+and the built_in function-call counts, 16684 in all, are:
+= -- 1751
+> -- 246
+< -- 0
++ -- 152
+- -- 84
+* -- 1090
+:= -- 1890
+add.period$ -- 0
+call.type$ -- 26
+change.case$ -- 8
+chr.to.int$ -- 0
+cite$ -- 26
+duplicate$ -- 1574
+empty$ -- 1686
+format.name$ -- 77
+if$ -- 3788
+int.to.chr$ -- 0
+int.to.str$ -- 26
+missing$ -- 217
+newline$ -- 88
+num.names$ -- 26
+pop$ -- 492
+preamble$ -- 1
+purify$ -- 0
+quote$ -- 0
+skip$ -- 228
+stack$ -- 0
+substring$ -- 2210
+swap$ -- 518
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 0
+warning$ -- 0
+while$ -- 224
+width$ -- 28
+write$ -- 228

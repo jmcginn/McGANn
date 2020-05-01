@@ -45,9 +45,11 @@
 \usepackage{pifont}
 \usepackage{comment}
 \usepackage{acronym}
-%\usepackage{subcaptncluon}
+\usepackage{standalone}
+%\usepackage{import}
+\usepackage{subfig}
 \usepackage{tikz}
-\usetikzlibrary{shapes.geometric, arrows, calc}
+\usetikzlibrary{decorations.pathreplacing,angles,quotes,shapes.geometric, arrows,calc}
 \expandafter\let\csname equation*\endcsname\relax 
 \expandafter\let\csname endequation*\endcsname\relax 
 \usepackage{amsmath}
@@ -61,19 +63,19 @@
 \newcommand{\chris}[1]{\textbf{\textcolor{green}{CHRIS: #1}}}
 \newcommand{\michael}[1]{\textbf{\textcolor{orange}{MICHAEL: #1}}}
 \newcommand{\dcc}{LIGO-PXXXXXXX}
-\input{tag.tex}
+%\input{tag.tex}
 \begin{document}
 
 \title{Generalised gravitational burst generation with Generative Adversarial Networks}
 
-\author{J. McGinn, C. Messenger, I.S. Heng}
+\author{J. McGinn, C. Messenger, I.S. Heng, M. Williams}
 
 \address{University of Glasgow, Physics \& Astronomy Department, Glasgow G12 8QQ, UK}
 %\ead{jordan.mcginn@glasgow.ac.uk}
 \vspace{10pt}
-\begin{indented}
-\item[]\commitDATE\\\mbox{\small \commitID}\\\mbox{\dcc}
-\end{indented}
+%\begin{indented}
+%\item[]\commitDATE\\\mbox{\small \commitID}\\\mbox{\dcc}
+%\end{indented}
 
 \begin{abstract}
 The next generation of Gravitational wave detectors will accelerate the number
@@ -130,8 +132,8 @@ an introduction \ding{51}
 \ac{GW} astronomy is now an established field, starting with the first
 detection of a binary black hole merger \cite{Abbott2016} in September 2015.
 Following this, the first and second observations runs (O1 and O2) of Advanced
-LIGO and Advanced Virgo~\chris{need refs for the detectors, see here
-https://pnp.ligo.org/ppcomm/standard\_references.html} reported several more
+LIGO and Advanced Virgo \cite{Prospects-dets, AdvLIGO, AdvLIGO2, AdvVIRGO} ~\chris{need refs for the detectors, see here
+https://pnp.ligo.org/ppcomm/standard\_references.html} ~\jordan{\ding{51}} reported several more
 mergers \cite{Abbott2016a, Abbott2017, Abbott2017a, Abbott2017b}. On August
 2017 a binary neutron star merger was observed alongside its electromagnetic
 counterpart for the first time, giving rise to multimessenger gravitational
@@ -144,26 +146,24 @@ waveforms are not accurately modelled or are complex to re-produce.
 Astrophysical sources for such transients include: Core collapse supernova,
 Neutron star instabilities, Fallback accretion onto a neutron star, Non
 axisymetric deformation in magnetars, Pulsar glitches and Neutron star
-post-mergers.  As \ac{GW} bursts are un-modelled they are not sensitive to
-template based detection schemes~\chris{OK, but logically dodgy. You make it
+post-mergers. Currently, \ac{GW}s are detected using matched filtering, \cite{Owen1998} a process which requires template banks of possible GW signals. As \ac{GW} bursts are un-modelled there are no templates available and so these signals are undetectable through this scheme. ~\chris{OK, but logically dodgy. You make it
 sound like we could use a template scheme but it would be insensitive. The
-point is that we don't have templates in the first place.} such as
-matched-filtering \cite{Owen1998}, instead, detection involves distinguishing
+point is that we don't have templates in the first place.} \jordan{changed this but still reads clunky} Instead, detection involves distinguishing
 the signal from detector noise. This is only possible if the detector noise is
 well characterised and the candidate signal can be differentiated from
 systematic or environmental glitches. As such, \ac{GW} burst searches rely on
-an astrophysical burst signature appearing in multiple detectors~\chris{at
-similar times?}.  
+an astrophysical burst signature appearing in multiple detectors at similar times. ~\chris{at
+similar times?}. \ding{51}  
 
 % Discuss the family of burst waveforms currently used and why - not in detail, just
 % an introduction 
 %
-Many \ac{GW} burst algorithms \cite{Klimenko_2008, Aso_2008}~\chris{many? needs
+\ac{GW} burst algorithms \cite{Klimenko_2008, Aso_2008}~\chris{many? needs
 more than 2 refs for many.} are tested and tuned using model waveforms that may
 or may not have astrophysical significance but have easy to define parameters
-and share characteristics of real bursts that is enough to simulate coincident
-non-stationary deviations~\chris{fancy sounding but I'm not sure what
-non-stationary deviations means.} between detectors. Such waveforms may have
+and share characteristics of real bursts that is enough to simulate a \ac{GW} passing ~\chris{fancy sounding but I'm not sure what
+non-stationary deviations means.} between detectors. 
+\begin{comment}Such waveforms may have
 long-duration, short bandwidth (ringdowns), long-duration, large bandwidth
 (inspirals) and many algorithms make use of sine-Gaussians: a Gaussian
 modulated sine wave that is characterised by it's central frequency and narrow
@@ -172,18 +172,24 @@ Also, be careful with satying things like ringdowns have narrow bandwidth. I
 know we specify a single frequency but becuase of the short duration, the
 signal is broad band. Look at the FFT} This makes it a great tool for
 diagnosing LIGOs sensitivity to frequency.~\chris{strange unfinished sentence.} 
+\end{comment}
 
 % Introduce ML techniques in GWs
 %
 \chris{Introduce ML techniques in GWs}
 
+With the expectation that there will be many more \ac{GW} detections in the future, researches are starting to realise the need for fast and efficient \ac{GW} analysis to compete with the rising number of detections. Machine learning has shown great potential for \ac{GW} analysis in areas of detection \cite{george2016deep,Gabbard2017,Gebhard_2019,Krastev_2020}, glitch classification \cite{Bahaadini, George_2018,Razzano_2018} and parameter estimation \cite{gabbard2019bayesian,shen2019deterministic,green2020gravitationalwave}. Applying these machine learning algorithms show similar results to matched filtering techniques and have the benefit of being orders of magnitude faster. 
+
 % What this paper does on GANs in 1 paragraph
 %
 \chris{What this paper does on GANs in 1 paragraph}
-
+In this work we aim to explore the use of machine learning to generate and interpret
+unmodelled \ac{GW} burst waveforms. \jordan{i haven't mentioned gans yet do i explain it here briefly?}
 % the point of the paper
 %
 \chris{describe the structure of the paper}
+This paper is organised as follows: \jordan{unstructured at the moment}
+
 We aim to explore the use of machine learning in generating and interpreting
 these mock \ac{GW} burst signals. Neural networks have shown to replicate the
 sensitivities of matched filtering in \ac{GW} detection \cite{Gabbard2017} and rapid
@@ -195,6 +201,7 @@ paragrpah to GW ML efforts. The final paragrapgh of the section should
 introduce the paper structure. The penultimate paragraph should expain what the
 point of this paper is - in non technical terms. This is all outlined in the
 bullet points (hidden) at the start of this section.} 
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generative Adversarial Networks}
@@ -213,8 +220,37 @@ here - motivate this choice. \ding{51}
 
 % introduce GANs
 %
-A subset of deep learning that has seen fruitful development in recent years
-\cite{Goodfellow2014} is \acp{GAN}. These unsupervised algorithms learn
+\subsection{Artificial neural networks}
+
+\begin{figure}
+    \begin{minipage}[b]{0.3\linewidth}
+        \subfloat[]{\label{fig:perceptron}\includegraphics[width=\linewidth,height=0.65\linewidth]{figures/neural_network-figure0.pdf}}
+        \par
+        \vspace{\baselineskip}
+        \subfloat[]{\label{fig:tanh_activation}\includegraphics[width=\linewidth,height=0.65\linewidth]{figures/neural_network-figure1.pdf}}
+    \end{minipage}
+        \begin{minipage}[b]{0.7\linewidth}
+        \subfloat[]{\label{fig:neural_network}\includegraphics[width=\linewidth,height=0.65\linewidth]{figures/neural_network-figure2.pdf}}
+    \end{minipage}
+    \caption{Neural Networks (a) A single neuron taking a vector of inputs and returning a singular output based on the weights, bias and activation function of the network. (b) The hyperbolic tangent used as an activation function. (c) A fully connected neural network containing two hidden layers that performs a mapping of an input vector to a singular output.}
+\end{figure}
+
+Since the birth of programmable computers, people have wondered if machines can develop true intelligence beyond formal mathematical procedures. Today, Machine Learning (ML) aims to learn apparent relationships held within the given data or `training data' in order to make accurate predictions without the need for additional programming . A common approach in ML relies on the computer learning on past experience to make decisions on future events. The hierarchical nature of this approach means that the machine can build complicated concepts from simpler ones. This branch of AI is called deep learning.
+Neural networks are the quintessential machine learning algorithm that aims to approximate a function. They are built from many single processing units called neurons. The simpliest Neural Network is the perceptron layer Figure \ref{fig:perceptron} which holds a single neuron that takes several real inputs $x_{1}, ... , x_{i}$ and maps them to an output according to the following linear equation: 
+
+\begin{equation}
+\sigma(\sum_i w_i x_i + b)
+\label{eqn:neuron}
+\end{equation}
+where $w$ and $b$ are the weights and bias and $\sigma$ denotes the activation function. The weights are numbers which can be thought as the strength between connections. The output of a neuron is called its activation. Different choices of activation functions allow the user to simulate various models. A common example of an activation function is the hyperbolic tangent Figure \ref{fig:tanh_activation} that is used when the outputs of the network must be both positive and negative and re-scaled to $[-1,1]$. It is often useful to introduce a bias, $b$, such that the neuron remains inactive above zero but is active when the sum reaches a defined threshold. This bias is added before the activation function and it tells us how high the weighted sum needs to be before the neuron becomes active.
+
+The output of a single neuron is defined by \ref{eqn:neuron} and gives a prediction $\hat{y}$ that can be compared to the real value $y$ through a cost or loss function. If the loss is non-zero, the network must work to minimise this function by updating the weights in the negative direction of the loss gradient in a process referred to as gradient descent. This loss function plays a critical role in how neural networks learn.
+
+A neural network contains many single neurons connected in a layered structure as shown in Figure \ref{fig:neural_network}. The activations of the first layer (or input layer) act as the inputs to the second layer and so on until the output layer. Multilayered neural networks have intermediate layers between the input and output stages dubbed the hidden layers as the computations performed are not accessible to the user. The network can be thought of as a function F: $\mathbb{R}^N\rightarrow \mathbb{R}^M $ reliant on how activations from one layer bring activations in the next. The system is analogous to biology, where, some groups of neurons in animal brains cause certain others to fire. 
+
+\subsection{GANs}
+
+A subset of deep learning that has seen fruitful development in recent years is \acp{GAN} \cite{Goodfellow2014}. These unsupervised algorithms learn
 patterns in a given training data set using an adversarial process. The
 generations from \acp{GAN} are state-of-the-art in fields such as high quality image
 fidelity \cite{brock2018large,karras2019analyzing}, text-to-image translation
@@ -226,69 +262,77 @@ time series generations \cite{esteban2017realvalued}.
 \acp{GAN} train two competing neural networks, consisting of a discriminator
 that is set up to distinguish between real and fake data and a generator that
 produces synthetic reproductions of the real data. The generator performs a
-mapping from an input noise vector $\mathbf{z}$ to its representation of the
+mapping from an input noise vector $\mathbf{z}$, that is usually sampled from a n-dimensional Gaussian space known as the latent space, to its representation of the
 data and the discriminator maps its input $\mathbf{x}$ to a probability that
 the input came form either the training data or generator.  During training,
 the discriminator is given a batch of samples that contains one half real data
 and one half fake data which it then makes predictions on. The loss for the
 discriminator is calculated by comparing its predictions to the labelled data
-through the binary cross-entropy function. The training process of a \ac{GAN}
+through the binary cross-entropy function. \jordan{note to myself: This is important since eqn 2 is derived from it (thats where the logs come from)} The training process of a \ac{GAN}
 alternatively updates the weights~\chris{too much knowledge assumed - what are
-weights, they haven't been defined} of the discriminator and generator based on
+weights, they haven't been defined} \jordan{defined above but went on a bit, should i go into back prop and optimizers?} of the discriminator and generator based on
 information on its competitors loss function. This loss of discriminator is
 used to update the weights of the generator to produce more realistic samples
-of the input distribution, the loss of G~\chris{what is G?} encourages the
-discriminator to update its classification abilities. Both networks compete in
+of the input distribution, the loss of the generator encourages the
+discriminator to update its classification abilities. GANs seek to find an equilibrium between the generator and discriminator in the form of a two-player game that can be summarised by the following:  
+
+\begin{comment}
+Both networks compete in
 a minimax game~\chris{what is a minimax game? references?} which the generator
 is trying to minimise and the discriminator is trying to
 maximise:~\chris{nicely written, however, it needs an extra 25\% explanation
 for people not familar with ML or GANs in particular. Try to spell things out
 more. Also refer to Fig 1 somewhere in this section.}
+\end{comment}
 %
 \begin{equation}
 \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x} \sim p_{\text{r}}(\mathbf{x})} [\text{log} D(\mathbf{x})] \\ + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z})} [\text{log}(1-D(G(\mathbf{z})))]
 \label{equation:GANloss}
 \end{equation}
+
+where, V is an objective function that is to be optimized. Objective functions are a general term for either a loss function (to be minimized) or a negative loss function (to be maximised). D is the discriminator, G is the generator and ${\mathbf{x} \sim p_{\text{r}}(\mathbf{x})}$, ${\mathbf{z} \sim p_{\text{z}}(\mathbf{z})}$ are samples taken from the training data and generated data respectfully. In practice this approach was found to be unstable. Early on in training the generators weights are initialised randomly meaning that the early generations are noisy and uninformative. This means that the discriminator can easily learn to spot the fake generations and so the discriminator wins and the generator cannot continue to improve. To overcome this the framing of the generator is often changed. Rather than minimizing $\text{log}(1-D(G(\mathbf{z})))$ the objective now is to maximise $\text{log}(D(G(\mathbf{z})))$, that is, to maximise the probability of the generations being predicted as real. The idea being that we always want the loosing side to be able to leverage from its competitor. 
 %
 ~\chris{In line with explanding the explanation a bit more, really take the time
 to state what controls the functions and also deine ALL mathematical variables.
 What are $D, G, V\ldots$ Why are you taking the logs? What situation so you
 start with? What do you end up with? This is a nice start but beef it up.}
 
-\subsection{Auxiliary conditional GANs}
-
 % describing the problems with GANs 
 %
 In theory, the adversarial process will eventually lead to the local Nash
 equilibrium \cite{Nash1950} whereby both neural networks are trained
-optimally~\chris{this statement and this paragraph should be stated in the
-previous section}.  In practice, however, \acp{GAN} are notoriously difficult
+optimally. In practice, however, \acp{GAN} are notoriously difficult
 to train. Such difficulties include: Non-convergence, where the model
-parameters~\chris{you haven't stated what the model parameters are yet}
-oscillate and the loss~\chris{the reader soes not know what the loss is and
-what the point of it is} never converges, mode collapse where G produces a
-limited diversity of samples~\chris{samples of what?}, and diminishing
-gradients when applying gradient descent to a non-continuous
-function~\chris{not sure about what non-continuous means here but in general
-you are bringing in too many concepts without explanation e.g., gradient
-descent, why is that relevant? the reader does not know.}. 
+parameters oscillate and the loss never converges, mode collapse where the generator produces a
+limited diversity of samples, and diminishing
+gradients when applying gradient descent to a loss function that is discontinuous.
+
+\subsection{Conditional GANs}
 
 % introduce CGANs and ACGANs
 %
-To overcome some of these difficulties, a conditional variant of \acp{GAN}
-named \acp{CGAN}~\cite{cgan} adds structure to the latent space~\chris{what is
-the latent space - you called it an input noise vector before} by providing the
+To gain more control over what a GAN is able to generate, a conditional variant of \acp{GAN} named \acp{CGAN}~\cite{cgan} was introduced by feeding in extra information into the generator and discriminator such as a class label or attribute label, c. The objective function is then modified:
+\begin{equation}
+\mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x,c} \sim p_{\text{r}}(\mathbf{x,c})} [\text{log} D(\mathbf{x,c})] \\ + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z}),\mathbf{c} \sim p_{\text{r}}(\mathbf{c})} [\text{log}(1-D(G(\mathbf{z,c})))]
+\label{equation:cGANloss}
+\end{equation}
+
+%
+\begin{comment}adds structure to the latent space by providing the
 generator with a class or attribute label. The generator learns to segment the
 latent space by clustering distributions which have similar properties, making
 a point in latent space conditional on a class~\chris{are we sure about this?
 all classes share the same latent space and I don't think that the space gets
 segmented into areas corresponding to different classes - I do think that it
 gets broken down into spaces with different intrinsic physical properties e.g.,
-high frequency, long duration, etc...}. This idea was extended further with
+high frequency, long duration, etc...}.
+\end{comment}
+%
+This idea was extended further with
 \acp{ACGAN}~\cite{odena2016conditional} that require the discriminator to
 output a probability of data belonging to each class. A pictorial
 representation on the differences between these approaches is shown in
-Fig.~\ref{fig:gan_comparison}. 
+Fig.~\ref{fig:gan_comparison} \jordan{self note: Probably move away from ACGAN part, standalone aux classifiers can be trained later if that's what you want}. 
 
 \begin{figure}
     \centering
