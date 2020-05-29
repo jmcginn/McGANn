@@ -46,15 +46,20 @@
 \usepackage{comment}
 \usepackage{acronym}
 \usepackage{standalone}
+\usepackage{academicons}
+\usepackage{scalerel}
+\usepackage{layouts}
 %\usepackage{import}
 \usepackage{subfig}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing,angles,quotes,shapes.geometric, arrows,calc}
+\usetikzlibrary{svg.path}
 \expandafter\let\csname equation*\endcsname\relax 
 \expandafter\let\csname endequation*\endcsname\relax 
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{hyperref}
+\usepackage[capitalize]{cleveref}
 \newcommand{\gguide}{{\it Preparing graphics for IOP Publishing journals}}
 %Uncomment next line if AMS fonts required
 %\usepackage{iopams}  
@@ -64,11 +69,35 @@
 \newcommand{\michael}[1]{\textbf{\textcolor{orange}{MICHAEL: #1}}}
 \newcommand{\dcc}{LIGO-PXXXXXXX}
 %\input{tag.tex}
+% Command for ORCID id's
+\definecolor{orcidlogocol}{HTML}{A6CE39}
+\tikzset{
+  orcidlogo/.pic={
+    \fill[orcidlogocol] svg{M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z};
+    \fill[white] svg{M86.3,186.2H70.9V79.1h15.4v48.4V186.2z}
+                 svg{M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z}
+                 svg{M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1C84.2,46.7,88.7,51.3,88.7,56.8z};
+  }
+}
+
+\newcommand\orcidicon[1]{\href{https://orcid.org/#1}{\mbox{\scalerel*{
+\begin{tikzpicture}[yscale=-1,transform shape]
+\pic{orcidlogo};
+\end{tikzpicture}
+}{|}}}}
+
+\usepackage{hyperref} %<--- Load after everything else
+
 \begin{document}
 
 \title{Generalised gravitational burst generation with Generative Adversarial Networks}
 
-\author{J. McGinn, C. Messenger, I.S. Heng, M. Williams}
+\author{
+    J. McGinn \orcidicon{0000-0000-0000-0000},
+    C. Messenger \orcidicon{0000-0001-7488-5022},
+    I.S. Heng \orcidicon{0000-0000-0000-0000},
+    M. J. Williams \orcidicon{0000-0003-2198-2974}
+}
 
 \address{University of Glasgow, Physics \& Astronomy Department, Glasgow G12 8QQ, UK}
 %\ead{jordan.mcginn@glasgow.ac.uk}
@@ -114,6 +143,7 @@ Generative adversarial networks - a powerful class of machine learning.
 
 
 \section{Introduction}
+textwidth in inches: \printinunitsof{in}\prntlen{\textwidth}
 \begin{comment}
 \begin{itemize}
 \item Need to introduce GWs - the current state of the field e.g. detections
@@ -145,7 +175,7 @@ waveforms are not accurately modelled or are complex to re-produce.
 Astrophysical sources for such transients include: Core collapse supernova,
 Neutron star instabilities, Fallback accretion onto a neutron star, Non
 axisymetric deformation in magnetars, Pulsar glitches and Neutron star
-post-mergers. 
+post-mergers. \michael{Might be worth citing some sources for this statement}
 
 GW detections so far have used a process called matched filtering, \cite{Owen1998}, where a large template bank of possible GW waveforms are compared to the detector outputs. In order to increase the chances of detection these template banks must span a large multi dimensional parameter space and the templates must be accurate, requiring significant computational cost.  GW bursts are un-modelled; therefore there are no templates available and so these signals are undetectable through this scheme. Instead, detection involves distinguishing
 the signal from detector noise. Burst searches look for excess power contained in the time-frequency domain and rely on the astrophysical burst waveform appearing in multiple detectors at similar times. This is only possible if the detector noise is
@@ -173,7 +203,7 @@ diagnosing LIGOs sensitivity to frequency.~\chris{strange unfinished sentence.}
 % Introduce ML techniques in GWs
 %
 
-With the expectation that there will be many more \ac{GW} detections in the future, researches are starting to realise the need for fast and efficient \ac{GW} analysis to compete with the rising number of detections. While still in its infancy, Machine Learning (ML) with GW has already shown great potential for overcoming data bottlenecks. \ac{GW} analysis in areas of detection \cite{george2016deep,Gabbard2017,Gebhard_2019,Krastev_2020}, glitch classification \cite{Bahaadini, George_2018,Razzano_2018} and parameter estimation \cite{gabbard2019bayesian,shen2019deterministic,green2020gravitationalwave} have shown the success of in ML pattern recognition. Applying these algorithms show similar results to matched filtering techniques and have the benefit of being orders of magnitude faster. 
+With the expectation that there will be many more \ac{GW} detections in the future, researches are starting to realise the need for fast and efficient \ac{GW} analysis to compete with the rising number of detections. While still in its infancy, Machine Learning (ML) with GW has already shown great potential for overcoming data bottlenecks. \ac{GW} analysis in areas of detection \cite{Gabbard2017,Gebhard_2019,Krastev_2020}, glitch classification \cite{Bahaadini, George_2018,Razzano_2018} and parameter estimation \cite{gabbard2019bayesian,shen2019deterministic,green2020gravitationalwave} have shown the success of in ML pattern recognition. Applying these algorithms show similar results to matched filtering techniques and have the benefit of being orders of magnitude faster. 
 
 % What this paper does on GANs in 1 paragraph
 %
@@ -215,21 +245,21 @@ here - motivate this choice. \ding{51}
         \begin{minipage}[b]{0.7\linewidth}
         \subfloat[]{\label{fig:neural_network}\includegraphics[width=\linewidth,height=0.65\linewidth]{figures/neural_network-figure2.pdf}}
     \end{minipage}
-    \caption{Neural Networks (a) A single neuron taking a vector of inputs and returning a singular output based on the weights, bias and activation function of the network. (b) The hyperbolic tangent used as an activation function. (c) A fully connected neural network containing two hidden layers that performs a mapping of an input vector to a singular output.}
+    \caption{Neural Networks (a) A single neuron taking a vector of inputs and returning a singular output based on the weights, bias and activation function of the network. (b) The hyperbolic tangent used as an activation function. (c) A fully connected neural network containing two hidden layers that performs a mapping of an input vector to a singular output. \michael{Equation in the neuron looks very small}}
 \end{figure}
 
 Since the birth of programmable computers, people have wondered if machines can develop true intelligence beyond formal mathematical procedures. Today, ML aims to learn apparent relationships held within the given data or `training data' in order to make accurate predictions without the need for additional programming . A common approach in ML relies on the computer learning on past experience to make decisions on future events. The hierarchical nature of this approach means that the machine can build complicated concepts from simpler ones. This branch of AI is called deep learning.
-Neural networks are the quintessential machine learning algorithm that aims to approximate a function. They are built from many single processing units called neurons. The simpliest Neural Network is the perceptron layer Figure \ref{fig:perceptron} which holds a single neuron that takes several real inputs $x_{1}, ... , x_{i}$ and maps them to an output according to the following linear equation: 
+Neural networks are the quintessential machine learning algorithm that aims to approximate a function. They are built from many single processing units called neurons. The simpliest Neural Network is the perceptron layer \cref{fig:perceptron} which holds a single neuron that takes several real inputs $x_{1}, ... , x_{i}$ and maps them to an output according to the following linear equation: 
 
 \begin{equation}
 \sigma(\sum_i w_i x_i + b)
 \label{eqn:neuron}
 \end{equation}
-where $w$ and $b$ are the weights and bias and $\sigma$ denotes the activation function. The weights are numbers which can be thought as the strength between connections. The output of a neuron is called its activation. Different choices of activation functions allow the user to simulate various models. A common example of an activation function is the hyperbolic tangent Figure \ref{fig:tanh_activation} that is used when the outputs of the network must be both positive and negative and re-scaled to $[-1,1]$. It is often useful to introduce a bias, $b$, such that the neuron remains inactive above zero but is active when the sum reaches a defined threshold. This bias is added before the activation function and it tells us how high the weighted sum needs to be before the neuron becomes active.
+where $w$ and $b$ are the weights and bias and $\sigma$ denotes the activation function. The weights are numbers which can be thought as the strength between connections. The output of a neuron is called its activation. Different choices of activation functions allow the user to simulate various models. A common example of an activation function is the hyperbolic tangent \cref{fig:tanh_activation} that is used when the outputs of the network must be both positive and negative and re-scaled to $[-1,1]$. It is often useful to introduce a bias, $b$, such that the neuron remains inactive above zero but is active when the sum reaches a defined threshold. This bias is added before the activation function and it tells us how high the weighted sum needs to be before the neuron becomes active.
 
-The output of a single neuron is defined by \ref{eqn:neuron} and gives a prediction $\hat{y}$ that can be compared to the real value $y$ through a cost or loss function. If the loss is non-zero, the network must work to minimise this function by updating the weights in the negative direction of the loss gradient in a process referred to as gradient descent. This loss function plays a critical role in how neural networks learn.
+The output of a single neuron is defined by \cref{eqn:neuron} and gives a prediction $\hat{y}$ that can be compared to the real value $y$ through a cost or loss function. If the loss is non-zero, the network must work to minimise this function by updating the weights in the negative direction of the loss gradient in a process referred to as gradient descent. This loss function plays a critical role in how neural networks learn.
 
-A neural network contains many single neurons connected in a layered structure as shown in Figure \ref{fig:neural_network}. The activations of the first layer (or input layer) act as the inputs to the second layer and so on until the output layer. Multilayered neural networks have intermediate layers between the input and output stages dubbed the hidden layers as the computations performed are not accessible to the user. The network can be thought of as a function F: $\mathbb{R}^N\rightarrow \mathbb{R}^M $ reliant on how activations from one layer bring activations in the next. The system is analogous to biology, where, some groups of neurons in animal brains cause certain others to fire. 
+A neural network contains many single neurons connected in a layered structure as shown in \cref{fig:neural_network}. The activations of the first layer (or input layer) act as the inputs to the second layer and so on until the output layer. Multilayered neural networks have intermediate layers between the input and output stages dubbed the hidden layers as the computations performed are not accessible to the user. The network can be thought of as a function F: $\mathbb{R}^N\rightarrow \mathbb{R}^M $ reliant on how activations from one layer bring activations in the next. The system is analogous to biology, where, some groups of neurons in animal brains cause certain others to fire. 
 
 \subsection{GANs}
 
@@ -354,7 +384,7 @@ of thumb decisions made
 \br
 \hline
  Waveform & Central frequency  & Decay & Central time epoch & Mass range \\
- & (Hz) & (s) & (s) & ($M_{\odot}$) \\
+ & (Hz) & (s) & (s) & ($\textrm{M}_{\odot}$) \\
 \mr
 Sine-Gaussian & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A  \\  
 Ringdown & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A \\
@@ -372,11 +402,11 @@ GW burst signals remain an unmodelled phenomenon, as such, current
 detection algorithms focus on waveforms signals appearing within multiple detectors We propose a
 signal generation scheme using \acp{GAN} trained on burst-like
 waveforms. BurstGAN is a conditional GAN that is trained on five signal morphology's spanning a range of prior
-parameters. The parameter ranges can be seen in Table \ref{Tab:training_parms} The families are: sine-Gaussian $h(t) = A \exp\bigg[ - \frac{(t-t_{0})^2}{\tau^2} \bigg] \sin (2 \pi f_0 (t-t_0))$, a sinusoidal wave with a Gaussian envelop characterised by a central frequency, $f_0$; Ring-down, $h(t) = A \exp \bigg[-\frac{(t-t_0)}{\tau}\bigg]\sin(2 \pi f_0 (t-t_0))$, with frequency $f_0$ and duration $\tau$, white-noise bursts, with bounded frequency bandwidth $\Delta f$ and duration $\tau$, gaussian pulse $h(t) = \exp(-\frac{t^2}{\tau^2})$ with duration $\tau$ and binary-black hole inspirals which are simulated using IMRPhenomD waveform \cite{Khan_2016} routine from
+parameters. The parameter ranges can be seen in \cref{Tab:training_parms} The families are: sine-Gaussian $h(t) = A \exp\left[ - (t-t_{0})^2 / \tau^2 \right] \sin (2 \pi f_0 (t-t_0))$, a sinusoidal wave with a Gaussian envelop characterised by a central frequency, $f_0$; Ring-down, $h(t) = A \exp \left[-{(t-t_0)} / {\tau} \right] \sin(2 \pi f_0 (t-t_0))$, with frequency $f_0$ and duration $\tau$, white-noise bursts, with bounded frequency bandwidth $\Delta f$ and duration $\tau$, gaussian pulse $h(t) = \exp(-t^2 / \tau^2)$ with duration $\tau$ and binary-black hole inspirals which are simulated using IMRPhenomD waveform \cite{Khan_2016} routine from
 LALSuite \cite{lalsuite} which models the
 inspiral, merger and ringdown of a \ac{BBH} waveform. The component masses lie
-in the range of [5,70]$M_{\odot}$ with zero spins
-and we fix m$_1$ $>$ m$_2$. The mass distribution is approximated by a power
+in the range of [5,70] $\textrm{M}_{\odot}$ with zero spins
+and we fix m$_1$ $>$ m$_2$ \michael{I think the exponentials look neater without using frac\{\}\{\}}. The mass distribution is approximated by a power
 law with index of 1.6 \cite{Abbott_2019}. The signals are generated using random right ascensions and
 declinations uniform over the sky and the inclinations are drawn from the
 cosine of a uniform distribution in the range [-1,1]. The peaks of the
@@ -435,7 +465,7 @@ first output is a single node activated by a Sigmoid that can be interpreted as
 the realness of the the signal, the second output is 5 nodes activated using
 the softmax function predicting the class of the input.  This model is trained
 with binary cross entropy for the first output and sparse categorical
-cross-entropy for the second output. The full architecture description can be seen in Table \ref{Tab:hyperparameters}.~\chris{OK, very technically tight but too
+cross-entropy for the second output. The full architecture description can be seen in \cref{Tab:hyperparameters}.~\chris{OK, very technically tight but too
 computer sciencey. Try to make it human readbale for a physicist and refer to
 the table of parameters in the appendix.}
 
@@ -445,9 +475,8 @@ Neural networks and subsequently \acp{GAN} have multiple parameters a developer
 can tune when designing the model and these are referred to as hyperparameters.
 The final network design used in this work comes from the use of trial and
 error and the initial designs influenced by the available literature. After
-tuning the multiple hyperparamters (Table~\ref{Tab:hyperparameters}), the GAN
-was trained for $6\times 10^5$ iterations~\chris{what is an iteration here?
-It's not an epoch right?} and takes $\Or$(1) day to train~\chris{trained on
+tuning the multiple hyperparamters (\cref{Tab:hyperparameters}), the GAN
+was trained for 1000 epochs and takes $\Or$(2) days to train. ~\jordan{talk about making D and G 'symmetric' increasing batch size, number of filters powers of 2, spatial dropout,no early stopping.} ~\chris{trained on
 what? Were there any major decisions made based on the trial and error process?
 Anything that was learned from your mistakes that might be useful to others?}.
 
@@ -462,7 +491,7 @@ distinct vector of a given size. The elements of these vectors are initialized
 randomly and tuned during training just like weights~\chris{I thought that they
 weren't trained. Are they definitely trained? Is this not just a single fully
 connected layer that turns 5 numbers into 120? How is it any different to
-that?}. This reduces computational cost as the sparse vectors containing mostly
+that?}. ~\jordan{each class is one number that is turned into 120 numbers, embedding keeps track of the 5x120 numbers and as its training similar classes are grouped together in the class space. This explains it better than i can: https://machinelearningmastery.com/what-are-word-embeddings/ } This reduces computational cost as the sparse vectors containing mostly
 zeros are not needed and allows related classes to cluster together. Once the
 networks are trained the learned embedding vectors can be extracted from the
 model and used as inputs to the generator. The benefit here is that the former
@@ -511,24 +540,25 @@ and class space locations.
 Given a 100 dimensional vector drawn from a normal distribution, a class label and sky localisation information, the GAN is able to generate burst-like waveforms  generalised from the training set. We set out by describing the quality of generated waveforms and how they compare to the training set. We then explore the structure of the latent and class spaces by interpolating between points in these spaces. We test vector arithmetic that can be used to generate a new breed of signal by merging two or more families together. Finally, we discuss the capacity of the discriminator as a \ac{GW} burst classifier and the auxiliary component of this work. 
 
 \subsection{Waveform quality}
-The generator network is a function G : $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ $\in$ $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024\times2}$, where $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ are the latent vector, class embedding vector and sky positions respectively. Given a latent vector randomly sampled from a normal distribution with zero mean and unit variance, a class label which is represented by a 120 dimensional vector for each class and antenna responses, the results from the generator can be seen in Figure \ref{fig:gen_signals}. Depending on the orientation of the detector with respect to a hypothetical signal in the sky, the waveforms may appear inverted, shifted in time and their strain attenuated. Each plot shows the output of the generator after given randomised $\mathbf{z}, \mathbb{\textbf{s}}$ and one of the five class vectors $\mathbf{c}$.
+The generator network is a function G : $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ $\in$ $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024\times2}$, where $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ are the latent vector, class embedding vector and sky positions respectively. Given a latent vector randomly sampled from a normal distribution with zero mean and unit variance, a class label which is represented by a 120 dimensional vector for each class and antenna responses, the results from the generator can be seen in \cref{fig:gen_signals}. Depending on the orientation of the detector with respect to a hypothetical signal in the sky, the waveforms may appear inverted, shifted in time and their strain attenuated. Each plot shows the output of the generator after given randomised $\mathbf{z}, \mathbb{\textbf{s}}$ and one of the five class vectors $\mathbf{c}$.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth]{figures/conditional_gens.pdf}
+    \includegraphics[width=\textwidth]{figures/gens+taining.eps}
     \caption{Generated waveforms after training and conditioning on five classes. The generator will output two waveforms as seen by detectors in Hanford (red) and Livingston (blue). The generator is able to capture the characteristics of each waveform and structure the class space to give control over which waveform to generate. Each row shows a random assortment of one of the five classes the GAN is trained on. }
     \label{fig:gen_signals}
 \end{figure}
+
 
 \subsection{Interpolation}
 Machine learning algorithms are often described as universal function approximators. In the generators case it maps samples drawn from a 100 dimensional Gaussian space to its representation of the training set. As with any function, there should be a one to one mapping from the domain and co-domain to allow for smooth transitions across the latent space. One advantage of using GANs as a waveform generator is that once it is trained, it can perform rapid generations faster than more intricate and computationally expensive algorithms. For complicated data sets, the network architecture must be diverse and dense enough to capture distinct variations from the training set. Most GANs perform well on relatively low resolution image generations, however, higher resolutions demand larger networks and long training times. GANs attempting to replicate complicated structures and do not have the necessary architecture either struggle to produce results at all or fall into the common failure mode know as mode collapse; where the generator produces a small variety of samples or simply memorises the training set. To test this, we perform linear interpolations in the latent and class space. 
 
 \subsection{Latent space interpolation}
-In this section we explore the latent space formed by the generator by interpolation. We take two random points in the latent space and linearly interpolate between them (six times inclusive). These new latent space vectors can now be fed into the generator to make predictions on while keeping the class vectors constant. The third input, the response values are kept constant for each class. The full effect shown in Figure \ref{fig:z_interp}. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth space unlike the discrete training case. Additionally as each class is given the same latent points to interpolate over, we can see that the waveforms cluster together with respect to their parameters. Visually, the sine-gaussian and ring-down waveforms share similar frequencies and the other signals show similar decays and starting epochs. The only exception is BBH waveforms, which is expected as they were trained with more variety of parameters and consistently have their peaks in the last quarter of the time series.
+In this section we explore the latent space formed by the generator by interpolation. We take two random points in the latent space and linearly interpolate between them (six times inclusive). These new latent space vectors can now be fed into the generator to make predictions on while keeping the class vectors constant. The third input, the response values are kept constant for each class. The full effect shown in \cref{fig:z_interp}. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth space unlike the discrete training case. Additionally as each class is given the same latent points to interpolate over, we can see that the waveforms cluster together with respect to their parameters. Visually, the sine-gaussian and ring-down waveforms share similar frequencies and the other signals show similar decays and starting epochs. The only exception is BBH waveforms, which is expected as they were trained with more variety of parameters and consistently have their peaks in the last quarter of the time series.
 
 \begin{figure}[ht]
     \centering
-    \includegraphics[width=\textwidth]{figures/z_interp_fix_c.pdf}
+    \includegraphics[width=\textwidth]{figures/z_interpolation.eps}
     \caption{Interpolations between two random latent points in z. Each row uniformly interpolates between two points in $\mathbf{z}$ keeping the class fixed. Only a single waveform from the generator is plotted and each signal is re-scaled to [-1,1] effectively removing the antenna responses for clarity.}
     \label{fig:z_interp}
 \end{figure}
@@ -538,16 +568,9 @@ In order to explore the class space we keep the latent vector held constant and 
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/4_c_interp.pdf}
-    \caption{Class space interpolation with latent space held constant throughout. The plots show a zoomed in section of the 1s time interval. Top row: Sine-Gaussian class to ringdown class, Middle Row: Sine-Gaussian class to whitenoise burst class, Bottom row: Sine-Gaussian class to Gaussian class.}
+    \includegraphics[width=\textwidth]{figures/class_interpolation.eps}
+    \caption{Class space interpolation with latent space held constant throughout. The plots show a zoomed in section of the 1s time interval. First row: Sine-Gaussian class to ringdown class, Second Row: Sine-Gaussian class to whitenoise burst class, Third row: Sine-Gaussian class to Gaussian class, Fourth row: Sine-Gaussian to BBH class.}
     \label{fig:c_interp}
-\end{figure}
-
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/sg_bbh_interp.pdf}
-    \caption{Class space interpolation with latent space held constant throughout. The full 1s interval is plotted for class based interpolations between a Sine-Gaussian and a BBH in spiral.}
-    \label{fig:sgbbh_interp}
 \end{figure}
 
 \begin{comment}
@@ -560,7 +583,7 @@ In order to explore the class space we keep the latent vector held constant and 
 \end{comment}
 
 \subsection{Vector Arithmetic}
-In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity face generation. They kept points in the latent space and performed simple vector arithmetic to generate new images. This allows for intuitive and targeted generation of images. However, the authors realised that single images vectors were unstable and there was a need to average three vectors before any arithmetic. DCGANs is unconditional, therefore, the vectors used were chosen empirically, generating many faces and choosing the attributes for study. Here, we show that this GAN only needs a single vector representation and due to conditioning we can have more control over which vectors to use in the arithmetic. In Figure \ref{fig:arithmetic} we generate a whitenoise burst and a BBH insprial using their respective class labels and use a randomised latent point and response. Keeping the latent point and response, we average the two class vectors and use this as input to the generator. Figure \ref{fig:arithmetic} (c) shows the generation based on the combined class vectors which visually looks similar to a supernova waveform. Supernova waveform generations require expensive numerical relativity simulations and various assumptions about the collapse of its parent star. Here, we are able to produce similar waves at a fraction of the expense and we are able to further modify the resultant by using different latent space samples. \jordan{this is the adding noise thing but i need to work out the correct way to do it with the directional vector}. 
+In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity face generation. They kept points in the latent space and performed simple vector arithmetic to generate new images. This allows for intuitive and targeted generation of images. However, the authors realised that single images vectors were unstable and there was a need to average three vectors before any arithmetic. DCGANs is unconditional, therefore, the vectors used were chosen empirically, generating many faces and choosing the attributes for study. Here, we show that this GAN only needs a single vector representation and due to conditioning we can have more control over which vectors to use in the arithmetic. In \cref{fig:arithmetic} we generate a whitenoise burst and a BBH insprial using their respective class labels and use a randomised latent point and response. Keeping the latent point and response, we average the two class vectors and use this as input to the generator. \Cref{fig:arithmetic} (c) shows the generation based on the combined class vectors which visually looks similar to a supernova waveform. Supernova waveform generations require expensive numerical relativity simulations and various assumptions about the collapse of its parent star. Here, we are able to produce similar waves at a fraction of the expense and we are able to further modify the resultant by using different latent space samples. \jordan{this is the adding noise thing but i need to work out the correct way to do it with the directional vector}. 
 
 \begin{figure}
   \centering
@@ -568,7 +591,6 @@ In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity
     \includegraphics[width=0.9\textwidth]{figures/wn+bbh.pdf} \\
     \small ~~~~~~~~~(a)
   \end{tabular} %\qquad
-  
   \begin{tabular}[b]{c}
     \includegraphics[width=0.46\textwidth]{figures/ambient_result.pdf} \\
     \small ~~~~~~~~(b)
@@ -580,7 +602,6 @@ In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity
   \caption{Conditional vector arithmetic. (a) Generated samples of a whitenoise burst and BBH insprial. (c) Effect of naively adding the components from (a) in the time domain. \jordan{just adding the two signals post generation} (c) Generation from the combined class vectors. }
   \label{fig:arithmetic}
 \end{figure}
-
 
 \begin{comment}
 \begin{figure}
