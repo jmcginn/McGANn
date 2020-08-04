@@ -1,0 +1,18 @@
+{
+    "outdir": "./outdir/generations_snr_1_16/",
+    "training_data": "./data/train_G_200k.h5",
+    "validation_data": "./data/train_G.h5",
+    "epochs": 10,
+    "patience": 20, 
+    "batch_size": 1000,
+    "prefetch": 5,
+    "conv_layers": 4,
+    "filters": [16, 16, 8, 8],
+    "kernel_size": [5, 5, 5, 5],
+    "strides": [2, 2, 2, 2],
+    "dense_layers": 1,
+    "dense_units": [100],
+    "activation": "swish"
+
+}
+

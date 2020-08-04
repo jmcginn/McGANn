@@ -1,7 +1,8 @@
 #!/usr/env/bin python
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = '2'
-
+import sys
+import json
 import h5py
 import numpy as np
 import matplotlib.pyplot as plt
@@ -57,22 +58,31 @@ def swish(x):
     return tf.keras.activations.swish(x)
 
 
-def main(path, filename, val_filename):
+def main(config):
 
-    path = setup_rundir(path)
+    path = setup_rundir(config['outdir'])
     print('Saving results to: ', path)
+    with open(f'{path}/config.json', 'w') as wf:
+        json.dump(config, wf, indent=4)
 
-    epochs = 5
-    batch_size = 1000
-    prefetch = 10
+    print('Using following configuration ', config)
 
-    train_dataset = setup_hdf5_dataset(filename, '/time_series', y_dataset='/labels',
+    epochs = config['epochs']
+    batch_size = config['batch_size']
+    prefetch = config['prefetch']
+
+    print('Setting up dataloaders')
+
+    train_dataset = setup_hdf5_dataset(config['training_data'],
+            '/time_series', y_dataset='/labels',
             batch_size=batch_size, prefetch=prefetch)
-    val_dataset = setup_hdf5_dataset(val_filename, '/time_series', y_dataset='/labels',
+    val_dataset = setup_hdf5_dataset(config['validation_data'],
+            '/time_series', y_dataset='/labels',
             batch_size=batch_size, prefetch=prefetch)
 
     checkpoint_filepath = os.path.join(path,'best_model_bigger_model.hdf5')
-    callback = keras.callbacks.EarlyStopping(monitor='val_loss', patience=20)
+    callback = keras.callbacks.EarlyStopping(monitor='val_loss',
+            patience=config['patience'])
 
     model_checkpoint_callback = keras.callbacks.ModelCheckpoint(
         filepath=checkpoint_filepath,
@@ -81,29 +91,53 @@ def main(path, filename, val_filename):
         mode='min',
         save_best_only=True)
 
+    activations = {
+            'swish': tf.keras.activations.swish,
+            'relu': tf.keras.activations.relu,
+            'elu': tf.keras.activations.elu
+            }
+    print('Buidling model')
 #create model
-    model = keras.Sequential(
-        [
-            layers.Conv1D(16, kernel_size=5, strides=2, padding='same', activation=swish, input_shape=(1024, 2)),
-            layers.Conv1D(16, kernel_size=5, strides=2, padding='same', activation=swish),
-            layers.Conv1D(8, kernel_size=5, strides=2, padding='same', activation=swish),
-            layers.Conv1D(8, kernel_size=5, strides=2, padding='same', activation=swish),
-            layers.Flatten(),
-            layers.Dense(100),
-            layers.Dense(1, activation='sigmoid'),
-        ]
-    )
+    layers_list = []
+    layers_list += [
+            layers.Conv1D(config['filters'][0],
+                kernel_size=config['kernel_size'][0],
+                strides=config['strides'][0],
+                padding='same',
+                activation=activations[config['activation']],
+                input_shape=(1024, 2))
+            ]
+    for i in range(1, config['conv_layers']):
+        layers_list += [
+                layers.Conv1D(config['filters'][i],
+                    kernel_size=config['kernel_size'][i],
+                    strides=config['strides'][i],
+                    padding='same',
+                    activation=activations[config['activation']])
+                ]
+
+    layers_list += [layers.Flatten()]
+    for i in range(config['dense_layers']):
+        layers_list += [
+                layers.Dense(config['dense_units'][i],
+                    activation=activations[config['activation']]),
+                ]
+    layers_list += [layers.Dense(1, activation='sigmoid')]
+
+    model = keras.Sequential(layers_list)
+
     model.summary()
 
 
 #compile model using accuracy to measure model performance
     opt = keras.optimizers.Adam(learning_rate=0.001)
     model.compile(optimizer=opt, loss='binary_crossentropy', metrics=['accuracy'])
-
+    print('Modelled compiled')
 #train the model
+    print('Fitting model')
     history = model.fit(train_dataset, validation_data=val_dataset,
                         callbacks=[callback,model_checkpoint_callback],epochs=epochs)
-
+    print('Plotting loss')
     fig, axs = plt.subplots(1,2,figsize=(15,5))
 
     axs[0].plot(history.history['loss'], label = "train_loss")
@@ -125,8 +159,10 @@ def main(path, filename, val_filename):
 
 if __name__ == '__main__':
 
-    path = './outdir/generations_snr_1_16/'
-    filename = 'data/train_G_200k.h5'
-    val_filename = 'data/train_G.h5'
+    if not len(sys.argv) > 1:
+        raise RuntimeError('No config file provided!')
 
-    main(path, filename, val_filename)
+
+    with open(sys.argv[1], 'r') as rf:
+        config = json.load(rf)
+    main(config)
