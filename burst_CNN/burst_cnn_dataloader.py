@@ -107,6 +107,8 @@ def main(config):
                 activation=activations[config['activation']],
                 input_shape=(1024, 2))
             ]
+    if (p:=config['conv_dropout']):
+        layers_list += [layers.Dropout(p)]
     for i in range(1, config['conv_layers']):
         layers_list += [
                 layers.Conv1D(config['filters'][i],
@@ -115,6 +117,8 @@ def main(config):
                     padding='same',
                     activation=activations[config['activation']])
                 ]
+        if (p:=config['conv_dropout']):
+            layers_list += [layers.Dropout(p)]
 
     layers_list += [layers.Flatten()]
     for i in range(config['dense_layers']):
@@ -122,6 +126,8 @@ def main(config):
                 layers.Dense(config['dense_units'][i],
                     activation=activations[config['activation']]),
                 ]
+        if (p:=config['dense_dropout']):
+            layers_list += [layers.Dropout(p)]
     layers_list += [layers.Dense(1, activation='sigmoid')]
 
     model = keras.Sequential(layers_list)

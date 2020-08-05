@@ -10,8 +10,10 @@
     "filters": [16, 16, 8, 8],
     "kernel_size": [5, 5, 5, 5],
     "strides": [2, 2, 2, 2],
+    "conv_dropout": false,
     "dense_layers": 1,
     "dense_units": [100],
+    "dense_dropout": 0.2,
     "activation": "swish"
 
 }
