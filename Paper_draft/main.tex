@@ -250,7 +250,7 @@ Since the birth of programmable computers, people have wondered if machines can 
 Neural networks are the quintessential machine learning algorithm that aims to approximate a function. They are built from many single processing units called neurons. The simpliest Neural Network is the perceptron layer \cref{fig:perceptron} which holds a single neuron that takes several real inputs $x_{1}, ... , x_{i}$ and maps them to an output according to the following linear equation: 
 
 \begin{equation}
-\sigma(\sum_i w_i x_i + b)
+\sigma(\sum_i w_i x_i + b),
 \label{eqn:neuron}
 \end{equation}
 where $w$ and $b$ are the weights and bias and $\sigma$ denotes the activation function. The weights are numbers which can be thought as the strength between connections. The output of a neuron is called its activation. Different choices of activation functions allow the user to simulate various models. A common example of an activation function is the hyperbolic tangent \cref{fig:tanh_activation} that is used when the outputs of the network must be both positive and negative and re-scaled to $[-1,1]$. It is often useful to introduce a bias, $b$, such that the neuron remains inactive above zero but is active when the sum reaches a defined threshold. This bias is added before the activation function and it tells us how high the weighted sum needs to be before the neuron becomes active.
@@ -299,7 +299,7 @@ more. Also refer to Fig 1 somewhere in this section.}
 \end{comment}
 %
 \begin{equation}
-\mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x} \sim p_{\text{r}}(\mathbf{x})} [\text{log} D(\mathbf{x})] \\ + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z})} [\text{log}(1-D(G(\mathbf{z})))]
+  \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x} \sim p_{\text{r}}(\mathbf{x})} [\text{log} D(\mathbf{x})] \\ + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z})} [\text{log}(1-D(G(\mathbf{z})))],
 \label{equation:GANloss}
 \end{equation}
 
@@ -322,7 +322,7 @@ gradients when applying gradient descent to a loss function that is discontinuou
 %
 To gain more control over what a GAN is able to generate, a conditional variant of \acp{GAN} named \acp{CGAN}~\cite{cgan} was introduced by feeding in extra information into the generator and discriminator such as a class label or attribute label, c. The objective function is then modified:
 \begin{equation}
-\mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x,c} \sim p_{\text{r}}(\mathbf{x,c})} [\text{log} D(\mathbf{x,c})] \\ + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z}),\mathbf{c} \sim p_{\text{r}}(\mathbf{c})} [\text{log}(1-D(G(\mathbf{z,c})))]
+  \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x,c} \sim p_{\text{r}}(\mathbf{x,c})} [\text{log} D(\mathbf{x,c})] \\ + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z}),\mathbf{c} \sim p_{\text{r}}(\mathbf{c})} [\text{log}(1-D(G(\mathbf{z,c})))].
 \label{equation:cGANloss}
 \end{equation}
 
