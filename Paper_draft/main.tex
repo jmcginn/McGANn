@@ -143,7 +143,7 @@ Generative adversarial networks - a powerful class of machine learning.
 
 
 \section{Introduction}
-textwidth in inches: \printinunitsof{in}\prntlen{\textwidth}
+%textwidth in inches: \printinunitsof{in}\prntlen{\textwidth}
 \begin{comment}
 \begin{itemize}
 \item Need to introduce GWs - the current state of the field e.g. detections
@@ -172,10 +172,8 @@ wave astronomy.
 %
 With these successes and continued upgrades to the detectors, further detections of CBCs are expected to be commonplace in a few short years. Another group of GW signals that has thus far been undetectable is GW ``bursts".  GW bursts are transient signals of typically short duration ($<$ 1s) whose
 waveforms are not accurately modelled or are complex to re-produce.
-Astrophysical sources for such transients include: Core collapse supernova,
-Neutron star instabilities, Fallback accretion onto a neutron star, Non
-axisymetric deformation in magnetars, Pulsar glitches and Neutron star
-post-mergers. \michael{Might be worth citing some sources for this statement}
+Astrophysical sources for such transients include: Core collapse supernova \cite{Fryer_2003}, Pulsar glitches \cite{Andersson_2001}, Neutron star
+post-mergers \cite{Baiotti_2007} and other as-yet unexplained physical phenomena. 
 
 GW detections so far have used a process called matched filtering, \cite{Owen1998}, where a large template bank of possible GW waveforms are compared to the detector outputs. In order to increase the chances of detection these template banks must span a large multi dimensional parameter space and the templates must be accurate, requiring significant computational cost.  GW bursts are un-modelled; therefore there are no templates available and so these signals are undetectable through this scheme. Instead, detection involves distinguishing
 the signal from detector noise. Burst searches look for excess power contained in the time-frequency domain and rely on the astrophysical burst waveform appearing in multiple detectors at similar times. This is only possible if the detector noise is
@@ -260,6 +258,9 @@ where $w$ and $b$ are the weights and bias and $\sigma$ denotes the activation f
 The output of a single neuron is defined by \cref{eqn:neuron} and gives a prediction $\hat{y}$ that can be compared to the real value $y$ through a cost or loss function. If the loss is non-zero, the network must work to minimise this function by updating the weights in the negative direction of the loss gradient in a process referred to as gradient descent. This loss function plays a critical role in how neural networks learn.
 
 A neural network contains many single neurons connected in a layered structure as shown in \cref{fig:neural_network}. The activations of the first layer (or input layer) act as the inputs to the second layer and so on until the output layer. Multilayered neural networks have intermediate layers between the input and output stages dubbed the hidden layers as the computations performed are not accessible to the user. The network can be thought of as a function F: $\mathbb{R}^N\rightarrow \mathbb{R}^M $ reliant on how activations from one layer bring activations in the next. The system is analogous to biology, where, some groups of neurons in animal brains cause certain others to fire. 
+
+\subsection{Convolutional Neural Networks}
+Convolutional Neural Networks (CNNs) are designed to work with grid-like structures that exhibit strong local spatial dependencies. An example would be a two-dimensional image as each coloured pixel has similar intensities to their near neighbours. The value contained in each pixel can be thought of as adding an additional dimension or channel to the image. Although most work with CNNs involve image-based data, they can be applied to other spatially adjacent data types such as time-series and text items. CNNs are defined by the use of a convolution operation, a mathematical operation that expresses the amount overlap between functions. The convolution is applied by shifting one grid-like structure over the other, drawing out spatially important features between the two.  A strided convolution reduces the dimensionality of the input while retaining spatial features. This can result in a loss of information along the boarders. To combat this, the input is padded with zeros at the edges which does not interfere with the convolutional operation. The output of the convolutional layer is then passed to an activation function. 
 
 \subsection{GANs}
 
@@ -405,7 +406,7 @@ parameters. The parameter ranges can be seen in \cref{Tab:training_parms} The fa
 LALSuite \cite{lalsuite} which models the
 inspiral, merger and ringdown of a \ac{BBH} waveform. The component masses lie
 in the range of [5,70] $\textrm{M}_{\odot}$ with zero spins
-and we fix m$_1$ $>$ m$_2$ \michael{I think the exponentials look neater without using frac\{\}\{\}}. The mass distribution is approximated by a power
+and we fix m$_1$ $>$ m$_2$. The mass distribution is approximated by a power
 law with index of 1.6 \cite{Abbott_2019}. The signals are generated using random right ascensions and
 declinations uniform over the sky and the inclinations are drawn from the
 cosine of a uniform distribution in the range [-1,1]. The peaks of the
@@ -433,21 +434,19 @@ discriminator network mirrors that of the generator without batch
 normalization, using LeakyReLU activations, SpatialDropout, and a 2-stride
 convolution for downsampling. The discriminator output is a single node activated by a Sigmoid that can be interpreted as
 a probability of the the signal being real. This model is trained
-with binary cross entropy for the first output and sparse categorical
-cross-entropy for the second output. The full architecture description can be seen in \cref{Tab:hyperparameters}.~\chris{OK, very technically tight but too
-computer sciencey. Try to make it human readbale for a physicist and refer to
-the table of parameters in the appendix.}
+with binary cross entropy. The full architecture description can be seen in \cref{Tab:hyperparameters}. ~\jordan{still too technical im not sure if we need to go into more detail on each thing mentioned.}
+%~\chris{OK, very technically tight but too
+%computer sciencey. Try to make it human readbale for a physicist and refer to
+%the table of parameters in the appendix.}
 
 % describe the hyperparameter tunings
 %
 Neural networks and subsequently \acp{GAN} have multiple parameters a developer
 can tune when designing the model and these are referred to as hyperparameters.
 The final network design used in this work comes from the use of trial and
-error and the initial designs influenced by the available literature. After
+error and the initial designs influenced by the available literature. We found that the GAN performed better with both networks having the same number of layers and neurons which should encourage even competition between the generator and discriminator.  After
 tuning the multiple hyperparamters (\cref{Tab:hyperparameters}), the GAN
-was trained for 1000 epochs and takes $\Or$(2) days to train. ~\jordan{talk about making D and G 'symmetric' increasing batch size, number of filters powers of 2, spatial dropout,no early stopping.} ~\chris{trained on
-what? Were there any major decisions made based on the trial and error process?
-Anything that was learned from your mistakes that might be useful to others?}.
+was trained on $10^5$ signals which contained an even mixture of sine-gaussian, ringdown, white noise bursts, gaussian blips and BBHs for 1000 epochs and takes $\Or$(2) days to train. A larger batch size saw a small increase in performance at the cost of training speed and we decided that 128 was a fair compromise. 
 
 \begin{comment}
 include Plot_NN to show generator architecture
@@ -487,37 +486,94 @@ Given a 100 dimensional vector drawn from a normal distribution, a class label a
     \includegraphics[width=\textwidth]{figures/generations/wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/blip.png}
     \includegraphics[width=\textwidth]{figures/generations/bbh.png}
-    \caption{Examples of \ac{GW} burst signals generated by a conditional generative adversarial network. Top row shows
-examples from the training set. By row: Sine-Gaussian, Ringdown,
+    \caption{Examples of \ac{GW} burst signals generated by a conditional generative adversarial network. By row: Sine-Gaussian, Ringdown,
 White-noise burst, Gaussian pulse, Binary black hole merger.}
-\label{fig:train} \end{figure}
+\label{fig:gen_signals} \end{figure}
 
 \subsection{Waveform quality}
-The generator network is a function G : $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ $\in$ $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024\times2}$, where $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ are the latent vector, class embedding vector and sky positions respectively. Given a latent vector randomly sampled from a normal distribution with zero mean and unit variance, a class label which is represented by a 120 dimensional vector for each class and antenna responses, the results from the generator can be seen in \cref{fig:gen_signals}. Depending on the orientation of the detector with respect to a hypothetical signal in the sky, the waveforms may appear inverted, shifted in time and their strain attenuated. Each plot shows the output of the generator after given randomised $\mathbf{z}, \mathbb{\textbf{s}}$ and one of the five class vectors $\mathbf{c}$.
+The generator network is a function G : $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ $\in$ $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024\times2}$, where $\mathbf{z},\mathbf{c},\mathbb{\textbf{s}}$ are the latent vector, class embedding vector and sky positions respectively. Given a latent vector randomly sampled from a normal distribution with zero mean and unit variance, a class label which is represented by a 5 dimensional one-hot encoded vector for each class, the results from the generator can be seen in \cref{fig:gen_signals}. Each plot shows the output of the generator after given randomised $\mathbf{z}$ and one of the five class vectors $\mathbf{c}$.
+ %Depending on the orientation of the detector with respect to a hypothetical signal in the sky, the waveforms may appear inverted, shifted in time and their strain attenuated. 
 
 \subsection{Interpolation}
-Machine learning algorithms are often described as universal function approximators. In the generators case it maps samples drawn from a 100 dimensional Gaussian space to its representation of the training set. As with any function, there should be a one to one mapping from the domain and co-domain to allow for smooth transitions across the latent space. One advantage of using GANs as a waveform generator is that once it is trained, it can perform rapid generations faster than more intricate and computationally expensive algorithms. For complicated data sets, the network architecture must be diverse and dense enough to capture distinct variations from the training set. Most GANs perform well on relatively low resolution image generations, however, higher resolutions demand larger networks and long training times. GANs attempting to replicate complicated structures and do not have the necessary architecture either struggle to produce results at all or fall into the common failure mode know as mode collapse; where the generator produces a small variety of samples or simply memorises the training set. To test this, we perform linear interpolations in the latent and class space. 
+Machine learning algorithms are often described as universal function approximators. In the generators case it maps samples drawn from a 100 dimensional Gaussian space to its representation of the training set. As with any function, there should be a one to one mapping from the domain and co-domain to allow for smooth transitions across the latent space. One advantage of using GANs as a waveform generator is that once it is trained, it can perform rapid generations faster than computationally expensive algorithms. For complicated data sets, the network architecture must be diverse and dense enough to capture distinct variations from the training set. Most GANs perform well on relatively low resolution image generations, however, higher resolutions demand larger networks and long training times. GANs attempting to replicate complicated structures and do not have the necessary architecture either struggle to produce results at all or fall into the common failure mode know as mode collapse; where the generator produces a small variety of samples or simply memorises the training set. To test this, we perform linear interpolations in the latent and class space. 
 
-\subsection{Latent space interpolation}
-In this section we explore the latent space formed by the generator by interpolation. We take two random points in the latent space and linearly interpolate between them (six times inclusive). These new latent space vectors can now be fed into the generator to make predictions on while keeping the class vectors constant. The third input, the response values are kept constant for each class. The full effect shown in \cref{fig:z_interp}. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth space unlike the discrete training case. Additionally as each class is given the same latent points to interpolate over, we can see that the waveforms cluster together with respect to their parameters. Visually, the sine-gaussian and ring-down waveforms share similar frequencies and the other signals show similar decays and starting epochs. The only exception is BBH waveforms, which is expected as they were trained with more variety of parameters and consistently have their peaks in the last quarter of the time series.
-
-
-\subsection{Class space interpolation}
-In order to explore the class space we keep the latent vector held constant and interpolate through the 5 classes. We construct a path between the 5 waveforms and show that the space is populated enough to allow for transitions between classes. Sine-Gaussian to ringdown performs well in interpolation with each signal being a plausible burst GW. It is obvious that the embedding layer has clustered these two groups during training as they share many characteristics. The other signals have sharper transitions but still retain plausible looking waveforms.  
+\subsubsection{Latent space interpolation}
+In this section we explore the latent space formed by the generator by interpolation. We take two random points in the latent space and linearly interpolate between them. These new latent space vectors can now be fed into the generator to make predictions on while keeping the class vectors constant. The full effect shown in \cref{fig:z_interp}. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth space unlike the discrete training case. Additionally as each class is given the same latent points to interpolate over, we can see that the waveforms cluster together with respect to their parameters. Visually, the sine-gaussian and ring-down waveforms share similar frequencies and the other signals show similar decays and starting epochs. The only exception is BBH waveforms, which is expected as they were trained with more variety of parameters and consistently have their peaks in the last quarter of the time series.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/generations/interp_rd-sg.png}
-    \includegraphics[width=\textwidth]{figures/generations/interp_wnb-blip.png}
-    \includegraphics[width=\textwidth]{figures/generations/interp_sg-bbh.png}
+    \includegraphics[width=\textwidth]{figures/generations/z_interp_sg.png}
+    \includegraphics[width=\textwidth]{figures/generations/z_interp_rd.png}
+    \includegraphics[width=\textwidth]{figures/generations/z_interp_wnb.png}
+    \includegraphics[width=\textwidth]{figures/generations/z_interp_blip.png}
+    \includegraphics[width=\textwidth]{figures/generations/z_interp_bbh.png}
     \caption{Latent space linear interpolation, class space is held constant.}
+    \label{fig:z_interp}
+\end{figure}
+
+\subsubsection{Class space interpolation}
+In order to explore the class space we keep the latent vector held constant and interpolate through the 5 classes. We construct a path between the 5 waveforms and show that the space is populated enough to allow for transitions between classes. Sine-Gaussian to ringdown performs well in interpolation with each signal being a plausible burst GW. It is obvious that the GAN has clustered these two groups during training as they share many characteristics. The other signals have sharper transitions but still retain plausible looking waveforms. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/generations/interp_blip-sg.png}
+    \includegraphics[width=\textwidth]{figures/generations/interp_wnb-rd.png}
+    \includegraphics[width=\textwidth]{figures/generations/interp_sg-bbh.png}
+    \caption{Class space linear interpolation, class space is held constant. Top row: gaussian blip to sine-gaussian, middle row: white noise burst to ringdown, bottom row: sine-gaussian to BBH.}
     \label{fig:c_interp}
 \end{figure}
 
-\subsection{Sampling from simplex section}
+\subsection{Using a GAN to generate unmodelled waveforms}
+So far the analysis has focused on interpolating between two classes of signals with the aim to use the interpolated signals as unmodelled waveforms, instead, we may consider random mixtures of classes. We defined the classes in one-hot encoding framework, that is, each class resides at the corner points of a 5 dimensional cube. In order to generate an even mixture of classes we sample points uniformly in this space. \jordan{this would be the box}. Alternativly we can sampe points from the plane that intersects the four corners, which for a 5-dimensional case is, sample from a 4-simplex. Thks can nbee seen in \ref{fig:unmodelled_samples}. \jordan{why? this enforces the vector points to sum to one. Why is that good? Well it keeps the points lying on the simplex.} 
 
-\subsection{Vector Arithmetic}
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/generations/simplex_sample1.png}
+    \includegraphics[width=\textwidth]{figures/generations/simplex_sample2.png}
+    \includegraphics[width=\textwidth]{figures/generations/simplex_sample3.png}
+
+    \includegraphics[width=\textwidth]{figures/generations/uniform_sample3.png}
+    \includegraphics[width=\textwidth]{figures/generations/uniform_sample2.png}
+    \includegraphics[width=\textwidth]{figures/generations/uniform_sample1.png}
+    \caption{GAN generations where the class vectors are sampled from the 4-D plane and sampled uniformly in the class space.}
+    \label{fig:unmodelled_samples}
+\end{figure}
+
+
+\begin{comment}
+We can now think of ways to properly sample from the space between these points in a uniform way. Uniformity enforces the condition that we have a variety of waveforms. Thge easiest being to uniformly sample points in this space and use them as the class vectors for the generator. Another way would be to keep the magnitude of the class vector as 1. For a 5-dimensional space we would sample from the 4-dimensional plane that intersects the corner points. 
+\end{comment}
+
+\subsection{CNN analysis}
+In this section of the analysis we will forensically compare generations from the GAN to help determine the success and failures of the model. We investigate a simple case of using a CNN to detect whether a signal is contained in noise or if the data is noise only. The signals we train the CNN on are generated from the GAN with their latent input randomised from a 100-dimensional Gaussian distribution and are categorised by their method of defining their class vector: 
+\begin{itemize}
+	\item Conditional – Definite categorical generations from the GAN. These signals are the closest to the training set.
+	\item Uniform – Generated using a uniform distribution U[0,1] as the input class vector.
+	\item Simplex – Generated using a Dirichlet distribution that samples from the 4-simplex as the input class vector. 
+\end{itemize}
+The CNN is trained to distinguish between two classes: signals in additive Gaussian noise and Gaussian noise, where “signals” are taken from either the Conditional, Uniform or Simplex cases. This means in total there are three CNNs to train and all CNNs share the same architectural structure. All of the training data used is “whitened” by a power spectral density (PSD) at Advanced LIGO design sensitivity, such that, there is equal power at each frequency and is correctly normalised. This procedure is applied to signals whose signal-to-noise ratios (SNRs) are defined prior to be in the range uniformly [1-16]. For each run the training data consists of 200,000 signals which contain one half noise only and one half signal contained in noise. Of that 80\% is used for training and 20\% used for validation. A different testing set is also used in analysis that is 200,000 in size. 
+
+*table of parameters used for CNN*
+
+In Fig. \ref{fig:roc_curves} we compare the CNN results between the three datasets, we train three CNNs on the Conditional, simplex and uniform data sets and use these models to make predictions on the other unseen datasets. We make a comparison by fixing the fraction of samples incorrectly identified as signals (false alarm rate) and plotting this versus the optimal SNR of the signals. 
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/conditional_trained.png}
+    \includegraphics[width=0.8\textwidth]{figures/simplex_trained.png}
+    \includegraphics[width=0.8\textwidth]{figures/uniform_trained.png}
+
+    \caption{Efficiency curves comparing the performance of CNNs trained on conditional generations (top), simplex generations (middle), uniform generations (bottom) for a fixed false alarm rate of $10^{-3}$.}
+    \label{fig:roc_curves}
+\end{figure}
+
+These results show for a CNN trained on conditional signals, the uniform data set is distinguishable from the conditional and simplex dataset. The CNN is robust enough to capture the differences between the datasets and shows that the GAN can generate a variety of unmodelled waveforms that can be used in future testing. 
+
+\begin{comment}
+{\subsection{Vector Arithmetic}
 In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity face generation. They kept points in the latent space and performed simple vector arithmetic to generate new images. This allows for intuitive and targeted generation of images. However, the authors realised that single images vectors were unstable and there was a need to average three vectors before any arithmetic. DCGANs is unconditional, therefore, the vectors used were chosen empirically, generating many faces and choosing the attributes for study. Here, we show that this GAN only needs a single vector representation and due to conditioning we can have more control over which vectors to use in the arithmetic. In \cref{fig:arithmetic} we generate a whitenoise burst and a BBH insprial using their respective class labels and use a randomised latent point and response. Keeping the latent point and response, we average the two class vectors and use this as input to the generator. \Cref{fig:arithmetic} (c) shows the generation based on the combined class vectors which visually looks similar to a supernova waveform. Supernova waveform generations require expensive numerical relativity simulations and various assumptions about the collapse of its parent star. Here, we are able to produce similar waves at a fraction of the expense and we are able to further modify the resultant by using different latent space samples. \jordan{this is the adding noise thing but i need to work out the correct way to do it with the directional vector}. 
+\end{comment}
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

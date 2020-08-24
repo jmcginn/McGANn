@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.20)  27 JUL 2020 09:38
+This is pdfTeX, Version 3.14159265-2.6-1.40.20 (TeX Live 2019) (preloaded format=pdflatex 2020.3.20)  24 AUG 2020 09:17
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -988,237 +988,269 @@ Excluding 'comment' comment. [1
 
 {/usr/local/texlive/2019/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 Package acronym Info: Label `acro:GW' newly defined as it shall be overridden
-although it is yet undefined on input line 188.
+although it is yet undefined on input line 186.
  Excluding 'comment' comment.
-
-LaTeX Warning: Citation `Gebhard_2019' on page 2 undefined on input line 206.
-
-
-LaTeX Warning: Citation `Krastev_2020' on page 2 undefined on input line 206.
-
-
-LaTeX Warning: Citation `Bahaadini' on page 2 undefined on input line 206.
-
-
-LaTeX Warning: Citation `George_2018' on page 2 undefined on input line 206.
-
-
-LaTeX Warning: Citation `Razzano_2018' on page 2 undefined on input line 206.
-
-
-LaTeX Warning: Citation `shen2019deterministic' on page 2 undefined on input li
-ne 206.
-
-
-LaTeX Warning: Citation `green2020gravitationalwave' on page 2 undefined on inp
-ut line 206.
-
 Excluding 'comment' comment.
-<figures/neural_network-figure0.pdf, id=113, 31.1825pt x 20.81377pt>
+<figures/neural_network-figure0.pdf, id=130, 31.1825pt x 20.81377pt>
 File: figures/neural_network-figure0.pdf Graphic file (type pdf)
 <use figures/neural_network-figure0.pdf>
 Package pdftex.def Info: figures/neural_network-figure0.pdf  used on input line
- 240.
+ 238.
 (pdftex.def)             Requested size: 133.96643pt x 87.0529pt.
-<figures/neural_network-figure1.pdf, id=114, 195.40001pt x 162.39772pt>
+<figures/neural_network-figure1.pdf, id=131, 195.40001pt x 162.39772pt>
 File: figures/neural_network-figure1.pdf Graphic file (type pdf)
 <use figures/neural_network-figure1.pdf>
 Package pdftex.def Info: figures/neural_network-figure1.pdf  used on input line
- 243.
+ 241.
 (pdftex.def)             Requested size: 133.92569pt x 87.04918pt.
-<figures/neural_network-figure2.pdf, id=115, 220.44057pt x 136.61137pt>
+<figures/neural_network-figure2.pdf, id=132, 220.44057pt x 136.61137pt>
 File: figures/neural_network-figure2.pdf Graphic file (type pdf)
 <use figures/neural_network-figure2.pdf>
 Package pdftex.def Info: figures/neural_network-figure2.pdf  used on input line
- 246.
+ 244.
 (pdftex.def)             Requested size: 312.4795pt x 203.11136pt.
 
-Overfull \hbox (2.61107pt too wide) in paragraph at lines 239--248
+Overfull \hbox (2.61107pt too wide) in paragraph at lines 237--246
 [][] [] 
  []
 
 [2] [3 <./figures/neural_network-figure0.pdf> <./figures/neural_network-figure1
 .pdf> <./figures/neural_network-figure2.pdf>]
 Package acronym Info: Label `acro:GAN' newly defined as it shall be overridden
-although it is yet undefined on input line 266.
- Excluding 'comment' comment.
-[4]
+although it is yet undefined on input line 267.
+ [4] Excluding 'comment' comment.
 Package acronym Info: Label `acro:CGAN' newly defined as it shall be overridden
 
-although it is yet undefined on input line 322.
-
-
-LaTeX Warning: Citation `isola2016imagetoimage' on page 5 undefined on input li
-ne 328.
+although it is yet undefined on input line 323.
 
 Excluding 'comment' comment. Excluding 'comment' comment.
 (./figures/GAN_diagram_vertical.tex) (./figures/ACGAN_diagram_vertical.tex)
 Excluding 'comment' comment.
-Overfull \hbox (6.69597pt too wide) in paragraph at lines 382--394
+Overfull \hbox (6.69597pt too wide) in paragraph at lines 383--395
  [][] 
  []
 
-
-LaTeX Warning: Citation `Khan_2016' on page 5 undefined on input line 404.
-
-Package acronym Info: Label `acro:BBH' newly defined as it shall be overridden
-although it is yet undefined on input line 406.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 408.
-
-(/usr/local/texlive/2019/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/bx/n' in size <12> not available
-(Font)              Font shape `OMS/cmsy/b/n' tried instead on input line 408.
-
-
-LaTeX Warning: Citation `Abbott_2019' on page 5 undefined on input line 409.
-
 [5]
+Package acronym Info: Label `acro:BBH' newly defined as it shall be overridden
+although it is yet undefined on input line 407.
+ [6]
 Package acronym Info: Label `acro:DCGAN' newly defined as it shall be overridde
 n
-although it is yet undefined on input line 421.
-Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
 although it is yet undefined on input line 422.
- [6]
-Underfull \hbox (badness 2503) in paragraph at lines 426--440
+Package acronym Info: Label `acro:CNN' newly defined as it shall be overridden
+although it is yet undefined on input line 423.
+
+Underfull \hbox (badness 2503) in paragraph at lines 427--441
 \OT1/cmr/m/n/12 kernels on both the generator and discriminator. The Generator 
 model is
  []
 
-Excluding 'comment' comment. Excluding 'comment' comment. [7]
-<figures/generations/sg.png, id=245, 1494.58376pt x 330.23375pt>
+Excluding 'comment' comment. [7] Excluding 'comment' comment.
+<figures/generations/sg.png, id=274, 1770.615pt x 317.185pt>
 File: figures/generations/sg.png Graphic file (type png)
 <use figures/generations/sg.png>
-Package pdftex.def Info: figures/generations/sg.png  used on input line 485.
-(pdftex.def)             Requested size: 446.39996pt x 98.63249pt.
-<figures/generations/rd.png, id=247, 1494.58376pt x 330.23375pt>
+Package pdftex.def Info: figures/generations/sg.png  used on input line 484.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/rd.png, id=276, 1770.615pt x 317.185pt>
 File: figures/generations/rd.png Graphic file (type png)
 <use figures/generations/rd.png>
-Package pdftex.def Info: figures/generations/rd.png  used on input line 486.
-(pdftex.def)             Requested size: 446.39996pt x 98.63249pt.
-<figures/generations/wnb.png, id=248, 1494.58376pt x 330.23375pt>
+Package pdftex.def Info: figures/generations/rd.png  used on input line 485.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/wnb.png, id=277, 1770.615pt x 317.185pt>
 File: figures/generations/wnb.png Graphic file (type png)
 <use figures/generations/wnb.png>
-Package pdftex.def Info: figures/generations/wnb.png  used on input line 487.
-(pdftex.def)             Requested size: 446.39996pt x 98.63249pt.
-<figures/generations/blip.png, id=249, 1494.58376pt x 330.23375pt>
+Package pdftex.def Info: figures/generations/wnb.png  used on input line 486.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/blip.png, id=278, 1770.615pt x 317.185pt>
 File: figures/generations/blip.png Graphic file (type png)
 <use figures/generations/blip.png>
-Package pdftex.def Info: figures/generations/blip.png  used on input line 488.
-(pdftex.def)             Requested size: 446.39996pt x 98.63249pt.
-<figures/generations/bbh.png, id=250, 1494.58376pt x 360.34625pt>
+Package pdftex.def Info: figures/generations/blip.png  used on input line 487.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/bbh.png, id=279, 1770.615pt x 346.29375pt>
 File: figures/generations/bbh.png Graphic file (type png)
 <use figures/generations/bbh.png>
-Package pdftex.def Info: figures/generations/bbh.png  used on input line 489.
-(pdftex.def)             Requested size: 446.39996pt x 107.62634pt.
-
-
-LaTeX Warning: Reference `fig:gen_signals' on page 1 undefined on input line 49
-6.
-
-
-LaTeX Warning: Reference `fig:z_interp' on page 1 undefined on input line 502.
-
-[8]
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
+Package pdftex.def Info: figures/generations/bbh.png  used on input line 488.
+(pdftex.def)             Requested size: 446.39996pt x 87.30241pt.
+ [8]
+<figures/generations/z_interp_sg.png, id=287, 1770.615pt x 317.185pt>
+File: figures/generations/z_interp_sg.png Graphic file (type png)
+<use figures/generations/z_interp_sg.png>
+Package pdftex.def Info: figures/generations/z_interp_sg.png  used on input lin
+e 505.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/z_interp_rd.png, id=288, 1770.615pt x 317.185pt>
+File: figures/generations/z_interp_rd.png Graphic file (type png)
+<use figures/generations/z_interp_rd.png>
+Package pdftex.def Info: figures/generations/z_interp_rd.png  used on input lin
+e 506.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/z_interp_wnb.png, id=289, 1770.615pt x 317.185pt>
+File: figures/generations/z_interp_wnb.png Graphic file (type png)
+<use figures/generations/z_interp_wnb.png>
+Package pdftex.def Info: figures/generations/z_interp_wnb.png  used on input li
+ne 507.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/z_interp_blip.png, id=290, 1770.615pt x 317.185pt>
+File: figures/generations/z_interp_blip.png Graphic file (type png)
+<use figures/generations/z_interp_blip.png>
+Package pdftex.def Info: figures/generations/z_interp_blip.png  used on input l
+ine 508.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/z_interp_bbh.png, id=291, 1770.615pt x 346.29375pt>
+File: figures/generations/z_interp_bbh.png Graphic file (type png)
+<use figures/generations/z_interp_bbh.png>
+Package pdftex.def Info: figures/generations/z_interp_bbh.png  used on input li
+ne 509.
+(pdftex.def)             Requested size: 446.39996pt x 87.30241pt.
  [9 <./figures/generations/sg.png> <./figures/generations/rd.png> <./figures/ge
 nerations/wnb.png> <./figures/generations/blip.png> <./figures/generations/bbh.
 png>]
-<figures/generations/interp_rd-sg.png, id=265, 1774.63pt x 323.2075pt>
-File: figures/generations/interp_rd-sg.png Graphic file (type png)
-<use figures/generations/interp_rd-sg.png>
-Package pdftex.def Info: figures/generations/interp_rd-sg.png  used on input li
-ne 510.
-(pdftex.def)             Requested size: 446.39996pt x 81.29977pt.
-<figures/generations/interp_wnb-blip.png, id=266, 1774.63pt x 323.2075pt>
-File: figures/generations/interp_wnb-blip.png Graphic file (type png)
-<use figures/generations/interp_wnb-blip.png>
-Package pdftex.def Info: figures/generations/interp_wnb-blip.png  used on input
- line 511.
-(pdftex.def)             Requested size: 446.39996pt x 81.29977pt.
-<figures/generations/interp_sg-bbh.png, id=267, 1774.63pt x 353.32pt>
+<figures/generations/interp_blip-sg.png, id=302, 1770.615pt x 317.185pt>
+File: figures/generations/interp_blip-sg.png Graphic file (type png)
+<use figures/generations/interp_blip-sg.png>
+Package pdftex.def Info: figures/generations/interp_blip-sg.png  used on input 
+line 519.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/interp_wnb-rd.png, id=303, 1770.615pt x 317.185pt>
+File: figures/generations/interp_wnb-rd.png Graphic file (type png)
+<use figures/generations/interp_wnb-rd.png>
+Package pdftex.def Info: figures/generations/interp_wnb-rd.png  used on input l
+ine 520.
+(pdftex.def)             Requested size: 446.39996pt x 79.96394pt.
+<figures/generations/interp_sg-bbh.png, id=304, 1770.615pt x 346.29375pt>
 File: figures/generations/interp_sg-bbh.png Graphic file (type png)
 <use figures/generations/interp_sg-bbh.png>
 Package pdftex.def Info: figures/generations/interp_sg-bbh.png  used on input l
-ine 512.
-(pdftex.def)             Requested size: 446.39996pt x 88.87428pt.
+ine 521.
+(pdftex.def)             Requested size: 446.39996pt x 87.30241pt.
+ [10 <./figures/generations/z_interp_sg.png> <./figures/generations/z_interp_rd
+.png> <./figures/generations/z_interp_wnb.png> <./figures/generations/z_interp_
+blip.png> <./figures/generations/z_interp_bbh.png>]
+<figures/generations/simplex_sample1.png, id=315, 1770.615pt x 331.2375pt>
+File: figures/generations/simplex_sample1.png Graphic file (type png)
+<use figures/generations/simplex_sample1.png>
+Package pdftex.def Info: figures/generations/simplex_sample1.png  used on input
+ line 531.
+(pdftex.def)             Requested size: 446.39996pt x 83.50665pt.
+<figures/generations/simplex_sample2.png, id=316, 1770.615pt x 331.2375pt>
+File: figures/generations/simplex_sample2.png Graphic file (type png)
+<use figures/generations/simplex_sample2.png>
+Package pdftex.def Info: figures/generations/simplex_sample2.png  used on input
+ line 532.
+(pdftex.def)             Requested size: 446.39996pt x 83.50665pt.
+<figures/generations/simplex_sample3.png, id=317, 1770.615pt x 331.2375pt>
+File: figures/generations/simplex_sample3.png Graphic file (type png)
+<use figures/generations/simplex_sample3.png>
+Package pdftex.def Info: figures/generations/simplex_sample3.png  used on input
+ line 533.
+(pdftex.def)             Requested size: 446.39996pt x 83.50665pt.
+<figures/generations/uniform_sample3.png, id=318, 1770.615pt x 331.2375pt>
+File: figures/generations/uniform_sample3.png Graphic file (type png)
+<use figures/generations/uniform_sample3.png>
+Package pdftex.def Info: figures/generations/uniform_sample3.png  used on input
+ line 535.
+(pdftex.def)             Requested size: 446.39996pt x 83.50665pt.
+<figures/generations/uniform_sample2.png, id=319, 1770.615pt x 331.2375pt>
+File: figures/generations/uniform_sample2.png Graphic file (type png)
+<use figures/generations/uniform_sample2.png>
+Package pdftex.def Info: figures/generations/uniform_sample2.png  used on input
+ line 536.
+(pdftex.def)             Requested size: 446.39996pt x 83.50665pt.
+<figures/generations/uniform_sample1.png, id=320, 1770.615pt x 360.34625pt>
+File: figures/generations/uniform_sample1.png Graphic file (type png)
+<use figures/generations/uniform_sample1.png>
+Package pdftex.def Info: figures/generations/uniform_sample1.png  used on input
+ line 537.
+(pdftex.def)             Requested size: 446.39996pt x 90.84512pt.
+ Excluding 'comment' comment.
+[11 <./figures/generations/interp_blip-sg.png> <./figures/generations/interp_wn
+b-rd.png> <./figures/generations/interp_sg-bbh.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-[10 <./figures/generations/interp_rd-sg.png> <./figures/generations/interp_wnb-
-blip.png> <./figures/generations/interp_sg-bbh.png>] [11]
+ [12 <./figures/generations/simplex_sample1.png> <./figures/generations/simplex
+_sample2.png> <./figures/generations/simplex_sample3.png> <./figures/generation
+s/uniform_sample3.png> <./figures/generations/uniform_sample2.png> <./figures/g
+enerations/uniform_sample1.png>]
+<figures/conditional_trained.png, id=341, 722.7pt x 433.62pt>
+File: figures/conditional_trained.png Graphic file (type png)
+<use figures/conditional_trained.png>
+Package pdftex.def Info: figures/conditional_trained.png  used on input line 56
+2.
+(pdftex.def)             Requested size: 357.12132pt x 214.27534pt.
+<figures/simplex_trained.png, id=342, 722.7pt x 433.62pt>
+File: figures/simplex_trained.png Graphic file (type png)
+<use figures/simplex_trained.png>
+Package pdftex.def Info: figures/simplex_trained.png  used on input line 563.
+(pdftex.def)             Requested size: 357.12132pt x 214.27534pt.
+<figures/uniform_trained.png, id=343, 722.7pt x 433.62pt>
+File: figures/uniform_trained.png Graphic file (type png)
+<use figures/uniform_trained.png>
+Package pdftex.def Info: figures/uniform_trained.png  used on input line 564.
+(pdftex.def)             Requested size: 357.12132pt x 214.27534pt.
+
+
+LaTeX Warning: Float too large for page by 30.82603pt on input line 568.
+
+Excluding 'comment' comment. [13] [14 <./figures/conditional_trained.png> <./fi
+gures/simplex_trained.png> <./figures/uniform_trained.png>]
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 534.
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 590.
 
-Overfull \hbox (29.07527pt too wide) in paragraph at lines 534--535
+Overfull \hbox (29.07527pt too wide) in paragraph at lines 590--591
 []$\OT1/cmtt/m/n/12 https : / / colab . research . google . com / github / tens
 orflow / hub / blob / master / examples /
  []
 
-Excluding 'comment' comment. (./main.bbl [12]) [13] [14
+Excluding 'comment' comment. (./main.bbl
+Underfull \hbox (badness 1275) in paragraph at lines 102--105
+[]\OT1/cmr/m/n/10 Green S R, Simpson C and Gair J 2020 Gravitational-wave param
+eter estimation with
+ []
+
+[15]) [16] [17
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 601.
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 601.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 657.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 657.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 601.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 601.
-
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: 52A7DA7EB1885837F69E7DB735645A93;1041
-(rerunfilecheck)             After:  AB3D14A61C3F0470A488BDC03E235850;1060.
-
-LaTeX Warning: There were undefined references.
-
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 657.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 657.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: F730A4762F7E94336A8B7EC96CD70400;1169.
  ) 
 Here is how much of TeX's memory you used:
- 24115 strings out of 492616
- 465815 string characters out of 6129481
+ 24197 strings out of 492616
+ 468531 string characters out of 6129481
  589460 words of memory out of 5000000
- 27478 multiletter control sequences out of 15000+600000
- 14780 words of font info for 56 fonts, out of 8000000 for 9000
+ 27533 multiletter control sequences out of 15000+600000
+ 14525 words of font info for 55 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 67i,12n,102p,1565b,1083s stack positions out of 5000i,500n,10000p,200000b,80000s
-pdfTeX warning (dest): name{figure.caption.12} has been referenced but does n
-ot exist, replaced by a fixed one
-
-pdfTeX warning (dest): name{table.caption.14} has been referenced but does not 
-exist, replaced by a fixed one
-
-</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbsy10.pfb>
-</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb><
-/usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></
-usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></us
-r/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr
-/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/
-local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr/l
-ocal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/loc
-al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local
-/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/t
-exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/tex
-live/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texliv
-e/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2
-019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/2019
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2019/
-texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2019/te
-xmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2019/tex
-mf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2019/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2019/texmf
--dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2019/texmf-
-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2019/te
-xmf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
-Output written on main.pdf (14 pages, 786927 bytes).
+ 67i,12n,102p,1558b,1083s stack positions out of 5000i,500n,10000p,200000b,80000s
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
+></usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
+</usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx8.pfb></
+usr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></u
+sr/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></us
+r/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></usr
+/local/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/l
+ocal/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/loc
+al/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local
+/texlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/t
+exlive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texl
+ive/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive
+/2019/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive/20
+19/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/201
+9/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy8.pfb></usr/local/texlive/2019/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2019/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2019/te
+xmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2019/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmtt12.pfb></usr/local/texlive/2019/texm
+f-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2019/
+texmf-dist/fonts/type1/urw/zapfding/uzdr.pfb>
+Output written on main.pdf (17 pages, 1914877 bytes).
 PDF statistics:
- 406 PDF objects out of 1000 (max. 8388607)
- 345 compressed objects within 4 object streams
- 79 named destinations out of 1000 (max. 500000)
- 204 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 478 PDF objects out of 1000 (max. 8388607)
+ 387 compressed objects within 4 object streams
+ 96 named destinations out of 1000 (max. 500000)
+ 282 words of extra memory for PDF output out of 10000 (max. 10000000)
 
