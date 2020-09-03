@@ -4,7 +4,7 @@ FIGS = ./figures/*
 
 TABLES = 
 
-BIBLIO = ./iopart-num.bib
+BIBLIO = ./references.bib
 
 BYPROD = *.aux *.log *.out *.dvi *.bbl *.blg
 

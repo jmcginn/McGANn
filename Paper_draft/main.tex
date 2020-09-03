@@ -113,13 +113,14 @@
 
 \begin{abstract}
 The next generation of Gravitational wave detectors will accelerate the number
-of gravitational wave detections such that we can gain new in site into the
+of ac{GW} detections such that we can gain new in site into the
 physics behind the sources causing the phenomena. Numerical simulations and
-matched filtering are the standard for detecting gravitational waves for known
-sources such as binary-black hole mergers. There are other sources of gravitational waves
+matched filtering are the standard for detecting ac{GW}s for known
+sources such as binary-black hole mergers. There are other sources of ac{GW}s
 that remain elusive to standard modelling techniques and are expected to be
 detectable. Here we construct a unmodelled burst generation scheme using
 Generative adversarial networks - a powerful class of machine learning.
+\chris{time to add a real abstract}
 \end{abstract}
 
 %
@@ -138,6 +139,8 @@ Generative adversarial networks - a powerful class of machine learning.
 %
 
 \acrodef{GW}[GW]{Gravitational wave}
+\acrodef{CBC}[CBC]{compact binary coalescence} 
+\acrodef{ML}[ML]{machine learning}
 \acrodef{GAN}[GAN]{generative adversarial network}
 \acrodef{CGAN}[CGAN]{conditional generative adversarial network}
 \acrodef{ACGAN}[ACGAN]{auxilliary conditional generative adversarial network}
@@ -163,34 +166,64 @@ an introduction \ding{51}
 
 % introduce \ac{GW} astrophsyics
 %
-Gravitational wave astronomy is now an established field, starting with the first
-detection of a binary black hole merger \cite{Abbott2016} in September 2015.
+\ac{GW} astronomy is now an established field, starting with the first
+detection of a binary black hole merger~\cite{Abbott2016} in September 2015.
 Following this, the first and second observations runs (O1 and O2) of Advanced
-LIGO and Advanced Virgo \cite{Prospects-dets, AdvLIGO, AdvLIGO2, AdvVIRGO} reported several more Compact Binary Coalescence (CBC)
-mergers \cite{Abbott2016a, Abbott2017, Abbott2017a, Abbott2017b}. On August
-2017 a binary neutron star merger was observed alongside its electromagnetic
-counterpart for the first time, giving rise to multimessenger gravitational
-wave astronomy. 
+LIGO and Advanced Virgo~\cite{Prospects-dets, AdvLIGO, AdvLIGO2, AdvVIRGO}
+reported several more \ac{CBC} mergers~\cite{Abbott2016a, Abbott2017,
+Abbott2017a, Abbott2017b}. On 17th August 2017 a binary neutron star merger was
+observed alongside its electromagnetic counterpart for the first time, giving
+rise to multi-messenger ac{GW} astronomy. 
 
 % introduce burst searches
 %
-With these successes and continued upgrades to the detectors, further detections of CBCs are expected to be commonplace in a few short years. Another group of GW signals that has thus far been undetectable is GW ``bursts".  GW bursts are transient signals of typically short duration ($<$ 1s) whose
-waveforms are not accurately modelled or are complex to re-produce.
-Astrophysical sources for such transients include: Core collapse supernova \cite{Fryer_2003}, Pulsar glitches \cite{Andersson_2001}, Neutron star
-post-mergers \cite{Baiotti_2007} and other as-yet unexplained physical phenomena. 
+With these successes and continued upgrades to the detectors, further
+detections of \acp{CBC} are expected to be commonplace in future advanced
+detcetor observation runs. Another group of \ac{GW} signals that has thus far
+been undetected is \ac{GW} ``bursts". \ac{GW} bursts are classed as transient
+signals of typically short duration ($<$ 1s) whose waveforms are not accurately
+modelled or are complex to reproduce. Astrophysical sources for such transients
+include: Core collapse supernova~\cite{Fryer_2003}, Pulsar
+glitches~\cite{Andersson_2001}, Neutron star post-mergers~\cite{Baiotti_2007}
+and other as-yet unexplained astrophysical phenomena. 
 
-GW detections so far have used a process called matched filtering, \cite{Owen1998}, where a large template bank of possible GW waveforms are compared to the detector outputs. In order to increase the chances of detection these template banks must span a large multi dimensional parameter space and the templates must be accurate, requiring significant computational cost.  GW bursts are un-modelled; therefore there are no templates available and so these signals are undetectable through this scheme. Instead, detection involves distinguishing
-the signal from detector noise. Burst searches look for excess power contained in the time-frequency domain and rely on the astrophysical burst waveform appearing in multiple detectors at similar times. This is only possible if the detector noise is
-well characterised and the candidate signal can be differentiated from
-systematic or environmental glitches. 
+% more details on burst searches
+%
+\ac{GW} detections so far have used a process called
+matched-filtering,~\cite{Owen1998}, where a large template bank of possible
+\ac{GW} waveforms are compared to the detector outputs. In order to increase
+the chances of detection these template banks must span a large
+multi-dimensional parameter space and the templates must be accurate, requiring
+significant computational cost~\chris{the accuracy doesn't obviously lead to a
+cost increase}. \ac{GW} bursts are un-modelled~\chris{except for the ones you
+mentione before? SNe, glicthes, post-merger? }; therefore there are no
+templates available and so matched-filtering is unsuitable for the detection of
+these signals.  Instead, detection involves distinguishing the signal from
+detector noise~\chris{but that's also what matched-filtering does}. Burst
+searches look for excess power contained in the time-frequency
+domain~\chris{all of them? In any case you have to provide references here to
+the pipelines (cWB, x-pipeline, etc... Siong can help)} and rely on the
+astrophysical burst waveform appearing in multiple detectors at similar times.
+This is only possible if the detector noise is well characterised and the
+candidate signal can be differentiated from systematic or environmental
+glitches. 
 
 % Discuss the family of burst waveforms currently used and why - not in detail, just
 % an introduction 
 %
-\ac{GW} burst detection algorithms \cite{Klimenko_2008, Aso_2008} are tested and tuned using modelled waveforms that may
-or may not have astrophysical significance but have easy to define parameters
-and share characteristics of real bursts that are enough to simulate a \ac{GW} passing between detectors. Such waveforms include sine-Gaussians: a Gaussian modulated sine wave that is characterised by its central frequency and decay parameter. Bandlimited white-noise bursts: white noise that is contained within a certain frequency range and ring-downs which mimic the damped oscillations after a CBC merger.
+\ac{GW} burst detection algorithms~\cite{Klimenko_2008, Aso_2008} are tested
+and tuned using modelled waveforms that may or may not have astrophysical
+significance but have easy to define parameters and share characteristics of
+real bursts that are enough to simulate a \ac{GW} passing between
+detectors~\chris{long sentence}. Such waveforms include sine-Gaussians: a
+Gaussian modulated sine wave that is characterised by its central frequency and
+decay parameter. Bandlimited white-noise bursts: white noise that is contained
+within a certain frequency range and ring-downs which mimic the damped
+oscillations after a \ac{CBC} merger.~\chris{seems strange to list only 3 of
+the 5 that we will be using later on.}
 
+% cut this text if not going to be used
+%
 \begin{comment}Such waveforms may have
 long-duration, short bandwidth (ringdowns), long-duration, large bandwidth
 (inspirals) and many algorithms make use of sine-Gaussians: a Gaussian
@@ -204,21 +237,50 @@ diagnosing LIGOs sensitivity to frequency.~\chris{strange unfinished sentence.}
 
 % Introduce ML techniques in GWs
 %
+With the expectation that there will be many more \ac{GW} detections in the
+future, there is a growing need for fast and efficient \ac{GW} analysis methods
+to match the rising number of detections. While still in its infancy, \ac{ML}
+applications to \ac{GW} analyses have already shown great potential for
+overcoming data bottlenecks~\chris{what does that mean?}. \ac{GW} analysis in
+areas of detection~\cite{Gabbard2017,Gebhard_2019,Krastev_2020}, glitch
+classification~\cite{Bahaadini, George_2018,Razzano_2018} and parameter
+estimation~\cite{gabbard2019bayesian, shen2019deterministic,
+green2020gravitationalwave}~\chris{unfinished sentence, plus I wouldn't
+reference the Shen paper}. Applying these algorithms show similar results to
+matched-filtering techniques and have the benefit of being orders of magnitude
+faster. \michael{We mention aspects related to detection (pattern matching) but
+also metion PE in the same sentence and I think this is a bit
+confusing.}~\chris{yes, the matched-filtering comp[arison is only relevent for
+searches. The biggest speed gain is for the Bayesian PE. I also think that you
+need to reference more of the ML-GW literature here. I've added Mervyn's SNe
+paper, Joe's latest paper, our latest Gaussian ?Mixture model paper, 2 CW
+papers and the recent ML review paper to the bibligrapohy file but there are
+quite a few others. Have a look at the review to steal references. In each case
+try to say 1 sentence about what they do if possible.}
 
-With the expectation that there will be many more \ac{GW} detections in the future, researchers are starting to realise the need for fast and efficient \ac{GW} analysis to compete with the rising number of detections. While still in its infancy, Machine Learning (ML) with GW has already shown great potential for overcoming data bottlenecks. \ac{GW} analysis in areas of detection \cite{Gabbard2017,Gebhard_2019,Krastev_2020}, glitch classification \cite{Bahaadini, George_2018,Razzano_2018} and
-parameter estimation \cite{gabbard2019bayesian,shen2019deterministic,green2020gravitationalwave}. Applying these algorithms show similar results to matched filtering techniques and have the benefit of being orders of magnitude faster. \michael{We mention aspects related to detection (pattern matching) but also metion PE in the same sentence and I think this is a bit confusing.}
-
-% What this paper does on GANs in 1 paragraph
+% What this paper does on GANs in 1 paragraph - the point of the paper
 %
+In this work we aim to explore the use of \ac{ML} to generate and interpret
+unmodelled \ac{GW} burst waveforms. Using the generative machine learning
+model: \acp{GAN}, we train on five classes of known~\chris{are they known? In
+what sense?} burst morphologies~\chris{fancy word - what about waveform class?}
+in the time domain. Working with the assumption that \acp{GAN} construct smooth
+$n$-dimensional vector spaces between their input and output, we can then
+explore the space between the five classes to construct new
+unmodelled~\chris{hybrid?} waveforms. As all the computationally expensive
+processes occur during training, the learned model after training is able to
+produce waveforms in fractions of a second and in fact produce waveforms that
+are impossible~\chris{never say never (or impossible)} to produce with current
+techniques. These new varieties of waveforms can then be used to diagnose
+detection algorithms and gain new insight into sources of \ac{GW}
+bursts~\chris{yes, they can help diagnose or calibrate or assess the sensitivty
+of detection algorithms but also allow us to better train our algorithms to a
+broader range of possible signals and therefore enhance our detection ability}. 
 
-In this work we aim to explore the use of machine learning to generate and interpret
-unmodelled \ac{GW} burst waveforms. Using the generative machine learning model: Generative Adversarial Networks (GANs), we train on five classes of known burst morphologies in the time domain. Working with the assumption that GANs construct smooth n-dimensional vector spaces between its input and output, we can then explore the space between the five classes to construct new unmodelled waveforms. As all the computationally expensive processes occur during training, the learned model after
-training is able to produce waveforms in fractions of a second and in fact produce waveforms that are impossible to produce with current techniques. These new varieties of waveforms can then be used to diagnose detection algorithms and gain new insight into sources of \ac{GW} bursts. 
-% the point of the paper
+% the structure of the paper
 %
-
-This paper is organised as follows: \jordan{unstructured at the moment}
-
+This paper is organised as follows: \jordan{unstructured at the
+moment}~\chris{time to add the structure.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Generative Adversarial Networks}
@@ -602,11 +664,11 @@ In DCGANs the authors demonstrated unsupervised vector arithmetic with celebrity
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-In this work we present the potential of Generative Adversarial Networks for burst gravitational wave analysis. We have shown that GANs have the ability to generate 5 class varieties of modelled burst \ac{GW} signals that can be generated at whim. The latent and class spaces were explored through interpolation and suggest that the space provides smooth translations between classes and overall waveform shape. We then showed targeted waveform generation by mixing classes to produce new unmodlled waveform varieties that can be used to test current burst search pipelines. \jordan{couple of sentences about classifier}. 
+In this work we present the potential of Generative Adversarial Networks for burst ac{GW} analysis. We have shown that GANs have the ability to generate 5 class varieties of modelled burst \ac{GW} signals that can be generated at whim. The latent and class spaces were explored through interpolation and suggest that the space provides smooth translations between classes and overall waveform shape. We then showed targeted waveform generation by mixing classes to produce new unmodlled waveform varieties that can be used to test current burst search pipelines. \jordan{couple of sentences about classifier}. 
 
 In order to extend this work to a viable burst wave generator and classifier a few points require further research. In principle it is trivial to add another detector inside the response layer \jordan{response is the wrong thing to say since the time delay isnt really a response, extrinsic layer? just non trainable layer? The box?}, however, as this now 3 dimensional signal is feed to the discriminator this will no doubt require further tweaking of the network. We can add more burst-like wave forms in the training set, like detector glitches which would similarly require further network design. The work presented here is noise free. To havea complete generation and detection package we would like to train the network on signals hidden in additive Gaussian noise and test the ability of the auxiliary classifier. 
 
-The approach shown in this work shows promise in generating unmodelled burst waveforms from exotic sources. Having the ability to quickly generate new waveforms is essential to test current detection schemes and their susceptibilty to unmodelled sources. We belive that GANs have the ability to generate high fidelity waveforms at a fraction of the computational expense and do not rely on large prior parameter space. Having banks of these waveforms at hand can aid in our understand of the physics processes behind these non-standard gravitational wave emitters.  
+The approach shown in this work shows promise in generating unmodelled burst waveforms from exotic sources. Having the ability to quickly generate new waveforms is essential to test current detection schemes and their susceptibilty to unmodelled sources. We belive that GANs have the ability to generate high fidelity waveforms at a fraction of the computational expense and do not rely on large prior parameter space. Having banks of these waveforms at hand can aid in our understand of the physics processes behind these non-standard ac{GW} emitters.  
 
 \jordan{I want to include a link to the github etc but also a google collab scrip like the one for BigGANs: \\
 \url{https://colab.research.google.com/github/tensorflow/hub/blob/master/examples/colab/biggan_generation_with_tf_hub.ipynb.} 
@@ -624,7 +686,7 @@ the approach.
 \end{comment}
 
 \section*{References}
-\bibliography{iopart-num}
+\bibliography{references}
 
 \clearpage
 
