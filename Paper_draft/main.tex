@@ -636,7 +636,9 @@ in fact each $x$ sample has it's own randomly drawn $c$ value.}} \label{fig:gan_
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Methodology}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \begin{comment}
@@ -657,7 +659,10 @@ of thumb decisions made
 
 \begin{table}[hb]
 \centering
-\caption{Burst training parameters}
+\caption{Burst training parameters~\chris{Add a bit more caption description
+here. Plus address the issues of the actual distributions used (uniform) and
+how you include the BBH parameters. It's also not obvious that all the classes
+share the same 3 parameters.}}
 %\footnotesize
 \begin{tabular}{@{} l l l l l l }
 \br
@@ -676,71 +681,142 @@ BBH & N/A & N/A & N/A & 5 - 70  \\
 \end{table}
 \normalsize
 
+% introduce the signal models
+%
+\ac{GW} burst signals remain an unmodelled phenomenon~\chris{as in the
+introduction I think you need to make the distinction between unmodelled and
+modelled burst analyses}, as such, current detection algorithms exploit the
+fact that astrophysical signals will appear within data from multiple detectors
+in coincidence and share the same waveform morphology.~\chris{I have added to
+this first sentence but it still doesn't naturally lead intpo the next one} We
+propose a signal generation scheme using a \ac{CGAN} trained on burst-like
+waveforms. We call this \texttt{BurstGAN}~\chris{give reference to code repo
+here} and is a \ac{CGAN} trained on five signal classes each spanning a range
+of prior signal parameters. The signal classes are:
 
-GW burst signals remain an unmodelled phenomenon, as such, current
-detection algorithms focus on waveforms signals appearing within multiple detectors We propose a
-signal generation scheme using \acp{GAN} trained on burst-like
-waveforms. BurstGAN is a conditional GAN that is trained on five signal morphology's spanning a range of prior
-parameters. The parameter ranges can be seen in \cref{Tab:training_parms}. The families are:
-
+% list the 5 waveform classes
+%
 \begin{itemize}
-
-\item Sine-Gaussian $h_{sg}(t) = A \exp\left[ - (t-t_{0})^2 / \tau^2 \right] \sin (2 \pi f_0 (t-t_0))$, a sinusoidal wave with a Gaussian envelop characterised by a central frequency, $f_0$;.
-\item Ring-down, $h(t) = A \exp \left[-{(t-t_0)} / {\tau} \right] \sin(2 \pi f_0 (t-t_0))$, with frequency $f_0$ and duration $\tau$
-\item White-noise bursts, with bounded frequency bandwidth $\Delta f$ and duration $\tau$.
-\item Gaussian pulse $h(t) = \exp(-t^2 / \tau^2)$ with duration. $\tau$.
-\item Binary-black hole inspirals which are simulated using IMRPhenomD waveform \cite{Khan_2016} routine from
-LALSuite \cite{lalsuite} which models the
-inspiral, merger and ringdown of a \ac{BBH} waveform. The component masses lie
-in the range of [5,70] $\textrm{M}_{\odot}$ with zero spins
-and we fix m$_1$ $>$ m$_2$. The mass distribution is approximated by a power
-law with index of 1.6 \cite{Abbott_2019}. The signals are generated using random right ascensions and
-declinations uniform over the sky and the inclinations are drawn from the
-cosine of a uniform distribution in the range [-1,1]. 
+%
+\item {\bf Sine-Gaussian}: $h_{\text{sg}}(t) = A \exp\left[ - (t-t_{0})^2 /
+\tau^2 \right] \sin (2 \pi f_0 (t-t_0))$, a sinusoidal wave with a Gaussian
+envelope characterised by a central frequency, $f_0$.~\chris{what about
+amplitude, time of arrival and initial phase? For all the other classes too.}
+%
+\item {\bf Ring-down}: $h_{\text{rd}}(t) = A \exp \left[-{(t-t_0)} / {\tau}
+\right] \sin(2 \pi f_0 (t-t_0))$, with frequency $f_0$ and duration $\tau$
+%
+\item {\bf White-noise bursts}: $h_{\text{wn}}(t_j) = Ag_j\exp\left[ -
+(t-t_{0})^2 / \tau^2 \right]$ where $g_j$ are drawn from a zero mean unit
+variance Gaussian distribution and ahave a bounded frequency bandwidth $\Delta
+f$ and duration $\tau$~\chris{no, they have a Gaussian envelope with a duration
+parameter $tau$, we don't explicitly define the bandwidth}.
+%
+\item {\bf Gaussian pulse}: $h_{\text{gp}}(t) = \exp(-t^2 / \tau^2)$ with
+duration parameter $\tau$.
+%
+\item {\bf Binary-black hole}: Simulated using the IMRPhenomD
+waveform~\cite{Khan_2016} routine from LALSuite~\cite{lalsuite} which models
+the inspiral, merger and ringdown of a \ac{BBH} waveform. The component masses
+lie in the range of [5,70] $\textrm{M}_{\odot}$ with zero spins and we fix
+$m_1>m_2$. The mass distribution is approximated by a power law with
+index of 1.6~\cite{Abbott_2019}. The signals are generated using random right
+ascensions and declinations uniform over the sky and the inclinations are drawn
+from the cosine of a uniform distribution in the range [-1,1].~\chris{OK, we
+have an issue here. First the prior parameters and ranges are being defined
+here rather than in the table with the other classes. Second, you are
+randomising the sky in order to get random antenna patterns which only act to
+change the relative amplitudes in multiple detectors - whcih we don't use any
+more. So I would say that you shoudl only use the plus polarisation since it is
+the same as the cross but pi/2 out of phase.}  
+%
 \end{itemize}
-The peaks of the waveforms are set to be within [0.4, 0.6]s of the 1s time interval and all training waveforms are sampled at 1024 Hz.
+%
+The location of the peak amplitude of the waveforms (corresponding to the
+mid-points of all but the ring-down and \ac{BBH} classes) are randomly drawn to
+be within [0.4, 0.6] sec from the start of the 1 sec time interval and all
+training waveforms are sampled at 1024 Hz.  The parameter prior ranges are
+defined in~\cref{Tab:training_parms}.~\chris{Yes, those are the ranges but what
+are the distributions?}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Architecture details}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
 % Introduce some architecture features
 %
 Extensions to the original \ac{GAN} method such as the
-\ac{DCGAN}~\cite{Radford2015} have been widely praised for
-enabling a stable \ac{GAN} architecture. Most GANs now replace fully connected layers, where each neuron is connect to all the neurons in the previous and next layer, with convolutional layers. \ac{CNN} \michael{capitalisation, not sure how it works with the accronyms package} are designed to work with grid-like structures with close local dependencies like image and text based data, however, there are examples of audio synthesis work \cite{DBLP:journals/corr/abs-1809-11096}.
+\ac{DCGAN}~\cite{Radford2015} have been widely praised for enabling a stable
+\ac{GAN} architecture. Most GANs now replace fully connected layers, where each
+neuron is connect to all the neurons in the previous and next layer, with
+convolutional layers. \acp{CNN}~\michael{capitalisation, not sure how it works
+with the accronyms package}~\chris{I will fix this} are designed to work with
+grid-like structures with close local dependencies like image and text based
+data, however, there are examples of audio synthesis
+work~\cite{DBLP:journals/corr/abs-1809-11096}.~\chris{this text sounds very
+similar to the CNN text from earlier. Do you need this here? Can you simply say
+that we are using a DCGAN architecture or say that our networks use
+convolutional layers and then move on?}
 
 % specifically define our architecture
 %
-We adopt the suggestions of \cite{Radford2015,DBLP:journals/corr/abs-1809-11096}, lengthening
-one-dimensional convolution kernels on both the generator and discriminator.
-The Generator model is fully convolutional, upsampled using strided transposed
-convolutions with batch normalisation in the first layer and ReLU activations
-throughout with the exception of Tanh for the output layer. Each transposed
-convolutional layer uses a kernel size of $18\times 1$ and stride of 2. The
-discriminator network mirrors that of the generator without batch
-normalization, using LeakyReLU activations, SpatialDropout, and a 2-stride
-convolution for downsampling. The discriminator output is a single node activated by a Sigmoid that can be interpreted as
-a probability of the the signal being real. This model is trained
-with binary cross entropy. The full architecture description can be seen in \cref{Tab:hyperparameters}. ~\jordan{still too technical im not sure if we need to go into more detail on each thing mentioned.} \michael{This para doesn't seem to technical to me}
-%~\chris{OK, very technically tight but too
-%computer sciencey. Try to make it human readbale for a physicist and refer to
-%the table of parameters in the appendix.}
+We adopt the suggestions
+of~\cite{Radford2015,DBLP:journals/corr/abs-1809-11096}, lengthening
+one-dimensional convolution kernels on both the generator and
+discriminator~\chris{what does this statment actually mean and why are you
+opening the paragrpah with it?}.  The Generator model is fully convolutional,
+upsampled using strided transposed~\chris{you mentioned strides before but not
+transposing. Can you explain that aspect seomwhere earlier on.} convolutions
+with batch normalisation~\chris{same here, can you mention it earlier} in the
+first layer and ReLU~\chris{you can easily mention ReLU and other activations
+earlier} activations throughout with the exception of the Tanh activation for
+the output layer~\chris{why do you need this for the output? State that it is
+to guarantee the output function is bound between [-1,1]}. Each transposed
+convolutional layer uses a kernel size of $18\times 1$~\chris{by saying 18x1
+you are saying that you are using a 2D kernel with width 1 but why not just say
+you use a 1D kernel of size 18?} and stride of 2. The discriminator network
+mirrors that of the generator without batch normalization~\chris{why?}, using
+LeakyReLU activations, SpatialDropout, and a 2-stride convolution for
+downsampling~\chris{any reason for these choices?}. The discriminator output is
+a single node with Sigmoid activation that can be interpreted as a probability
+of the the signal being real. This model is trained with binary cross
+entropy~\chris{how exactly if the output is 1 number rather than 2 (binary)?}.
+The full architecture description can be seen in~\cref{Tab:hyperparameters}.
+~\jordan{still too technical im not sure if we need to go into more detail on
+each thing mentioned.} \michael{This para doesn't seem to technical to
+me}~\chris{same here, not too technical but lacking detail and motivation for
+choices.}
+%~\chris{OK, very technically tight but too computer sciencey. Try to make it
+%human readbale for a physicist and refer to the table of parameters in the
+%appendix.}
 
 % describe the hyperparameter tunings
 %
 Neural networks and subsequently \acp{GAN} have multiple parameters a developer
 can tune when designing the model and these are referred to as hyperparameters.
 The final network design used in this work comes from the use of trial and
-error and the initial designs influenced by the available literature. We found that the GAN performed better with both networks having the same number of layers and neurons which should encourage even competition between the generator and discriminator.  After
-tuning the multiple hyperparamters (\cref{Tab:hyperparameters}), the GAN
-was trained on $10^5$ signals which contained an even mixture of sine-gaussian, ringdown, white noise bursts, gaussian blips and BBHs for 1000 epochs and takes $\Or$(2) days to train. A larger batch size saw a small increase in performance at the cost of training speed and we decided that 128 was a fair compromise. 
+error and the initial designs influenced by the available literature. We found
+that the \ac{GAN} performed better with both networks having the same number of
+layers and neurons which should~\chris{should? well does it?} encourage even
+competition between the generator and discriminator.  After tuning the multiple
+hyperparameters (see \cref{Tab:hyperparameters}), the \ac{GAN} was trained on
+$10^5$ signals which contained an even mixture~\chris{be a bit more specific
+about what an even mixture is - technically they are drawn from a categorical
+distribution with equal propabilities for each class} of
+sine-Gaussian~\chris{Gauss was a person so we have to capitalise his stuff},
+ring-down, white noise bursts, Gaussian pulse and \acp{BBH} for 1000 epochs and
+takes $\Or$(2) days to train~\chris{on what? be specific}. A larger batch size
+saw a small increase in performance~\chris{what is performance in this case} at
+the cost of training speed and we decided that 128~\chris{128 what? Also, why
+pick on batch size as the thing to comment on here? What about learning rate,
+kernel size, etc...} was a fair compromise. 
 
 \begin{comment}
 include Plot_NN to show generator architecture
 \end{comment}
 
-~\chris{In general I find this section to read like un-connected statements in
-the sense that they are un-connected to each other and un-connected to the main
-GW problem. Try to make it more like a recipe for doing this analysis.}
+~\chris{Please add a loss plot and use a paragrpah to describe what is going
+on.}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results}
