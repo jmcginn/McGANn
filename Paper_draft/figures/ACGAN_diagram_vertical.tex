@@ -14,7 +14,7 @@
 \node (r) [X real] {\textbf{X} real};
 \node (f) [X fake, right of = r, xshift = 0cm] {\textbf{X} fake};
 \node (G) [generator,above of = f, scale = 2] {\textbf{G}};
-\node (z) [zinput] [zinput, above of = G, xshift = 1cm] {\textbf{z} (noise)};
+\node (z) [zinput] [zinput, above of = G, xshift = 1cm] {\textbf{z} (latent)};
 \node (c) [coutput, left of = z] {\textbf{c} (class)};
 \node (D) [discriminator, below of = f, xshift = -1cm, scale = 2] {\textbf{D}};
 \node (rf) [real/fake, below of = D] {real/fake};

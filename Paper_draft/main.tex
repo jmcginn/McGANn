@@ -49,8 +49,9 @@
 \usepackage{academicons}
 \usepackage{scalerel}
 \usepackage{layouts}
-%\usepackage{import}
-\usepackage{subfig}
+\usepackage{import}
+%\usepackage{subfig}
+\usepackage{subcaption}
 \usepackage{tikz}
 \usetikzlibrary{decorations.pathreplacing,angles,quotes,shapes.geometric, arrows,calc}
 \usetikzlibrary{svg.path}
@@ -60,6 +61,14 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage[capitalize]{cleveref}
+
+
+\usepackage{graphicx}
+\usetikzlibrary{decorations.pathreplacing,angles,quotes,shapes.geometric, arrows,calc}
+\usepackage{wrapfig, blindtext}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.16}
+
 
 \usepackage[mathlines]{lineno}% Enable numbering of text and display math
 \linenumbers\relax % Commence numbering lines
@@ -198,16 +207,12 @@ and other as-yet unexplained astrophysical phenomena.
 matched-filtering,~\cite{Owen1998}, where a large template bank of possible
 \ac{GW} waveforms are compared to the detector outputs. In order to increase
 the chances of detection these template banks must span a large
-multi-dimensional parameter space and the templates must be accurate, requiring
-significant computational cost~\chris{the accuracy doesn't obviously lead to a
-cost increase}. \ac{GW} bursts are un-modelled~\chris{except for the ones you
-mentione before? SNe, glicthes, post-merger? }; therefore there are no
+multi-dimensional parameter space requiring
+significant computational cost. For \ac{GW} bursts that remain un-modelled; there are no
 templates available and so matched-filtering is unsuitable for the detection of
-these signals.  Instead, detection involves distinguishing the signal from
-detector noise~\chris{but that's also what matched-filtering does}. Burst
-searches look for excess power contained in the time-frequency
-domain~\chris{all of them? In any case you have to provide references here to
-the pipelines (cWB, x-pipeline, etc... Siong can help)} and rely on the
+these signals.  Instead, detection algorithms like (cWB, x-pipeline, etc... \jordan{reference}) involve distinguishing the signal from
+detector noise by looking for excess power contained in the time-frequency
+domain and rely on the
 astrophysical burst waveform appearing in multiple detectors at similar times.
 This is only possible if the detector noise is well characterised and the
 candidate signal can be differentiated from systematic or environmental
@@ -224,9 +229,7 @@ detectors~\chris{long sentence}. Such waveforms include sine-Gaussians: a
 Gaussian modulated sine wave that is characterised by its central frequency and
 decay parameter. Bandlimited white-noise bursts: white noise that is contained
 within a certain frequency range and ring-downs which mimic the damped
-oscillations after a \ac{CBC} merger.~\chris{seems strange to list only 3 of
-the 5 that we will be using later on.}
-
+oscillations after a \ac{CBC} merger. A Gaussian blip: a short exponential increase the decrease in amplitude and a Binary black hole in spiral. 
 % cut this text if not going to be used
 %
 \begin{comment}Such waveforms may have
@@ -244,43 +247,26 @@ diagnosing LIGOs sensitivity to frequency.~\chris{strange unfinished sentence.}
 %
 With the expectation that there will be many more \ac{GW} detections in the
 future, there is a growing need for fast and efficient \ac{GW} analysis methods
-to match the rising number of detections. While still in its infancy, \ac{ML}
-applications to \ac{GW} analyses have already shown great potential for
-overcoming data bottlenecks~\chris{what does that mean?}. \ac{GW} analysis in
-areas of detection~\cite{Gabbard2017,Gebhard_2019,Krastev_2020}, glitch
-classification~\cite{Bahaadini, George_2018,Razzano_2018} and parameter
-estimation~\cite{gabbard2019bayesian, shen2019deterministic,
-green2020gravitationalwave}~\chris{unfinished sentence, plus I wouldn't
-reference the Shen paper}. Applying these algorithms show similar results to
-matched-filtering techniques and have the benefit of being orders of magnitude
-faster. \michael{We mention aspects related to detection (pattern matching) but
-also metion PE in the same sentence and I think this is a bit
-confusing.}~\chris{yes, the matched-filtering comp[arison is only relevent for
-searches. The biggest speed gain is for the Bayesian PE. I also think that you
-need to reference more of the ML-GW literature here. I've added Mervyn's SNe
-paper, Joe's latest paper, our latest Gaussian ?Mixture model paper, 2 CW
-papers and the recent ML review paper to the bibligrapohy file but there are
-quite a few others. Have a look at the review to steal references. In each case
-try to say 1 sentence about what they do if possible.}
+to match the rising number of detections. While still in its infancy, applying \ac{ML} to \ac{GW} analyses have already shown great potential in
+areas of detection~\cite{Gabbard2017,Gebhard_2019,Krastev_2020}, where these techniques have matched the sensitivity of matched filtering for Advanced LIGO and Advanced Virgo gravitational-wave searches. In identifying and classifying detector noise transients or  'glitches"~\cite{Bahaadini, George_2018,Razzano_2018, 2020arXiv200801262G}. In Bayesian parameter
+estimation~\cite{gabbard2019bayesian,
+green2020gravitationalwave} where \ac{ML} techniques can recover parameters of a \ac{GW} signal significantly faster than standard methods. Long duration signals like continuous \ac{GW} require long observing times and therefore have large amounts of data needing to be processed. Current \ac{ML} approaches~\cite{2020PhRvD.102b2005D, 2019PhRvD.100d4009D, 2020arXiv200708207B} are particularly well suited to dealing with this as once trained the searches can be performed quickly. \jordan{quicker than than what?}
 
 % What this paper does on GANs in 1 paragraph - the point of the paper
 %
 In this work we aim to explore the use of \ac{ML} to generate and interpret
 unmodelled \ac{GW} burst waveforms. Using the generative machine learning
-model: \acp{GAN}, we train on five classes of known~\chris{are they known? In
-what sense?} burst morphologies~\chris{fancy word - what about waveform class?}
-in the time domain. Working with the assumption that \acp{GAN} construct smooth
-$n$-dimensional vector spaces between their input and output, we can then
+model, \acp{GAN}, we train on five classes of waveforms in the time domain. Working on the assumption that \acp{GAN} construct smooth
+ high dimensional vector spaces between their input and output, we can then
 explore the space between the five classes to construct new
-unmodelled~\chris{hybrid?} waveforms. As all the computationally expensive
+hybrid waveforms. As all the computationally expensive
 processes occur during training, the learned model after training is able to
 produce waveforms in fractions of a second and in fact produce waveforms that
-are impossible~\chris{never say never (or impossible)} to produce with current
+are difficult to produce with current
 techniques. These new varieties of waveforms can then be used to diagnose
-detection algorithms and gain new insight into sources of \ac{GW}
-bursts~\chris{yes, they can help diagnose or calibrate or assess the sensitivty
-of detection algorithms but also allow us to better train our algorithms to a
-broader range of possible signals and therefore enhance our detection ability}. 
+detection algorithms, gain new insight into sources of \ac{GW}
+bursts and  allow us to better train our algorithms to a
+broader range of possible signals and therefore enhance our detection ability. 
 
 % the structure of the paper
 %
@@ -308,151 +294,194 @@ here - motivate this choice. \ding{51}
 %
 \subsection{Artificial neural networks}
 
-\begin{figure}
-    \begin{minipage}[b]{0.3\linewidth}
-        \subfloat[]{\label{fig:perceptron}\includegraphics[width=\linewidth,height=0.65\linewidth]{figures/neural_network-figure0.pdf}}
-        \par
-        \vspace{\baselineskip}
-        \subfloat[]{\label{fig:tanh_activation}\includegraphics[width=\linewidth,height=0.65\linewidth]{figures/neural_network-figure1.pdf}}
-    \end{minipage}
-        \begin{minipage}[b]{0.7\linewidth}
-        \subfloat[]{\label{fig:neural_network}\includegraphics[width=\linewidth,height=0.65\linewidth]{figures/neural_network-figure2.pdf}}
-    \end{minipage}
-    \caption{Neural Networks (a) A single neuron taking a vector of inputs and
-returning a single output based on the weights, bias and activation function
-of the network. (b) The hyperbolic tangent used as an activation
-function.~\chris{is this the actual activation that you use in the GAN?
-otherwise why focus on it alone, you could plot a handful on the same plot} (c)
-A fully connected~\chris{you haven't mentioned what a fully connected network
-actually is in the text} neural network containing two hidden layers that performs a
-mapping of an input vector to a single output. \michael{Equation in the
-neuron looks very small}~\chris{I agree, but the equation in (b) is even
-smaller. I would also recommed that you make the style of the FC network hidden
-and output layer neurons the same as the single perceptron in terms of colours.
-You could put $x_i$s in the input layer.}}
-\end{figure}
-
 % inroduce the concept of ML
 %
-Since the birth of programmable computers, people have wondered if machines can
-develop true intelligence beyond formal mathematical procedures. Today, \ac{ML}
-aims to learn apparent relationships held within the given data or `training
+
+\begin{figure}[h!]
+\begin{subfigure}[b]{0.30\textwidth}
+   \begin{subfigure}[b]{1\textwidth}
+   	\centering
+	\resizebox{\textwidth}{!}{
+ 	\begin{tikzpicture}		
+		    \node[scale=0.3] 		   (x1) at (0,0.8) {$x_1$}; 
+		    \node[scale=0.3] 		   (x2) at (0,0.5) {$x_2$};  
+		    \node[scale=0.3] 		   (x3) at (0,0.2) {$x_3$};       
+    		    \node [draw, circle,scale=0.18,fill=blue!25]          (c3) at (0.7,0.5) {\Large $\sigma(\sum_i w_i x_i + b)$};
+    \draw[->] (x1)--(c3);
+    \draw[->] (x2)--(c3);
+    \draw[->] (x3)--(c3);
+     \draw[->] (c3)--(1.3,0.5);
+   	\end{tikzpicture}
+	}
+	\caption{}
+	 \label{fig:perceptron}
+ \end{subfigure}
+ 
+   \begin{subfigure}[b]{1\textwidth}
+  	\centering
+	\resizebox{\textwidth}{!}{
+\begin{tikzpicture}
+\begin{axis}[
+    xmin=-2.5, xmax=2.5,
+    ymin=-1.5, ymax=1.5,
+    axis lines=center,
+    axis on top=true,
+    domain=-2.5:2.5,
+    ylabel=$\sigma$,
+    xlabel=$x$,
+    ]
+
+    \addplot [mark=none,draw=green,ultra thick] {tanh(\x)};
+    \addplot+[mark=none,draw=blue,domain=-2.5:0,ultra thick] {0};
+    \addplot+[mark=none,draw=blue,domain=0:2.5,ultra thick] {x};
+    \addplot+[mark=none,red,dotted,domain=-2:0,ultra thick] {0.2*x};
+    \addplot+[mark=none,red,dotted,domain=0:2.5,ultra thick] {x};
+
+    %% Add the asymptotes
+\end{axis}
+\end{tikzpicture}
+	}
+	\caption{}
+	 \label{fig:activations}
+\end{subfigure}
+\end{subfigure}
+	 \begin{subfigure}[b]{0.70\textwidth}
+\centering
+\resizebox{\textwidth}{!}{
+\def\layersep{1.5cm}
+\begin{tikzpicture}[shorten >=1pt,draw=black, ->,node distance=\layersep]
+
+
+    \tikzstyle{every pin edge}=[<-,shorten <=1pt]
+    \tikzstyle{neuron}=[circle,draw=black, very thick, fill=blue!25, minimum size=22pt,inner sep=0pt]
+    \tikzstyle{input neuron}=[circle,draw=black,very thick,fill=black!25, minimum size=22pt,inner sep=0pt];
+    \tikzstyle{output neuron}=[neuron];
+    \tikzstyle{hidden neuron}=[circle,draw=black,very thick,fill=blue!25,minimum size=22pt,inner sep=0pt];
+    \tikzstyle{annot} = [text width=4em, text centered]
+
+    % Draw the input layer nodes
+    \foreach \name / \y in {1,...,5}
+    % This is the same as writing \foreach \name / \y in {1/1,2/2,3/3,4/4}
+        \node[input neuron] (I-\name) at (0,-\y) {$x_{\name}$};
+
+    % Draw the hidden layer nodes
+    \foreach \name / \y in {1,...,3}
+        \path[yshift=-1cm]
+            node[hidden neuron] (H-\name) at (\layersep,-\y cm) {};
+            
+  \foreach \namee / \y in {1,...,3}
+        \path[yshift=-1 cm]
+            node[hidden neuron] (H1-\namee) at (2*\layersep,-\y cm){};
+
+           
+    % Draw the output layer node
+  \node[output neuron,pin={[pin edge={->}]right:}, right of=H1-2] (O) {};
+    % Connect every node in the input layer with every node in the
+    % hidden layer.
+    \foreach \source in {1,...,5}
+        \foreach \dest in {1,...,3}
+            \path (I-\source) edge (H-\dest);
+
+ \foreach \source in {1,...,3}
+        \foreach \dest in {1,...,3}
+            \path (H-\source) edge (H1-\dest);
+            
+    % Connect every node in the hidden layer with the output layer
+    \foreach \source in {1,...,3}
+        \path (H1-\source) edge (O);
+
+    % Annotate the layers
+    %\node[annot,above of=H-1, node distance=1cm] (hl) {Hidden layers};
+   % \node[annot,left of=I-4] at (0) {Input layer};
+    %\node[annot,right of=hl] {Output layer};
+    
+    \draw[decoration={brace,mirror,raise=15pt},decorate,-]
+  (I-1.north) -- node[left=0.8cm,scale=0.7] {Input layer} (I-5.south);
+ 
+    \draw[decoration={brace,raise=15pt},decorate,-]
+  (H-1.west) --  node[above=0.8cm,scale=0.7]{Hidden layers}  (H1-1.east);
+  
+    \draw[decoration={brace,raise=15pt},decorate,-]
+  (O.west) --  node[above=0.8cm,scale=0.7]{Output layers}  (O.east);
+ 
+\end{tikzpicture}
+}
+ \caption{}
+ \label{fig:network}
+ \end{subfigure}
+
+\caption{Neural Networks (a) A single neuron taking a vector of inputs and
+returning a single output based on the weights, bias and activation function
+of the network. (b) A selection of activation functions used in this study. The hyperbolic tangent (Green), Rectified linear unit \cite{relu} (Blue) and Leaky rectified linear unit \cite{Maas2013RectifierNI} (Red). (c)
+A an example of a neural network containing two hidden layers that performs a
+mapping of an input vector to a single output.}
+\end{figure}
+
+\ac{ML} aims to learn apparent relationships held within given data or `training
 data' in order to make accurate predictions without the need for additional
-programming. A common approach in \ac{ML} relies on the computer learning on
-past experience to make decisions on future events. \michael{Not sure about the
-use of computer here, maybe \textit{relies on a model}?} The hierarchical
-nature of this approach means that the machine can build complicated concepts
-from simpler ones~\chris{what hierarchical nature? You haven't mentioned
-anything about that.}. This branch of \ac{AI} is called deep
-learning~\chris{OK, but as long as you explain the hierarchy thing and how it
-implies complicated concepts from simpler ones.}. 
+programming. A common approach in \ac{ML} relies on the model learning on
+past experience to make decisions on future events. Deep learning is a branch of \ac{ML} that takes inspiration from biological processes in the brain. 
 
 % Introduce basic neural networks - a perceptron layer
 %
-Neural networks are the quintessential~\chris{really? quintessential?} \ac{ML}
-algorithm that aims to approximate a function. They are built from many single
-processing units called neurons. The simpliest Neural Network is the perceptron
+\begin{comment}
+Neural networks are the quintessential~\chris{really? quintessential?} \jordan{It's a perfectly cromulent word https://www.imdb.com/title/tt0701155/} \ac{ML}
+algorithm that aims to approximate a function. 
+\end{comment}
+
+Artificial neural networks are universal function approximators that are built from many single
+processing units called neurons. The simplest neural network is the perceptron
 layer~\cref{fig:perceptron} which holds a single neuron that takes several real
-inputs $x_{1},\ldots, x_{i}$~\chris{and outputs what? also $i$ is the index and not the "final" index}
-and maps them to an output according to the linear equation 
+inputs $x_{i},\ldots, x_{n}$
+and maps them to an \jordan{probability?} output according to the linear function, 
 %
 \begin{align}
-\sigma(\sum_i w_i x_i + b),
+f(x) = \sigma(\sum_i w_i x_i + b),
 \label{eqn:neuron}
 \end{align}
 %
-\chris{it's not an equation if it's not equal to something. Please make it
-eaqual something.} where $w$ and $b$ are the weights and bias and $\sigma$
+where $w$ and $b$ are the weights and bias and $\sigma$
 denotes the activation function. The weights are numbers which can be thought
-as the strength between connections~\chris{what connestions? between what
-objects?}. The output of a neuron is called its activation and different
-choices of activation function allow the user~\chris{are we users or developers
-or what?} to simulate various models. A common example of an activation
-function is the hyperbolic tangent~\cref{fig:tanh_activation} that is used when
-the outputs of the network must be both positive and negative~\chris{how can an
-output be both positive and negative. The language is ambiguous and confusing}
-and re-scaled to $[-1,1]$~\chris{at this stage in the explanation the reader
-has no idea what an output would look like or why it would be rescaled}. It is
-often useful to introduce a bias, $b$, such that the neuron remains inactive
-above zero but is active when the sum reaches a defined threshold. This bias is
-added before the activation function and it tells us how high the weighted sum
-needs to be before the neuron becomes active.~\chris{well kind of, but also not
-really. I would advise you to rewrite this (if we keep it) in a minimalist
-style just explaining what each item is and not trying to describe what it
-does.}
-
-% the cost or loss function
-%
-The output of a single neuron is defined by~\cref{eqn:neuron} and gives a
-prediction $\hat{y}$ that can be compared to the real value $y$~\chris{what the
-hell is $y$, it's not been mentioned before} through a loss (also known as a
-cost) function. If the loss is non-zero~\chris{no, it doesn't matter whether
-the number is above or below or equal to zero, the machine will try to minimise
-the number (if negative, it will try to make it more negative)}, the network
-must work to minimise this function by updating the weights in the negative
-direction of the loss gradient in a process referred to as gradient
-descent~\chris{give reference and also make the distinction between this and
-the actual method used to do it, back progagation}. This loss function plays a
-critical role in how neural networks learn~\chris{OK, but are you going to
-expand on that or just leave it there? As far as I can tell from the text it's
-the *only* way network's learn so that's pretty critical and already evident}.
+of as the strength between connected neurons. The output of a neuron is defined by its activation function which controls how the neuron 'fires" depending on its input. Some examples of commonly used activation functions are shown in~\cref{fig:activations}. It is often useful to introduce a bias, $b$, such that the neuron remains inactive
+above zero but is active when the sum reaches a defined threshold. 
 
 % basic network structure
 %
 A neural network contains many single neurons connected in a layered structure
-as shown in~\cref{fig:neural_network}. The activations of the first layer (or
+as shown in~\cref{fig:network}. The activation's of the first layer (or
 input layer) act as the inputs to the second layer and so on until the output
 layer. Multi-layered neural networks have intermediate layers between the input
-and output stages dubbed the hidden layers as the computations performed are
-not accessible to the user~\chris{well that's not really true. We can access
-everything if we want but it depends on what you define as a user. Best to
-simply state what they're clalled and no need to give a reason.}. The network
-can be thought of as a function F: $\mathbb{R}^N\rightarrow
-\mathbb{R}^M$~\chris{does F not have to be in math-mode too? Is is a
-mathematical symbol?} reliant on how activations from one layer bring
-activations in the next~\chris{yes, kind of, but also reliant on the trained
-weights and biases too, so actually reliant on everything}. The system is
-analogous to biology, where, some groups of neurons in animal brains cause
-certain others to fire~\chris{best to stay away from analogies like these where
-the practical specifics can be picked apart}. 
+and output stages dubbed the hidden layers.
+
+% the cost or loss function
+%
+The output of a single neuron is gives a
+prediction that can be compared to the real value through a loss (also known as a
+cost) function. The network must work to minimise this function by updating the weights in the negative
+direction of the loss gradient in a process referred to as gradient
+descent \cite{ruder2016overview}. The training process for a single layered network is easy to compute as the weights relate directly to the gradient of the loss function the network is trying to minimise. For deeper architectures, the loss is a complicated function of all the weights in all the layers. The backpropagation \cite{Nielsen1992} algorithm acts over the many paths from node to output. It does so in two phases:
+
+\begin{itemize}
+\item Forward phase: For one instance of training, the inputs are fed forward through the network using the current weights and the final output is compared to the training labels. The derivative of the loss function is then computed.
+\item Backward phase: This phase learns how the gradient of the loss function changes when the weights are varied. Starting at the output node, the algorithm goes backwards through the network (hence the name). The weights that give the steepest descent to the loss function are saved for the next training instance.  
+\end{itemize}
+This process of updating the weights is repeated until the loss function reaches convergence or a global minimum. The training data is cycled through in epochs. An epoch is defined when the entire data set is fed through the network. It is impractical to feed the entire data set into the network at once, so the training is split up into smaller more manageable batches. Finally, the number of batches needed to compete one epoch is referred to as the iterations.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Convolutional Neural Networks}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \acp{CNN} are designed to work with grid-like input structures that exhibit
-strong local spatial dependencies. An example would be a two-dimensional image
-as each coloured pixel has similar intensities to their near
-neighbours~\chris{it's not about that really, it's like you said, it's about
-spatial relationships}. The value contained in each pixel can be thought of as
-adding an additional dimension or channel to the image~\chris{no, the dimension
-and channel are specifically defined. A 2D image has 2 dimensions. An RGB image
-has 3 numbers per pixel and these are typcally stored as channels. Channels are
-dealt with differently to dimensions}. Although most work with \acp{CNN}
+strong local spatial dependencies. Although most work with \acp{CNN}
 involve image-based data, they can be applied to other spatially adjacent data
 types such as time-series and text items. \acp{CNN} are defined by the use of a
 convolution operation, a mathematical operation that expresses the amount
-overlap between functions. The convolution is applied by shifting one grid-like
-structure over the other, drawing out spatially important features between the
-two~\chris{yes, but what is being dragged over what? Time to define the
-convolutional neuron? Maybe add an equation?}. A strided convolution reduces
-the dimensionality of the input while retaining spatial features \michael{How?
-This is core part of the architecture of the GAN but is quite vague, I don't
-think it's obvious that stride imples moving the filter further. Maybe
-something like: \textit{the distance by which the grid is shifted is known as
+overlap between functions. Much like traditional neural networks the convolution operation in this context involves multiplying the input by an array of weights, called a filter or a kernel qhich is typically smaller in size than the input. The convolution is applied by shifting the kernel over the input, drawing out spatially important features between the
+two. The distance by which the grid is shifted is known as
 the stride and increasing it reduces the dimensionality of the
-output}}~\chris{why are we talking about strides at this point? Are they
-important for the GAN? You haven't mentioned kernel sizes or dropout. are these
-equally important?}. This can result in a loss of information along the
-borders~\chris{the borders of what?}. To combat this, the input is padded with
-zeros at the edges which does not interfere with the convolutional operation.
-The output of the convolutional layer is then passed to an activation function.
+output. The output of the convolutional layer is then passed to an activation function.
 
-~\chris{I'm getting the sense that these 2 sections of ANNs and CNNs aren't
-really helpful in their current state. They should either be removed OR tidied
-up. I don't think they need to be expanded upon but various statements can be
-removed and other important things can be added. Imagine reading this with no
-knowledge of ML. Do you get informed by this or confused?} 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{GANs}
@@ -461,118 +490,43 @@ knowledge of ML. Do you get informed by this or confused?}
 % basic intro to GANs
 %
 A subset of deep learning that has seen fruitful development in recent years
-are \acp{GAN}~\cite{Goodfellow2014}. These unsupervised~\chris{they have
-training data don't they? Is that unsupervised?} algorithms learn patterns in a
+are \acp{GAN}~\cite{Goodfellow2014}. These unsupervised algorithms learn patterns in a
 given training data set using an adversarial process. The generations from
-\acp{GAN} are state-of-the-art~\chris{a phrase that will not stand the test of
-time} in fields such as high quality image
+\acp{GAN} are currently state-of-the-art in fields such as high quality image
 fidelity~\cite{brock2018large,karras2019analyzing}, text-to-image
 translation~\cite{reed2016generative}, and video
 prediction~\cite{liang2017dual} as well as time series
 generations~\cite{esteban2017realvalued}~\chris{do we still not have any other
-GW GAN applications to reference or are we hoping to still be the first?}. 
+GW GAN applications to reference or are we hoping to still be the first?}. \jordan{None that i can find?}
 
 % Basic components of a GAN
 %
 \acp{GAN} train two competing neural networks, consisting of a discriminator
 network that is set up to distinguish between real and fake data and a
-generator network that produces synthetic (fake) versions of the real data.
-\michael{Is it clear to the reader that the \textit{fake} data is the same as
-the synthetic data?} The generator performs a mapping from an input noise
-vector $\mathbf{z}$, that is usually sampled from a $n$-dimensional~\chris{be
-careful with statments about $n$-dimensions since $n$ is a variable and could
-mean the number of latent dimensions or the number of class dimensions or data
-dimensions, etc...} Gaussian space known as the latent space, to its
-representation of the data, and the discriminator maps its input $\mathbf{x}$ to
-a probability that the input came from either the training (real) data or
-generator (fake). 
+generator network that produces fake versions of the real data. The generator model performs a mapping from a fixed length vector $\mathbf{z}$ to its
+representation of the data. The input vector is drawn randomly from a Gaussian distribution which is referred to as a latent space comprised of latent variables. The latent space is a compressed representation of a data distribution which the generator applies meaning to during training. Sampling points from this space allows the generator to produce a variety of different generations, with different points corresponding to different features in the generations. The discriminator maps its input $\mathbf{x}$ to a probability that the input came from either the training (real) data or
+generator (fake).
+
+\begin{comment}
+Chris' definition of latent space if needed: It maps the intrinsic
+variation of the training space onto the Gaussian latent space distribution.
+\end{comment}
 
 % training a GAN
 %
-During training, the discriminator is given a batch~\chris{you have not
-introduced batches yet. Best to do that in the ANN section} of samples that
-contains one half real data and one half fake data which it then makes
-predictions on.  The loss for the discriminator is calculated by comparing its
-predictions to the labelled data through the binary cross-entropy function.
-\jordan{note to myself: This is important since eqn 2 is derived from it (thats
-where the logs come from)}~\chris{either give a reference to binary cross
-entropy or define it here mathematically}. The training process of a \ac{GAN}
-alternatively updates the weights of the discriminator and generator based on
-information on its competitors loss function~\chris{you haven't fully explained
-how the loss is computed in the 2 phases of each training pass. I recommend
-that you add that here other wise discussion of generator loss and discrimator
-loss makes no sense.}. This loss of the discriminator is used to update the
-weights of the generator to produce more realistic samples of the input
-distribution, the loss of the generator encourages the discriminator to update
-its classification abilities. \acp{GAN} seek to find an equilibrium between the
-generator and discriminator in the form of a two-player game that can be
-summarised by 
-%
-\begin{align}
-  \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) &= \mathbb{E}_{\mathbf{x} \sim p_{\text{r}}(\mathbf{x})} [\text{log} D(\mathbf{x})] + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z})} [\text{log}(1-D(G(\mathbf{z})))],
-\label{equation:GANloss}
-\end{align}
-%
-% remove these comments 
-%
-\begin{comment}
-Both networks compete in
-a minimax game~\chris{what is a minimax game? references?} which the generator
-is trying to minimise and the discriminator is trying to
-maximise:~\chris{nicely written, however, it needs an extra 25\% explanation
-for people not familar with ML or GANs in particular. Try to spell things out
-more. Also refer to Fig 1 somewhere in this section.}
-\end{comment}
-%
-where $V$ is an objective function that is to be optimised. Objective functions
-are a general term for either a loss function (to be minimized) or a negative
-loss function (to be maximised). We use $D$ to define the discriminator
-function~\chris{output interpreted as a probability?} , $G$ for the generator
-function and ${\mathbf{x} \sim p_{\text{r}}(\mathbf{x})}$, ${\mathbf{z} \sim
-p_{\text{z}}(\mathbf{z})}$ are samples taken from the training data and
-generated data respectfully~\chris{no, $z$ can't be from the data since it's
-not called $x$. It is from the latent space distribution.}. In practice this
-approach was found to be unstable \michael{Cite?}~\chris{unstable for us or
-unstable in general, also add reference.}. Early on in training the generators
-weights are initialised randomly meaning that the early generations are noisy
-and uninformative. This means that the discriminator can easily learn to spot
-the fake generations and so the discriminator wins and the generator cannot
-continue to improve. To overcome this the framing~\chris{what is framing in
-this context?} of the generator is often changed. Rather than minimizing
-$\text{log}(1-D(G(\mathbf{z})))$ the objective now is to maximise
-$\text{log}(D(G(\mathbf{z})))$, that is, to maximise the probability of the
-generations being predicted as real. The idea being that we always want the
-losing side to be able to leverage \michael{information?} from its
-competitor.~\chris{OK, does this all mean that the previous equation is wrong?
-If so, why quote it. Just use the actual correct equation and explain why it's
-correct rather than explaining why something is wrong. I would also try to link
-up this equation with how we actually train i.e., we compute the first term by
-drawing samples from the training set $x$ and getting the average log-prob of
-the discriminator (not quite true since we actually input a mix of real $x$ and
-fake $G(z)\rightarrow x'$). Then we take a set of fake $x'$ made using $G(z)$
-with $z$ drawn from the latent space, and get the loss (but we switch the
-labels hence the $1-D(G(z))$. See what I mean? You shouls also refer to Fig 2
-here.} 
-%
+During training, the discriminator and generator are updated in parallel using batches of data. Random latent vectors are given to the generator to produce a batch of fake samples and an equal batch of real samples is taken from the training data. The discriminator makes predictions on the real and fake samples and the model is updated through minimising the binary cross-entropy function \cite{Goodfellow-et-al-2016}
 
-% describing the problems with GANs 
-%
-In theory, the adversarial process will eventually lead to the local Nash
-equilibrium~\cite{Nash1950} whereby both neural networks are trained
-optimally~\chris{vague and not informative statement. What does optimal mean
-here?}. In practice, however, \acp{GAN} are notoriously difficult to train with
-difficulties that include: Non-convergence, where the model parameters
-oscillate and the loss never converges, mode collapse where the generator
-produces a limited diversity of samples, and diminishing gradients when
-applying gradient descent to a loss function that is discontinuous.~\chris{OK,
-difficult to train. I understand. Why are you telling the reader this? Will we
-be referring back to these issues later?}
+\begin{equation}
+    L = -y \log(p) + (1 - y) \log(1-p),
+    \label{eqn:gloss}
+\end{equation}
+where p is the networks output and y is the true output. 
+To update the generator, a new batch of fake samples is generated by drawing new points in the latent space and passing this to the discriminator. The generators loss is computed by minimizing the discriminators loss averaged over the batch but with switched labels 
 
-~\chris{there needs to be some more discusiion of what the latent space
-and $z$ variables represent in the GAN in general. It maps the intrinsic
-variation of the training space onto the Gaussian latent space distribution.}
-
-
+\begin{equation}
+    L_{G} = n^{-1} \sum\limits_{i=1}^n \log(1-D(G(\mathbf{z}_{i}))),
+\end{equation}
+where D is the discriminator and G is the generator.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Conditional GANs}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -582,63 +536,32 @@ variation of the training space onto the Gaussian latent space distribution.}
 To gain more control over what a GAN is able to generate, a conditional variant
 of \acp{GAN} named \acp{CGAN}~\cite{cgan} was introduced by feeding in extra
 information into the generator and discriminator such as a class label or
-attribute label, $c$. The objective function~\cref{equation:GANloss}~\chris{I
-think it owuld be be best if you just stick to loss function rather than
-switching between loss and objective} is then
-%
-\begin{align}
-  \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) &= \mathbb{E}_{\mathbf{x,c} \sim p_{\text{r}}(\mathbf{x,c})} [\text{log} D(\mathbf{x,c})] + \mathbb{E}_{\mathbf{z} \sim p_{\text{z}}(\mathbf{z}),\mathbf{c} \sim p_{\text{r}}(\mathbf{c})} [\text{log}(1-D(G(\mathbf{z,c})))].
-\label{equation:cGANloss}
-\end{align}
+attribute label, $c$. This simple addition has shown to work well in practice, for instance in image-to-image translation~\cite{isola2016imagetoimage}. We defined the classes in one-hot encoding framework, that is, each class resides at the corner points of a 5 dimensional cube. For example e.g. $c=[0,1,0,0,0]$ represents the ring-down signal class. The training data and labels are drawn from a joint distribution $p_{real}(x,c)$, whereas when generating fake data we sample from $p(c)$ and $p(z)$ independently. While the generator and disriinmator now have two inputs $D(\mathbf{z},\mathbf{c})$ and $G(\mathbf{z},\mathbf{c})$ the networks are still trained via Eq. \eqref{eqn:gloss} as the discriminator only needs to output the realness/fakeness. 
+Fig. \ref{fig:gan_comparison} shows the differences in inputs and outputs of a GAN compared with a \ac{CGAN}. We will be using a conditional GAN for this study.
 
-This simple addition has shown to work well in practice, for instance in
-image-to-image translation~\cite{isola2016imagetoimage}. We will be using a
-conditional GAN for this study.~\chris{OK, but you have not defined the new
-changes to the loss function in the text. Please indicate that the training
-data and labels are being drawn from a joint distribution $p_r(x,c)$ and when
-making fake data you are drawing from $p_r(c)$ independent of =$p(z)$. However,
-what does the $r$ stand for and why is it important, and what defines $p_r(c)$?}
-
-~\chris{Finally, you need to refer to and discuss Figure 2. It is currently
-neither referenced or discussed.}
-
-% get rid of these comments if they are no longer useful
-%
-\begin{comment}adds structure to the latent space by providing the
-generator with a class or attribute label. The generator learns to segment the
-latent space by clustering distributions which have similar properties, making
-a point in latent space conditional on a class~\chris{are we sure about this?
-all classes share the same latent space and I don't think that the space gets
-segmented into areas corresponding to different classes - I do think that it
-gets broken down into spaces with different intrinsic physical properties e.g.,
-high frequency, long duration, etc...}.
-\end{comment}
-%
-\begin{comment}
-This idea was extended further with
-\acp{ACGAN}~\cite{odena2016conditional} that require the discriminator to
-output a probability of data belonging to each class. A pictorial
-representation on the differences between these approaches is shown in
-Fig.~\ref{fig:gan_comparison} \jordan{self note: Probably move away from ACGAN part, standalone aux classifiers can be trained later if that's what you want}. 
-\end{comment}
-
-\begin{figure}
-    \centering
-        \input{figures/GAN_diagram_vertical}%     without .tex extension
-        \input{figures/ACGAN_diagram_vertical}%     without .tex extension
+\begin{figure}[h!]
+    \begin{subfigure}{.5\textwidth}
+     \centering
+        \input{figures/GAN_diagram_vertical}
+        \caption{GAN}
+    \end{subfigure}
+    \begin{subfigure}{.5\textwidth}
+     \centering
+        \input{figures/ACGAN_diagram_vertical}
+        \caption{CGAN}
+    \end{subfigure}
     \caption{Comparison of the original GAN method and the
 Conditional-GAN method. For CGANs the training data requires a label denoting
 its class that is also fed to the generator which then learns to generate
-waveforms based on the input label.~\chris{OK, a few things. Try to separate
-these a bit and maybe make them subplots with sublabels indicating GAN and CGAN
-distinction. Replace noise with latent (or otherwise). Noise implies GW data
-noise which it is not. Overall it's a bit basic and doesn't indicate either the
+waveforms based on the input label.~\chris{Overall it's a bit basic and doesn't indicate either the
 2 competing training steps or any aspect of the loss or specify that $x$ and
 $z$ (and $c$) are drawn from distributions already defined in the text. Maybe it's OK without
 that. As for the CGAN, I'm troubled by the fact that there is only one $c$ box.
 It implies that the same $c$ value is given to each real and fake $x$ data when
 in fact each $x$ sample has it's own randomly drawn $c$ value.}} \label{fig:gan_comparison}
 \end{figure}
+
+
 
 ~\chris{After describing the latent space meaning in the GAN section you need
 to bring that together with a discussion of the entirely seperate class space
