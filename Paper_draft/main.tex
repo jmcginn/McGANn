@@ -658,7 +658,7 @@ defined in~\cref{Tab:training_parms} and a sample of training waveforms are show
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{Paper_draft/figures/training-4.png}
+    \includegraphics[width=\textwidth]{figures/training-sample.png}
     \caption{Examples of the five different waveforms that were used in training the \ac{GAN} for this study. \jordan{put in the parms here too?}}
     \label{fig:training_waveforms}
 \end{figure}
@@ -696,12 +696,12 @@ distribution with equal propabilities for each class of
 sine-Gaussian,
 ring-down, white noise bursts, Gaussian pulse and \acp{BBH}. \jordan{add how many epochs trained for, on what hardware and how long}
 
-As \acp{GAN} are trained by updating one model at the expense of the other, they can be hard to train. The goal of GAN training is to find an equilibrium between the two models, if this cannot be found then it is said that the \ac{GAN} has failed to converge. One way to diagnose \acp{GAN} during the development process is to keep track of the loss over time. Loss plots, for example, as seen in fig. \ref{fig:lossplot} can help to identify common failure modes or to check if the \ac{GAN} has indeed converged. There is currently no notion of early stopping in \acp{GAN}, instead, training is halted after convergence and by visually inspecting the generations. 
+As \acp{GAN} are trained by updating one model at the expense of the other, they can be hard to train. The goal of GAN training is to find an equilibrium between the two models, if this cannot be found then it is said that the \ac{GAN} has failed to converge. One way to diagnose \acp{GAN} during the development process is to keep track of the loss and accuracy over time. Loss plots, for example, as seen in fig. \cref{fig:lossplot} can help to identify common failure modes or to check if the \ac{GAN} has indeed converged. Accuracy is the number of correct predictions made divided by total number of predictions. \jordan{mention why accuracy can be misleading? \cite{https://en.wikipedia.org/wiki/Accuracy_paradox}} There is currently no notion of early stopping in \acp{GAN}, instead, training is halted after convergence and by visually inspecting the generations. 
 
 \begin{figure}[h!]
     \centering
-    \includegraphics[width=1\textwidth]{Paper_draft/figures/Screenshot 2020-09-11 at 16.52.47.png}
-    \caption{Line plots of the discriminator (blue) and generator (orange) loss v iterations. Early in training the losses oscillates as both models attempt to find their equilibrium, after which, both losses vary around 0.7.}
+    \includegraphics[width=1\textwidth]{figures/losses.png}
+    \caption{Plot of the discriminator and generator loss and accuracy as a function of iterations. Early in training the losses oscillates as both models attempt to find their equilibrium, after which, both losses vary around 0.7-1.}
     \label{fig:lossplot}
 \end{figure}
 
@@ -756,53 +756,13 @@ After training the networks, the generator's function is to map $G$ : $\mathbf{z
 $\mathbb{R}^{100}$ $\to$ $\mathbb{R}^{1024}$. The results from the
 generator can be seen in \cref{fig:gen_signals}. Each plot shows the output of
 the generator for random input latent space vectors $\mathbf{z}$ and each row
-corresponds to one of the five class vectors $\mathbf{c}$.~\chris{yes? What
-about the plot? Anything positive to say about what you're showing? Please
-comment on the quality of the generated waveforms and the good varaition within
-each class representative of the variation in the training data. The point is
-to show the general variation and quality.}
-
-\chris{You also need to make it clear somewhere (maybe here) that you are
-generting single polarisation waveforms with normalised amplitude fixed to
-unity.}
-
-\chris{Also, how is the reader going to judge that your waveforms are good if
-we don't show any examples of the training data. I recommend a single plot
-showing 5 waveforms (5 panels horizontally) for reference.}
+corresponds to one of the five class vectors $\mathbf{c}$. The generations show good quality likeliness and good variation within each class representative of the variation of the training data. All generations are single plus polarised waveforms and their amplitudes are normalised to unity after generation. 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Interpolation within the latent space}
 
 % expain what we are planning to show here
 %
-In this section we explore the latent space formed by the generator by interpolation. We take two random
-points in the latent space and linearly interpolate between them~\chris{OK, but
-how do you select the latent points? Are they the same pair of points for each
-class?}. These new latent space vectors can now be fed into the generator to
-make predictions on~\chris{"to make predictions on" - what does that mean?}
-while keeping the class vectors constant at each of the 5 \chris{fiducial?}
-training classes. The full effect shown in~\cref{fig:z_interp}~\chris{not a
-sentence}. We can see that each plot shows plausible waveforms suggesting that
-the generator has constructed a smooth space unlike the discrete training
-case~\chris{don't confuse the issue by saying that the class space is discrtee
-when later we want to show the opposite}. Additionally as each class is given
-the same latent points to interpolate over, we can see that the waveforms
-cluster together with respect to their parameters. Visually, the sine-gaussian
-and ring-down waveforms share similar frequencies and the other signals show
-similar decays and starting epochs for a common latent space input. The only
-exception is for the \ac{BBH} waveforms. This can be explained by the fact that
-they were trained with more variety of parameters~\chris{what is more variety
-of parameters? Does it really mean anything?} and consistently have their peak
-amplitudes in the last quarter of the time series~\chris{do they? In the plot
-the peak amplitude locations seem to range from 0.6 back to 0.5 but that's not
-too different to the ring-downs, the white noise or the pulse. The
-sine-Gaussian is the one that stands out as different. Can you please verify
-the correctness of the plot you are referring to.}.
-
-\chris{I think that it might be sensible to hand-pick the latent space
-locations as the origin and the point $[1,1,\ldots,1]/2$. When you do random
-locations we don't know what we should expect to get.}
-
 \ac{ML} algorithms are often described as universal function approximators. In
 the case of the generator it maps samples drawn from a 100 dimensional Gaussian
 distribution in the latent space to its representation of the training set. As
@@ -822,8 +782,18 @@ have the necessary architecture either struggle to produce results at all or
 fall into the common failure mode know as mode collapse; where the generator
 produces a small variety of samples or simply memorises the training set. To
 test this, we perform linear interpolations in the latent and class
-space.~\chris{lots of technical talk before actually saying what you are trying
-to do. Reverse this. Also try to provide references for the technical talk} 
+space. We take two random
+points in the 100-dimensional latent space and linearly interpolate between them. These new interpolated latent space vectors along with class vectors can now be fed into the generator to produce interpolated waveforms. \cref{fig:z_interp} shows the generated waveforms, with the class vectors held constant along each row. We can see that each plot shows plausible waveforms suggesting that
+the generator has constructed a smooth traversable, space. Additionally, as each class is given
+the same latent points to interpolate over, we can see that the waveforms
+cluster together with respect to their parameters. Visually, the sine-Gaussian
+and ring-down waveforms share similar frequencies and the other signals show
+similar decays and starting epochs for a common latent space input. 
+
+\chris{I think that it might be sensible to hand-pick the latent space
+locations as the origin and the point $[1,1,\ldots,1]/2$. When you do random
+locations we don't know what we should expect to get.} \jordan{the origin point for some signals either produce no data or rubbish generations}
+ 
 
 
 \begin{figure}
@@ -833,58 +803,50 @@ to do. Reverse this. Also try to provide references for the technical talk}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_blip.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_bbh.png}
-    \caption{Latent space linear interpolation, class space is
-constant.~\chris{lots more discription needed. what is being plotted against
-what? What is being held fixed, what is being varied.}}
+    \caption{Generated interpolated waveforms plotted as a function of time. The latent space inputs for the first and last columns are random vectors drawn from a Gaussian distribution and the between panels are linearly interpolated vectors between these two points. Each row keeps on of the class vetors constant thoughout the latent space interpolation. On the first four rows each x axis is zoomed for ease of viewing, while the last row shows the full one second time interval.}
     \label{fig:z_interp}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Interpolation between pairs of classes}
 
-In order to explore the class space we keep the latent vector constant and
-interpolate through the 5 classes. We construct a path between the 5 waveforms
-and show that the space is populated enough to allow for transitions between
-classes. Sine-Gaussian to ringdown performs well in interpolation with each
+While the \ac{GAN} is trained on distinct one-hot encoded classes, we may test arbitrary points in the 5-dimensional space to produce indistinct or "inbetween" waveforms. In order to explore the class space we keep the latent vector constant and
+interpolate through the 5 classes. We construct a path between two waveforms
+and show in \cref{fig:c_in	terp} that the space is populated enough to allow for transitions between
+classes.  Sine-Gaussian to ringdown performs well in interpolation with each
 signal being a plausible burst GW. It is obvious that the GAN has clustered
 these two groups during training as they share many characteristics. The other
 signals have sharper transitions but still retain plausible looking waveforms. 
-
-~\chris{this is one of  the most important sections of the paper and there
-is barely 1 paragrpah about it. Please beter explain what you are doing in
-general when you fix the latent space location and explore the class space. The
-concept of having arbitrary points in the 5-D class space should have been made
-clear earlier on in the CGAN section (or elsewhere). There also isn't currently a
-reference to the corresponding figure.}
 
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/generations/interp_blip-sg.png}
     \includegraphics[width=\textwidth]{figures/generations/interp_wnb-rd.png}
     \includegraphics[width=\textwidth]{figures/generations/interp_sg-bbh.png}
-    \caption{Class space linear interpolation, class space is held
-constant~\chris{no it isn't}.
-Top row: gaussian blip to sine-Gaussian, middle row: white noise burst to
-ringdown, bottom row: sine-Gaussian to BBH.~\chris{Again, more description,
-start from the basics, what is plotted against what. Is the latent space fixed
-the same for each row? Add the class space vectors on each panel. We have 5
-classes and so there are 10 possible pairs but you can't fit 10 rows here so
-why do 3? Why not 5 or 6? }}
+    \caption{Generated class interpolated waveforms as a function of time. The latent space vectors are held constant for each panel while each row shows generations using linearly interpolated classes as inputs to the generator. Top row: gaussian blip to sine-Gaussian, middle row: white noise burst to
+ring-down, bottom row: sine-Gaussian to BBH.~\chris{10 possible pairs but you can't fit 10 rows here so
+why do 3? Why not 5 or 6? }/\jordan{add vectors above panels.}}
     \label{fig:c_interp}
 \end{figure}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{General interpolsation within the class space}
+\subsection{General points within the class space}
+We have shown that the \acp{GAN} latent space and class space has structure that can be navigated through with interpolation between paris of signals. Taken a step further, we can sample from the class space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class space. The methods we use are divided into the following: 
 
-So far the analysis has focused~\chris{not really focussed, you only dedicated
-1 paragraph to it in the previous subsection} on interpolating between two
-classes of signals with the aim to use the interpolated signals as unmodelled
-waveforms, instead, we may consider random mixtures of classes~\chris{don't
-sell this according to our thought processes as we did the research, sell it as
-"we just explained the pair interpolation since it's a stepping stone to the
-general interpolation"}. We defined the classes in one-hot encoding framework,
-that is, each class resides at the corner points of a 5 dimensional
-cube~\chris{this should have already been stated n earlier sections}. In order
+\begin{itemize}
+%
+\item {\bf Conditional}: The original one-hot categorical generations from the \ac{GAN}.
+These signals are the closest to the training set.
+%
+\item {\bf Uniform}: Generated using a uniform distribution U[0,1] as the input
+class vector.
+%
+\item {\bf Simplex}: Generated using a Dirichlet distribution that samples from the
+4-simplex as the input class vector and includes within it the conditional
+locations.
+%
+\end{itemize}
+
+ In order
 to generate an even mixture~\chris{by definition, it won't be an even mixture
 if points are randomly sampled} of classes we sample points uniformly in this
 space. \jordan{this would be the box}. Alternativly we can sampe points from
@@ -933,15 +895,6 @@ where each class gets a colour and then when you mix them you plot it with the
 mixed colours - you average the RGB values. Maybe everything would look brown?
 Worth a try?}
 
-% remove these comments
-%
-\begin{comment}
-We can now think of ways to properly sample from the space between these points
-in a uniform way. Uniformity enforces the condition that we have a variety of
-waveforms. Thge easiest being to uniformly sample points in this space and use
-them as the class vectors for the generator. Another way would be to keep the
-magnitude of the class vector as 1. For a 5-dimensional space we would sample
-from the 4-dimensional plane that intersects the corner points.  \end{comment}
 
 \michael{We don't show any results with two detectors yet we use two detectors
 for the CNN, we might want to think when/where it's best to show some
@@ -949,11 +902,9 @@ generations with both detectors. Maybe when we show a signal with noise since
 it's all part of the post-processing?}~\chris{I agree, see my comment in the
 CNN section next.}
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 \section{Searching for generalised burst - a CNN analysis}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 
 In this section of the analysis we will forensically~\chris{no we won't}
 compare different waveform generations from the \ac{CGAN} to help determine the
@@ -982,6 +933,12 @@ on.}
 %
 \end{itemize}
 
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/SNR8.png}
+    \caption{\ac{CNN} training data. Whitened noise free sine-Gaussian timeseries as seen by Hanford (red) and Livingston (light blue) detectors. These signals with fixed SNR = 8, re-scaled by the two detector network SNR. The dark blue time series for each plot shows either the same signal with added detector noise from Hanford (left) or Livingston (right). The signals plus added noise is used to train, test and validate the \ac{CNN}.}
+\end{figure}
+
 \chris{please add an example plot showing the normalised and whitened input of
 an SNR=8 signal, one panel for each detector, with noisy signal and noise-free
 signal plotted on top. Then remember to reference it in the text.}
@@ -990,7 +947,7 @@ The CNN~\chris{whoah, hold on. What CNN? You said you were going to use one but
 can we get a few more details first. what's the input, what's the output,
 what's the loss function, then point us to a table of params in the appendix.}
 is trained to distinguish between two classes: signals in additive Gaussian
-noise and Gaussian noise, where “signals” are taken from either the
+noise and Gaussian noise, where â signalsâ are taken from either the
 Conditional, Uniform or Simplex cases~\chris{the signals+noise and noise
 statement is repetetive of the previous paragraph.}. This means in total there
 are three \acp{CNN} to train and all \acp{CNN} share the same architectural
