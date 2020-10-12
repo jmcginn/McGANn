@@ -324,11 +324,11 @@ here - motivate this choice. \ding{51}
     xlabel=$x$,
     ]
 
-    \addplot [mark=none,draw=green,ultra thick] {tanh(\x)};
-    \addplot+[mark=none,draw=blue,domain=-2.5:0,ultra thick] {0};
-    \addplot+[mark=none,draw=blue,domain=0:2.5,ultra thick] {x};
-    \addplot+[mark=none,red,dotted,domain=-2:0,ultra thick] {0.2*x};
-    \addplot+[mark=none,red,dotted,domain=0:2.5,ultra thick] {x};
+    \addplot [mark=none,draw=purple,ultra thick] {tanh(\x)};
+    \addplot+[mark=none,draw=green,domain=-2.5:0,ultra thick] {0};
+    \addplot+[mark=none,draw=green,domain=0:2.5,ultra thick] {x};
+    \addplot+[mark=none,orange,domain=-2.5:0,ultra thick] {0.2*x};
+    \addplot+[mark=none,orange,domain=0:2.5,ultra thick] {x};
 
     %% Add the asymptotes
 \end{axis}
@@ -405,7 +405,7 @@ here - motivate this choice. \ding{51}
 
 \caption{Neural Networks (a) A single neuron taking a vector of inputs and
 returning a single output based on the weights, bias and activation function
-of the network. (b) A selection of activation functions used in this study. The hyperbolic tangent (Green), Rectified linear unit \cite{relu} (Blue) and Leaky rectified linear unit \cite{Maas2013RectifierNI} (Red). (c)
+of the network. (b) A selection of activation functions used in this study. The hyperbolic tangent (purple), Rectified linear unit \cite{relu} (orange) and Leaky rectified linear unit \cite{Maas2013RectifierNI} (green). (c)
 A an example of a neural network containing two hidden layers that performs a
 mapping of an input vector to a single output.}
 \end{figure}
@@ -632,7 +632,7 @@ duration parameter $\tau$.
 \item {\bf Binary-black hole}: Simulated using the IMRPhenomD
 waveform~\cite{Khan_2016} routine from LALSuite~\cite{lalsuite} which models
 the inspiral, merger and ringdown of a \ac{BBH} waveform. The component masses
-lie in the range of [5,70] $\textrm{M}_{\odot}$ with zero spins and we fix
+lie in the range of [30,70] $\textrm{M}_{\odot}$ with zero spins and we fix
 $m_1>m_2$. The mass distribution is approximated by a power law with
 index of 1.6~\cite{Abbott_2019}. The inclinations are drawn
 such that the cosine of the angles lies uniformly in the range [-1,1] and we only use the plus polarisation.
@@ -756,15 +756,7 @@ corresponds to one of the five class vectors $\mathbf{c}$. The generations show 
 the case of the generator it maps samples drawn from a 100 dimensional Gaussian
 distribution in the latent space to its representation of the training set. As
 with any function, there should be a one to one mapping from the domain and
-co-domain to allow for smooth transitions across the latent space. One
-advantage of using \acp{GAN} as a waveform generator is that once it is
-trained, it can perform rapid generations faster than computationally expensive
-algorithms \michael{e.g.?}~\chris{you can maybe reference Seb Kahn and Green
-here soon. It will be on the arXiv next week I think - they did fast CBC
-waveform generation.  Also Walter Del Pozzo has a paper xoming out soon on
-this. Neither use GANs though, just ML}. For complicated data sets, the network
-architecture must be diverse and dense enough to capture distinct variations
-from the training set.  Most GANs perform well on relatively low resolution
+co-domain to allow for smooth transitions across the latent space. Most GANs perform well on relatively low resolution
 image generations, however, higher resolutions demand larger networks and long
 training times. GANs attempting to replicate complicated structures and do not
 have the necessary architecture either struggle to produce results at all or
@@ -778,13 +770,7 @@ the same latent points to interpolate over, we can see that the waveforms
 cluster together with respect to their parameters. Visually, the sine-Gaussian
 and ring-down waveforms share similar frequencies and the other signals show
 similar decays and starting epochs for a common latent space input. 
-
-\chris{I think that it might be sensible to hand-pick the latent space
-locations as the origin and the point $[1,1,\ldots,1]/2$. When you do random
-locations we don't know what we should expect to get.} \jordan{the origin point for some signals either produce no data or rubbish generations}
  
-
-
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/generations/z_interp_sg.png}
@@ -792,7 +778,7 @@ locations we don't know what we should expect to get.} \jordan{the origin point 
     \includegraphics[width=\textwidth]{figures/generations/z_interp_wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_blip.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_bbh.png}
-    \caption{Generated interpolated waveforms plotted as a function of time. The latent space inputs for the first and last columns are random vectors drawn from a Gaussian distribution and the between panels are linearly interpolated vectors between these two points. Each row keeps on of the class vetors constant thoughout the latent space interpolation. On the first four rows each x axis is zoomed for ease of viewing, while the last row shows the full one second time interval.}
+    \caption{Generated interpolated waveforms plotted as a function of time. The latent space inputs for the first  column is a vector of zeros and last columns are vectors of 0.5. Between panels are linearly interpolated vectors between these two points. Each row keeps on of the class vetors constant thoughout the latent space interpolation. On the first four rows each x axis is zoomed for ease of viewing, while the last row shows the full one second time interval.}
     \label{fig:z_interp}
 \end{figure}
 
@@ -809,12 +795,13 @@ signals have sharper transitions but still retain plausible looking waveforms.
 
 \begin{figure}
     \centering
-    \includegraphics[width=\textwidth]{figures/generations/interp_blip-sg.png}
-    \includegraphics[width=\textwidth]{figures/generations/interp_wnb-rd.png}
-    \includegraphics[width=\textwidth]{figures/generations/interp_sg-bbh.png}
-    \caption{Generated class interpolated waveforms as a function of time. The latent space vectors are held constant for each panel while each row shows generations using linearly interpolated classes as inputs to the generator. Top row: gaussian blip to sine-Gaussian, middle row: white noise burst to
-ring-down, bottom row: sine-Gaussian to BBH.~\chris{10 possible pairs but you can't fit 10 rows here so
-why do 3? Why not 5 or 6? }/\jordan{add vectors above panels.}}
+    \includegraphics[width=\textwidth]{figures/generations/sg-rd.png}
+    \includegraphics[width=\textwidth]{figures/generations/rd-wnb.png}
+    \includegraphics[width=\textwidth]{figures/generations/wnb-blip.png}
+    \includegraphics[width=\textwidth]{figures/generations/blip-bbh.png}
+    \includegraphics[width=\textwidth]{figures/generations/bbh-sg.png}
+    \includegraphics[width=\textwidth]{figures/generations/wnb-bbh.png}
+    \caption{Generated class interpolated waveforms as a function of time. The latent space vectors are fixed at 0.5 for each entry while each row shows generations using linearly interpolated classes as inputs to the generator. By row top to bottom: Sine-Gaussian to Ringdown, Ringdown to White-noise burst, Gaussian pulse to BBH, BBH to Sine-Gaussian, White-noise burst to BBH.}
     \label{fig:c_interp}
 \end{figure}
 
@@ -846,29 +833,24 @@ interesting or annoying features.}
     \includegraphics[width=\textwidth]{figures/generations/simplex_sample1.png}
     \includegraphics[width=\textwidth]{figures/generations/simplex_sample2.png}
     \includegraphics[width=\textwidth]{figures/generations/simplex_sample3.png}
+    \caption{GAN generations where the class vectors are sampled from the 4-D
+plane intersecting all classes. Latent space locations for all signals are taken randomly from a Gaussian distribution and the signals are then re-scaled such that they peak at unity.}
+    \label{fig:simplexd_samples}
+\end{figure}
+
+\begin{figure}
+    \centering
     \includegraphics[width=\textwidth]{figures/generations/uniform_sample3.png}
     \includegraphics[width=\textwidth]{figures/generations/uniform_sample2.png}
     \includegraphics[width=\textwidth]{figures/generations/uniform_sample1.png}
-    \caption{GAN generations where the class vectors are sampled from the 4-D
-plane and sampled uniformly in the class space.~\chris{As always, far more
-description needed. What are you plotting against what? Do you fix or randomise
-the latent space locations? You absolutely need to specify which are simplex
-and which are box.\jordan{this needs re thinking n how to show the three cases in a nice way, or just describe it in the caption? first three rows are from simplex" etc?}}}
-    \label{fig:unmodelled_samples}
+    \caption{GAN generations where the class vectors are sampled uniformly in the hypercube class space. Latent space locations for all signals are taken randomly from a Gaussian distribution and the signals are then re-scaled such that they peak at unity.}
+    \label{fig:uniform_samples}
 \end{figure}
 
 ~\chris{I have an idea for the plots. Could we have a colour coding system
 where each class gets a colour and then when you mix them you plot it with the
 mixed colours - you average the RGB values. Maybe everything would look brown?
 Worth a try?}
-
-
-\michael{We don't show any results with two detectors yet we use two detectors
-for the CNN, we might want to think when/where it's best to show some
-generations with both detectors. Maybe when we show a signal with noise since
-it's all part of the post-processing?}~\chris{I agree, see my comment in the
-CNN section next.}
-
 
 \section{Searching for generalised burst using a CNN}
 In this section  we use a convolutional neural network \ac{CNN} 
@@ -934,28 +916,12 @@ burst \ac{GW} analysis. We have shown that \acp{GAN} have the ability to generat
 suggest that the space provides smooth translations between classes and overall
 waveform shape. We then showed targeted waveform generation by mixing classes
 to produce new unmodelled waveform varieties that can be used to test current
-burst search pipelines. \jordan{couple of sentences about
-classifier}.~\chris{expand this. You have 15-20 pages of material so you can
-get a nioce big paragrpah or 2 out of this. It will be repetitive, yes, but
-that's the point.} 
+burst search pipelines.
 
 % extra things to think about
 %
-In order to extend this work to a viable burst wave generator and classifier a
-few points require further research. In principle it is trivial to add another
-detector inside the response layer \jordan{response is the wrong thing to say
-since the time delay isnt really a response, extrinsic layer? just non
-trainable layer? The box?}, however, as this now 3 dimensional signal is feed
-to the discriminator this will no doubt require further tweaking of the
-network. We can add more burst-like wave forms in the training set, like
-detector glitches which would similarly require further network design. The
-work presented here is noise free. To havea complete generation and detection
-package we would like to train the network on signals hidden in additive
-Gaussian noise and test the ability of the auxiliary classifier. 
-~\chris{this paragrph is old and out of date. Please unpdate it.}
 
-The approach shown in this work shows promise in generating unmodelled burst
-waveforms from exotic~\chris{no} sources. Having the ability to quickly
+Having the ability to quickly
 generate new waveforms is essential to test current detection schemes and their
 susceptibilty to unmodelled sources. We believe that \acp{GAN} have the ability
 to generate high fidelity waveforms at a fraction of the computational
@@ -964,11 +930,6 @@ anyway} and do not rely on large prior parameter space. Having banks of these
 waveforms at hand can aid in our understand of the physics processes behind
 these non-standard ac{GW} emitters.  
 ~\chris{we need to write down paragrph headinsg in the next meeting. I'm tired.}
-
-\jordan{I want to include a link to the github etc but also a google collab
-scrip like the one for BigGANs: \\
-\url{https://colab.research.google.com/github/tensorflow/hub/blob/master/examples/colab/biggan_generation_with_tf_hub.ipynb.}
-It's fun and gives a better feel for the interpolating that static images.}
 
 \begin{comment}
 \begin{itemize}
@@ -1045,17 +1006,17 @@ Class Input & (5) & N/A & N/A & \ding{55}  & N/A \\
 Latent Input  & (100) & N/A & N/A & \ding{55} & N/A \\
 Concatenate & (105) & N/A & N/A & \ding{55} &  N/A \\
 Dense & (32768) & N/A & N/A & \ding{55} &  ReLu \\
-Reshape & (64, 512) & N/A & N/A & N/A \\
+Reshape & (64, 512) & N/A & N/A & \ding{55} & N/A \\
 Transposed Conv & (128, 256) & 18 & 2 & \ding{51} & ReLU \\
 Transposed Conv & (256, 128) & 18 & 2 & \ding{55} &  ReLU \\
 Transposed Conv & (512, 264) & 18 & 2 & \ding{55} & ReLU \\
-Transposed Convn & (1024, 1) & 18 & 2 & \ding{55} & Linear \\
+Transposed Conv & (1024, 1) & 18 & 2 & \ding{55} & Linear \\
 Reshape & (1024) & N/A & N/A & \ding{55} & N/A \\
 \end{tabular*}
 \begin{tabular*}{\textwidth}{@{} l l l l l l}
 \mr
  Optimizer & Adam($\alpha$ = 0.0002, $\beta_{1}$ = 0.5) \\
- Batch size & 128  \\
+ Batch size & 512  \\
  Epochs & 100  \\
  Loss & Binary cross-entropy \\
  \br
