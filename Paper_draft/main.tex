@@ -775,7 +775,7 @@ similar decays and starting epochs for a common latent space input.
     \includegraphics[width=\textwidth]{figures/generations/z_interp_wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_blip.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_bbh.png}
-    \caption{Generated interpolated waveforms plotted as a function of time. For each interpolation two points were randomly chosen in the latent space on the conditional that they lie at unit distance away from the origin. Between panels are linearly interpolated vectors between these two points. Each row keeps on of the class vetors constant throughout the latent space interpolation.}
+    \caption{Generated interpolated waveforms plotted as a function of time. For each interpolation two points were randomly chosen in the latent space and the between panels are linearly interpolated vectors between these two points. Each row keeps on of the class vetors constant throughout the latent space interpolation.}
     \label{fig:z_interp}
 \end{figure}
 
@@ -808,11 +808,10 @@ We have shown that the \acp{GAN} latent space and class space has structure that
 \item {\bf Vertex}: Points that lie at the corners of the five dimensional class space.
 These signals are the closest to the training set.
 %
-\item {\bf Uniform}: Generated using a uniform distribution U[0,1] as the input
-class vector. \michael{I don't think it's quite clear what this means}
+\item {\bf Uniform}: Each of the entries in the class vector is sampled from a uniform distribution U[0,1].
+
 %
-\item {\bf Simplex}: Generated using a Dirichlet distribution to sample from the
-4-simplex inside the class space. \michael{Might have to mentioned the k-value (or whatever it is called) for the Dirichlet since it is only uniform for k=1 I think}
+\item {\bf Simplex}: This class vector we define as uniformly sampled points on a simplex, which is a generalization of a triangle in k-dimensions. We sample uniformly on the k=4 simplex that is embedded in the 5 dimensional class hyper cube. In practice we use the equivalent of sampling points from a k=4 Dirichlet distribution and then normalizing.
 %
 \end{itemize}
 
@@ -876,31 +875,41 @@ noise. Of that, 80\% is used for training and 20\% used for validation, while fo
 \end{figure}
 
 \subsection{CNN architecture}
-In this approach the input to the \ac{CNN} is a 2x1024 time series which is passed through a series of convolutional layers, onto two fully connected or ``Dense'' layers and finally to a single output neuron which represents the probability that a signal is present within the noise. We used a small amount \michael{rather in-precise} of dropout and found that the swish activation \cite{ramachandran2017searching} function performed well. The output layer is activated by a sigmoid function and we used \cref{eqn:crossentropy} as a loss function and Adam as an optimizer with learning rate set to $10^{-3}$. In total we train three separate \acp{CNN} on either the vertex, uniform or simplex data set share the same architecture and hyperparameters which are shown in \cref{Tab:cnn_training_parms}.
+In this approach the input to the \ac{CNN} is a 2x1024 time series which is passed through a series of convolutional layers, onto two fully connected or ``Dense'' layers and finally to a single output neuron which represents the probability that a signal is present within the noise. We used dropout in the final dense layer and found that the swish activation \cite{ramachandran2017searching} function performed well. The output layer is activated by a sigmoid function and we used \cref{eqn:crossentropy} as a loss function and Adam as an optimizer with learning rate set to $10^{-3}$. In total we train three separate \acp{CNN} on either the vertex, uniform or simplex data set share the same architecture and hyperparameters which are shown in \cref{Tab:cnn_training_parms}.
 
-In~\cref{fig:roc_curves} we compare the \ac{CNN} results between the three
-datasets, we train three \acp{CNN} on the Conditional, simplex and uniform data sets
+
+\subsection{Results}
+In~\cref{fig:eff_curves} we compare the \ac{CNN} results between the three
+datasets, we train three \acp{CNN} on the vertex, simplex and uniform data sets
 and use these models to make predictions on the other unseen datasets. We make
 a comparison by fixing the fraction of samples incorrectly identified as
 signals (false alarm rate) and plotting this versus the optimal SNR of the
 signals.~\chris{this last sentence isn't quite right} 
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/conditional_trained.png}
-    \includegraphics[width=\textwidth]{figures/simplex_trained.png}
-    \includegraphics[width=\textwidth]{figures/uniform_trained.png}
-    \caption{Efficiency curves comparing the performance of \acp{CNN} trained on
-conditional generations (top), simplex generations (middle), uniform
-generations (bottom) for a fixed false alarm rate of $10^{-3}$. The true alarm probability is plotted as a function of the optimal SNR of the signals.}
-\label{fig:roc_curves} 
-\end{figure}
-
-These results show for a \ac{CNN} trained on conditional signals, the uniform data
-set is distinguishable from the conditional and simplex dataset. The \ac{CNN} is
+These results show for a \ac{CNN} trained on vertex signals, the uniform data
+set is distinguishable from the vertex and simplex dataset. The \ac{CNN} is
 robust enough to capture the differences between the datasets and shows that
 the GAN can generate a variety of unmodeled waveforms that can be used in
 future testing. 
+
+\begin{itemize}
+    \item vertex trained shows clear delineation from other two classes at snr$>$10. Good to show that they are different. But not all converge to 1.
+    \item simplex trained leads in smaller snrs but eventually all converge to 1
+    \item uniform trained shows much similarity to simplex test set, still different from vertex. all converge to 1. makes sense if the vertex is a subset of the simplex and uniform classes. Also a sign that the GAN likes to keep things as close to vertex as possible? 
+\end{itemize}
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.7\textwidth]{figures/conditional_trained.png}
+    \includegraphics[width=0.7\textwidth]{figures/simplex_trained.png}
+    \includegraphics[width=0.7\textwidth]{figures/uniform_trained.png}
+    \caption{Efficiency curves comparing the performance of \acp{CNN} trained on
+vertex generations (top), simplex generations (middle), uniform
+generations (bottom) for a fixed false alarm rate of $10^{-3}$. The true alarm probability is plotted as a function of the optimal SNR of the signals.}
+\label{fig:eff_curves} 
+\end{figure}
+
 
 \begin{comment}
 ~\chris{please write more about the results of the CNN}
@@ -914,26 +923,23 @@ future testing.
 % summary of the paper
 %
 In this work we present the potential of \acp{GAN} for
-burst \ac{GW} analysis. We have shown that \acp{GAN} have the ability to generate realisitc time series burst data and can be conditioned based on the inherent features of the signals. The latent and class spaces were explored through interpolation and
+burst \ac{GW} analysis. We have shown that \acp{GAN} have the ability to generate realistic time series burst data and can be conditioned based on the inherent features of the signals. The latent and class spaces were explored through interpolation and
 suggest that the space provides smooth translations between classes and overall
 waveform shape. We then showed targeted waveform generation by mixing classes
 to produce new unmodeled waveform varieties that can be used to test current
 burst search pipelines.
 
-% extra things to think about
-%
+We then considered three cases of unmodelled generated signals in Gaussian noise and demonstrated that a simple \ac{CNN} could distinguish between them. 
+In contrast to typical approaches in signal generation this is the first time a GAN has been used for generating gravitational wave burst data. In the future, as development in GANs and generative machine learning advances it is possible that we can gain greater control over target generation of features. Going forward it will also be important to extend our models to treat longer waveforms, higher sampling rates and generations other classes such as detector glitches. 
 
 Having the ability to quickly
 generate new waveforms is essential to test current detection schemes and their
-susceptibilty to unmodeled sources. We believe \michael{we've shown this!} that \acp{GAN} have the ability
-to generate high fidelity waveforms at a fraction of the computational
-expense~\chris{don't focus on the expense part since burst waveforms are cheap
-anyway} and do not rely on large prior parameter space. Having banks of these
+susceptibilty to unmodeled sources. We have shown that \acp{GAN} have the ability
+to generate high fidelity waveforms which do not rely on large prior parameter space. Having banks of these
 waveforms at hand can aid in our understand of the physics processes behind
 these non-standard ac{GW} emitters.  
-~\chris{we need to write down paragrph headinsg in the next meeting. I'm tired.}
 
-\michael{We need longer conclusions but I think you're working on this}
+
 
 \begin{comment}
 \begin{itemize}
@@ -1023,6 +1029,7 @@ Reshape & (1024) & N/A & N/A & \ding{55} & N/A \\
  Batch size & 512  \\
  Epochs & 100  \\
  Loss & Binary cross-entropy \\
+ \mr
  \br
 \end{tabular*}\\
 \label{Tab:gan_training_parms}
