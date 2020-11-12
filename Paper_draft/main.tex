@@ -404,7 +404,7 @@ of the network. (b) A selection of activation functions used in this study. The 
 A an example of a neural network containing two hidden layers that performs a
 mapping of an input vector to a single output.}
 \end{figure}
-
+%
 % Introduce basic neural networks - a perceptron layer
 %
 \begin{comment}
@@ -474,14 +474,14 @@ the stride and increasing it reduces the dimensionality of the output in a proce
 % basic intro to GANs
 %
 A subset of deep learning that has seen fruitful development in recent years
-are \acp{GAN}~\cite{Goodfellow2014}. These unsupervised algorithms learn patterns in a
+are generative adversarial networks \acp{GAN}~\cite{Goodfellow2014}. These unsupervised algorithms learn patterns in a
 given training data set using an adversarial process. The generations from
 \acp{GAN} are currently state-of-the-art in fields such as high quality image
 fidelity~\cite{brock2018large,karras2019analyzing}, text-to-image
 translation~\cite{reed2016generative}, and video
 prediction~\cite{liang2017dual} as well as time series
 generations~\cite{esteban2017realvalued}.
-
+%
 % Basic components of a GAN
 %
 \acp{GAN} train two competing neural networks, consisting of a discriminator
@@ -489,27 +489,46 @@ network that is set up to distinguish between real and fake data and a
 generator network that produces fake versions of the real data. The generator model performs a mapping from a fixed length vector $\mathbf{z}$ to its
 representation of the data. The input vector is drawn randomly from a Gaussian distribution which is referred to as a latent space comprised of latent variables. The latent space is a compressed representation of a data distribution which the generator applies meaning to during training. Sampling points from this space allows the generator to produce a variety of different generations, with different points corresponding to different features in the generations. The discriminator maps its input $\mathbf{x}$ to a probability that the input came from either the training (real) data or
 generator (fake).
-
 \begin{comment}
 Chris' definition of latent space if needed: It maps the intrinsic
 variation of the training space onto the Gaussian latent space distribution.
 \end{comment}
-
+%
 % training a GAN
 %
-During training, the discriminator and generator are updated in parallel using batches of data. Random latent vectors are given to the generator to produce a batch of fake samples and an equal batch of real samples is taken from the training data. The discriminator makes predictions on the real and fake samples and the model is updated through minimising the binary cross-entropy function \cite{Goodfellow-et-al-2016}
-
+During training, the discriminator and generator are updated using batches of data. Random latent vectors are given to the generator to produce a batch of fake samples and an equal batch of real samples is taken from the training data. The discriminator makes predictions on the real and fake samples and the model is updated through minimising the binary cross-entropy function \cite{Goodfellow-et-al-2016}
+%
 \begin{equation}
     L = -y \log(\hat{y}) - (1 - y) \log(1-\hat{y}),
     \label{eqn:crossentropy}
 \end{equation}
 where $\hat{y}$ is the network prediction and $y$ is the true output. While training the discriminator, D, on real data, we set $y = 1$ and $\hat{y} = D(\mathbf{x})$ which from \cref{eqn:crossentropy} gives $L(D(\mathbf{x}),1) = \log(D(\mathbf{x}))$. While training on fake data produced by the generator, G, $y = 0$ and $\hat{y} = D(G(\mathbf{z}))$ and so, $L(D(G(\mathbf{z})),0) = \log(1-(D(G(\mathbf{z}))))$. Since the objective of the discriminator is to correctly classify fake and real data these equations should be maximised, while the goal of the generator should be to minimize these equations. This gives the \ac{GAN} loss as
-
+%
 \begin{equation}
    \mathop{\text{min}}_{G}  \mathop{\text{max}}_{D} V(D,G) = \mathbb{E}_{\mathbf{x} \sim p_{\text{\text{data}}}(\mathbf{x})} [\text{log} D(\mathbf{x})] + \mathbb{E}_{\mathbf{z} \sim p_{\mathbf{z}}(\mathbf{z})} [\text{log}(1-D(G(\mathbf{z})))],
  \label{equation:GANloss}
  \end{equation}
 where $p_{\text{\text{data}}}(\mathbf{x})$ is the distribution of real data and $p_{\text{z}}(\mathbf{z})$ is the distribution of the latent space. 
+\begin{figure}[!h]
+    \centering
+    \includegraphics{figures/BCE-loss.png}
+    \caption{Binary cross-entropy plotted as a function of possible predicted probabilities in the case where the true label $y$ is 1 for a sample size of 512.}
+    \label{fig:BCE_loss}
+\end{figure}
+\subsection{Training stages}
+%
+Training a GAN is involves updating both the discriminator and generator in stages. First, the discriminator is updated on real instances from the training set. We set the true label $y=1$ and calculate the loss with respect to the predictions $\hat{y}$ via \cref{equation:GANloss}. Stochastic gradient descent is used to minimize the loss which has reduced to $L_D(\textrm{real}) = -\log(\hat{y})$. The discriminator is then trained on fake instances taken from the generator where we set $y=0$ and minimize $L_D(\textrm{fake}) = -\log(1-\hat{y})$. To train the generator, we use a composite model of the generator and discriminator and allow the gradients to flow through this entire model. At this step we set the labels for the generator as real $y=1$ and minimize $L_G = -\log(\hat{y})$. The act of switching the labels and minimizing this form of loss is identical to the previously mentioned generator loss but is beneficial as in practice this function provides more useful gradients. This tweak to the generator loss is called non-saturating generator loss and was reported in the original GAN paper \cite{Goodfellow2014}. It was also shown in that paper that if the generator and discriminator can no longer improve, then the discriminator can no longer distinguish between real and fake i.e. $D(x) = \frac{1}{2}$. In \cref{fig:BCE_loss} we show how the binary-cross entropy varies with probability inputs when the real label is set to 1. We can see that for optimal training of the discriminator of 0.5 the binary cross entropy sits around 0.7. One could then say that the optimal generator loss during training is 0.7 however in practice the generator loss may be higher due to the continually alternating training method.
+
+As \acp{GAN} are trained by updating one model at the expense of the other, they can be hard to train. GANs attempting to replicate complicated structures that do not
+have the necessary architecture either struggle to produce results at all or
+fall into the common failure mode know as mode collapse; where the generator
+produces a small variety of samples or simply memorises the training set. The goal of GAN training is to find an equilibrium between the two models, if this cannot be found then it is said that the \ac{GAN} has failed to converge. One way to diagnose \acp{GAN} during the development process is to keep track of the loss and accuracy over time. Loss plots, for example, as seen in \cref{fig:lossplot} can help to identify common failure modes or to check if the \ac{GAN} has indeed converged. Accuracy is another metric that may be used to monitor convergence and is defined as the number of correct predictions made divided by total number of predictions. There is currently no notion of early stopping in \acp{GAN}, instead, training is halted after convergence and by visually inspecting the generations. 
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.85\textwidth]{figures/losses.png}
+    \caption{Plot of the discriminator and generator loss and accuracy as a function of epochs. Early in training the losses oscillates as both models attempt to find their equilibrium, after which, both losses vary around a point which signifies stable training. Accuracy's on the real and fake data are similar showing that neither model is stronger than the other.}
+    \label{fig:lossplot}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Conditional GANs}
@@ -575,28 +594,12 @@ of thumb decisions made
 
 % introduce the training data
 %
-
-\begin{table}[hb]
-\centering
-\caption{The parameters used in generating the training data. Each parameter is drawn uniformly in the below ranges.}
-%\footnotesize
-\begin{tabular}{@{} l l l l l l }
-\br
-\hline
- Waveform & Central frequency  & Decay & Central time epoch & Mass range \\
- & (Hz) & (s) & (s) & ($\textrm{M}_{\odot}$) \\
-\mr
-Sine-Gaussian & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & -  \\  
-Ringdown & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A \\
-white noise burst & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A  \\
-Gaussian pulse & - & 0.004 - 0.03 & 0.4 - 0.6 & -  \\
-BBH & - & - & - & 30 - 70  \\
- \br
-\end{tabular}\\
-\label{Tab:training_parms}
-\end{table}
-\normalsize
-
+\begin{figure}
+    \centering
+    \includegraphics[width=\textwidth]{figures/training-sample.png}
+    \caption{Examples of the five different waveforms that were used in training the \ac{GAN} for this study. Values of the parameters were selected randomly from uniform distributions from \cref{Tab:hyperparameters}.}
+    \label{fig:training_waveforms}
+\end{figure}
 % introduce the signal models
 %
 We propose a signal generation scheme using a \ac{CGAN} trained on burst-like
@@ -637,12 +640,26 @@ be within [0.4, 0.6] seconds from the start of the 1 sec time interval and all
 training waveforms are sampled at 1024 Hz.  The parameter prior ranges are
 defined in~\cref{Tab:training_parms} and a sample of training waveforms are shown in \cref{fig:training_waveforms}. All training data is rescaled such that their amplitudes peak at 1.
 
-\begin{figure}
-    \centering
-    \includegraphics[width=\textwidth]{figures/training-sample.png}
-    \caption{Examples of the five different waveforms that were used in training the \ac{GAN} for this study. Values of the parameters were selected randomly from uniform distributions from \cref{Tab:hyperparameters}.}
-    \label{fig:training_waveforms}
-\end{figure}
+\begin{table}[!h]
+\centering
+\caption{The parameters used in generating the training data. Each parameter is drawn uniformly in the below ranges.}
+%\footnotesize
+\begin{tabular}{@{} l l l l l l }
+\br
+\hline
+ Waveform & Central frequency  & Decay & Central time epoch & Mass range \\
+ & (Hz) & (s) & (s) & ($\textrm{M}_{\odot}$) \\
+\mr
+Sine-Gaussian & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & -  \\  
+Ringdown & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A \\
+white noise burst & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A  \\
+Gaussian pulse & - & 0.004 - 0.03 & 0.4 - 0.6 & -  \\
+BBH & - & - & - & 30 - 70  \\
+ \br
+\end{tabular}\\
+\label{Tab:training_parms}
+\end{table}
+\normalsize
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Architecture details}
@@ -676,21 +693,7 @@ LeakyReLU activations, SpatialDropout, and a 2-stride convolution for
 downsampling. The discriminator output is a single node with sigmoid activation that can be interpreted as a probability of the the signal being real and both models are trained with binary cross
 entropy \cref{eqn:crossentropy}. The full architecture description can be seen in~\cref{Tab:gan_training_parms}.
 
-
-As \acp{GAN} are trained by updating one model at the expense of the other, they can be hard to train. GANs attempting to replicate complicated structures that do not
-have the necessary architecture either struggle to produce results at all or
-fall into the common failure mode know as mode collapse; where the generator
-produces a small variety of samples or simply memorises the training set. The goal of GAN training is to find an equilibrium between the two models, if this cannot be found then it is said that the \ac{GAN} has failed to converge. One way to diagnose \acp{GAN} during the development process is to keep track of the loss and accuracy over time. Loss plots, for example, as seen in \cref{fig:lossplot} can help to identify common failure modes or to check if the \ac{GAN} has indeed converged. Accuracy is the number of correct predictions made divided by total number of predictions. There is currently no notion of early stopping in \acp{GAN}, instead, training is halted after convergence and by visually inspecting the generations. 
-
 All models were designed with the Python Keras library \cite{} and TensorFlow \cite{} and ran on a GeForce RTX 2080 Ti GPU. We train the networks for 500 epochs which takes $\mathcal{O}(10)$ hours and save the model at each epoch. We choose an appropriate model by visually inspecting the generations at a point of convergence on the loss plot. 
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=1\textwidth]{figures/losses.png}
-    \caption{Plot of the discriminator and generator loss and accuracy as a function of iterations. Early in training the losses oscillates as both models attempt to find their equilibrium, after which, both losses vary around a point which signifies stable training. Accuracy's on the real and fake data are similar showing that neither model is stronger than the other.}
-    \label{fig:lossplot}
-\end{figure}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Results} \label{results}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -721,12 +724,7 @@ how they compare to the training set. We then explore the structure of the
 latent and class spaces by interpolating between points in these spaces. We
 test two methods of sampling from the class space that can be used to generate
 a new signals composed of weighted elements of each training class.
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Known class signal generation}
-In \cref{fig:gen_signals} we show conditional signal generations using our generator network. We can see the generations are of very good quality and appear like they could plausibly have come from the training set. We can also see that the model has learned the overall characteristics of the five training classes and is able to disentangle each class and associate them with the conditional input. Additionally, as the latent variable changes as do the parameters within each class. For instance \cref{fig:gen_signals} shows how signals vary in frequency, central epoch, decays and phase. The GANs ability to generate a variety of signals for various latent input indicate stable training and no mode collapse. 
-
-\begin{figure}
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{figures/generations/sg.png}
     \includegraphics[width=\textwidth]{figures/generations/rd.png}
@@ -737,15 +735,10 @@ In \cref{fig:gen_signals} we show conditional signal generations using our gener
 white noise burst, Gaussian pulse, binary black hole merger. On the first four rows each x axis is zoomed for ease of viewing, while the last row shows the full one second.}
 \label{fig:gen_signals} 
 \end{figure}
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\subsection{Interpolation within the latent space}
-
-% expain what we are planning to show here
-%
- We have shown that the generator produces quality signals and that the model responds well to randomly sampled Gaussian latent vectors. We now assume that during training the generator has learned a mapping from a Gaussian latent space to signal space and that this mapping is smooth. To test this, we fix the class vector input and linearly interpolate between two randomly chosen point in the latent space. In \cref{fig:z_interp} we show the generated waveforms, with the class vectors held constant along each row. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth traversable, space.
- 
-\begin{figure}
+\subsection{Known class signal generation}
+In \cref{fig:gen_signals} we show conditional signal generations using our generator network. We can see the generations are of very good quality and appear like they could plausibly have come from the training set. We can also see that the model has learned the overall characteristics of the five training classes and is able to disentangle each class and associate them with the conditional input. Additionally, as the latent variable changes as do the parameters within each class. For instance \cref{fig:gen_signals} shows how signals vary in frequency, central epoch, decays and phase. The GANs ability to generate a variety of signals for various latent input indicate stable training and no mode collapse. 
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{figures/generations/z_interp_sg.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_rd.png}
@@ -755,7 +748,12 @@ white noise burst, Gaussian pulse, binary black hole merger. On the first four r
     \caption{Generated interpolated waveforms plotted as a function of time. For each interpolation two points were randomly chosen in the latent space and the between panels are linearly interpolated vectors between these two points. Each row keeps on of the class vetors constant throughout the latent space interpolation.}
     \label{fig:z_interp}
 \end{figure}
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{Interpolation within the latent space}
+%
+% expain what we are planning to show here
+%
+ We have shown that the generator produces quality signals and that the model responds well to randomly sampled Gaussian latent vectors. We now assume that during training the generator has learned a mapping from a Gaussian latent space to signal space and that this mapping is smooth. To test this, we fix the class vector input and linearly interpolate between two randomly chosen point in the latent space. In \cref{fig:z_interp} we show the generated waveforms, with the class vectors held constant along each row. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth traversable, space.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Interpolation between pairs of classes}
 
@@ -766,8 +764,8 @@ classes.  Sine-Gaussian to ringdown performs well in interpolation with each
 signal being a plausible burst GW. It is obvious that the GAN has clustered
 these two groups during training as they share many characteristics. The other
 signals have sharper transitions but still retain plausible looking waveforms.
-
-\begin{figure}
+%
+\begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{figures/generations/sg-rd.png}
     \includegraphics[width=\textwidth]{figures/generations/rd-wnb.png}
@@ -776,10 +774,10 @@ signals have sharper transitions but still retain plausible looking waveforms.
     \caption{Generated class interpolated waveforms as a function of time. A single latent space vector is used for all generations and is chosen randomly in the latent space. Each row shows generations using linearly interpolated classes as inputs to the generator. By row top to bottom: Sine-Gaussian to Ringdown, Ringdown to white noise burst, Gaussian pulse to BBH.}
     \label{fig:c_interp}
 \end{figure}
-
+%
 \subsection{General points within the class space}
 We have shown that the \acp{GAN} latent space and class space has structure that can be navigated through with interpolation between paris of signals. Taking a step further, we can sample from the class space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class space. The methods we use are divided into the following: 
-
+%
 \begin{itemize}
 %
 \item {\bf Vertex}: Points that lie at the corners of the five dimensional class space.
@@ -887,6 +885,41 @@ future testing.
 vertex generations (top), simplex generations (middle), uniform
 generations (bottom) for a fixed false alarm rate of $10^{-3}$. The true alarm probability is plotted as a function of the optimal SNR of the signals.}
 \label{fig:eff_curves} 
+\end{figure}
+
+\begin{figure}[t!] % "[t!]" placement specifier just for this example
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/conditional_trained.png}
+\caption{}\label{fig:a}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/efficiency_curve_vtest.png}
+\caption{}\label{fig:b}
+\end{subfigure}
+
+\medskip
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/simplex_trained.png}
+\caption{}\label{fig:c}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/efficiency_curve_stest.png}
+\caption{}\label{fig:d}
+\end{subfigure}
+
+\medskip
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/uniform_trained.png}
+\caption{}\label{fig:e}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/efficiency_curve_utest.png}
+\caption{}\label{fig:f}
+\end{subfigure}
+
+\caption{Efficiency curves comparing the performance of the \acp{CNN}. The true alarm probability is plotted as a function of the optimal SNR of the signals. (a), (c), (e) show a CNN trained on
+vertex generations (top), simplex generations (middle), uniform
+generations (bottom) for a fixed false alarm rate of $10^{-3}$ and tested on all three data sets. (b), (d), (f) show fix the testing set vertex (top), simplex (middle), uniform (bottom) and show the performance of three trained CNNs on the different data sets.}   \label{fig:1}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1012,4 +1045,3 @@ Reshape & (1024) & N/A & N/A & \ding{55} & N/A \\
 ~\chris{do we still need this?}
 
 \end{document}
-
