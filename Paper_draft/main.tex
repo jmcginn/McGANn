@@ -597,7 +597,7 @@ of thumb decisions made
 \begin{figure}
     \centering
     \includegraphics[width=\textwidth]{figures/training-sample.png}
-    \caption{Examples of the five different waveforms that were used in training the \ac{GAN} for this study. Values of the parameters were selected randomly from uniform distributions from \cref{Tab:hyperparameters}.}
+    \caption{Examples of the five different waveforms that were used in training the \ac{GAN} for this study. Values of the parameters were selected randomly from uniform distributions from \cref{Tab:training_parms}}
     \label{fig:training_waveforms}
 \end{figure}
 % introduce the signal models
@@ -676,7 +676,7 @@ error and the initial designs influenced by the available literature. We found
 that the \ac{GAN} performed better with both networks having the same number of
 layers and neurons which encourages even
 competition between the generator and discriminator.  After tuning the multiple
-hyperparameters (see \cref{Tab:hyperparameters}), the \ac{GAN} was trained on
+hyperparameters (see \cref{Tab:gan_training_parms}), the \ac{GAN} was trained on
 $10^5$ signals  drawn from a categorical
 distribution with equal propabilities for each class of
 sine-Gaussian,
@@ -776,7 +776,7 @@ signals have sharper transitions but still retain plausible looking waveforms.
 \end{figure}
 %
 \subsection{General points within the class space}
-We have shown that the \acp{GAN} latent space and class space has structure that can be navigated through with interpolation between paris of signals. Taking a step further, we can sample from the class space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class space. The methods we use are divided into the following: 
+We have shown that the \acp{GAN} latent space and class space has structure that can be navigated through with interpolation between pairs of signals. Taking a step further, we can sample from the class space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class space. The methods we use are divided into the following: 
 %
 \begin{itemize}
 %
@@ -876,50 +876,62 @@ future testing.
 \end{itemize}
 \end{comment}
 
-\begin{figure}
-    \centering
-    \includegraphics[width=0.7\textwidth]{figures/conditional_trained.png}
-    \includegraphics[width=0.7\textwidth]{figures/simplex_trained.png}
-    \includegraphics[width=0.7\textwidth]{figures/uniform_trained.png}
-    \caption{Efficiency curves comparing the performance of \acp{CNN} trained on
-vertex generations (top), simplex generations (middle), uniform
-generations (bottom) for a fixed false alarm rate of $10^{-3}$. The true alarm probability is plotted as a function of the optimal SNR of the signals.}
-\label{fig:eff_curves} 
-\end{figure}
-
-\begin{figure}[t!] % "[t!]" placement specifier just for this example
+\begin{figure}[h!] % "[t!]" placement specifier just for this example
 \begin{subfigure}{0.48\textwidth}
 \includegraphics[width=\linewidth]{figures/conditional_trained.png}
-\caption{}\label{fig:a}
+\caption{}
 \end{subfigure}\hspace*{\fill}
 \begin{subfigure}{0.48\textwidth}
 \includegraphics[width=\linewidth]{figures/efficiency_curve_vtest.png}
-\caption{}\label{fig:b}
+\caption{}
 \end{subfigure}
 
 \medskip
 \begin{subfigure}{0.48\textwidth}
 \includegraphics[width=\linewidth]{figures/simplex_trained.png}
-\caption{}\label{fig:c}
+\caption{}
 \end{subfigure}\hspace*{\fill}
 \begin{subfigure}{0.48\textwidth}
 \includegraphics[width=\linewidth]{figures/efficiency_curve_stest.png}
-\caption{}\label{fig:d}
+\caption{}
 \end{subfigure}
 
 \medskip
 \begin{subfigure}{0.48\textwidth}
 \includegraphics[width=\linewidth]{figures/uniform_trained.png}
-\caption{}\label{fig:e}
+\caption{}
 \end{subfigure}\hspace*{\fill}
 \begin{subfigure}{0.48\textwidth}
 \includegraphics[width=\linewidth]{figures/efficiency_curve_utest.png}
-\caption{}\label{fig:f}
+\caption{}
 \end{subfigure}
 
 \caption{Efficiency curves comparing the performance of the \acp{CNN}. The true alarm probability is plotted as a function of the optimal SNR of the signals. (a), (c), (e) show a CNN trained on
 vertex generations (top), simplex generations (middle), uniform
-generations (bottom) for a fixed false alarm rate of $10^{-3}$ and tested on all three data sets. (b), (d), (f) show fix the testing set vertex (top), simplex (middle), uniform (bottom) and show the performance of three trained CNNs on the different data sets.}   \label{fig:1}
+generations (bottom) for a fixed false alarm rate of $10^{-3}$ and tested on all three data sets. (b), (d), (f) show fix the testing set vertex (top), simplex (middle), uniform (bottom) and show the performance of three trained CNNs on the different data sets.}  \jordan{This shows both comparisons of the models v test data and test data v models.} \label{fig:eff_curves}
+\end{figure}
+
+\begin{figure}[h!] % "[t!]" placement specifier just for this example
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/efficiency_curve_vtest.png}
+\caption{}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/efficiency_curve_stest.png}
+\caption{}
+\end{subfigure}
+
+\medskip
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/efficiency_curve_utest.png}
+\caption{}
+\end{subfigure}\hspace*{\fill}
+\begin{subfigure}{0.48\textwidth}
+\includegraphics[width=\linewidth]{figures/efficiency_curve_mix_text.png}
+\caption{}
+\end{subfigure}
+
+\caption{Efficiency curves comparing the performance of the \acp{CNN}. The true alarm probability is plotted as a function of the optimal SNR of the signals. Plots (a), (b), (c) fix the testing set vertex (top), simplex (middle), uniform (bottom) and show the performance of three trained CNNs on the different data sets for a fixed false alarm rate of $10^{-3}$. Plot (d) shows CNNs trained on vertex, an even mixture of vertex and simplex and an even mixture of vertex and uniform and tested against the vertex dataset}  \jordan{This shows just the trained models v a test set with additional "mixture plot"} \label{fig:eff_curves}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
