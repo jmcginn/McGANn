@@ -940,15 +940,18 @@ generations (bottom) for a fixed false alarm rate of $10^{-3}$ and tested on all
 
 % summary of the paper
 %
-In this work we present the potential of \acp{GAN} for
-burst \ac{GW} analysis. We have shown that \acp{GAN} have the ability to generate realistic time series burst data and can be conditioned based on the inherent features of the signals. The latent and class spaces were explored through interpolation and
-suggest that the space provides smooth translations between classes and overall
-waveform shape. We then showed targeted waveform generation by mixing classes
-to produce new unmodeled waveform varieties that can be used to test current
-burst search pipelines.
 
-We then considered three cases of unmodelled generated signals in Gaussian noise and demonstrated that a simple \ac{CNN} could distinguish between them. 
-In contrast to typical approaches in signal generation this is the first time a GAN has been used for generating gravitational wave burst data. In the future, as development in GANs and generative machine learning advances it is possible that we can gain greater control over target generation of features. Going forward it will also be important to extend our models to treat longer waveforms, higher sampling rates and generations other classes such as detector glitches. 
+In this work we present the potential of \acp{GAN} for
+burst \ac{GW} generation. We have shown that \acp{GAN} have the ability to generate plausible time series burst data and present a novel approach to generating unmodeled waveforms. We have shown that CGANs are able distinguish between five distinct classes of burst like signals through conditional training which we can then utilise for targeted generations. 
+
+We also show how our GAN constructs smooth latent and class spaces during training and we explore these through interpolation showing smooth translations between classes and overall
+waveform shape. Further, we showed targeted waveform generation by mixing classes in the class space through novel ways. We are able to produce new unmodeled waveform varieties vastly different from the training set and any known analytical method of generating these signals. Such waveforms are in demand in gravitaional wave detection as they allow developers to test their search pipelines and other detection schemes.
+
+We then considered three cases of unmodelled generated signals in Gaussian noise and trained a \ac{CNN} on those data. The resulting efficiency curves comparing the detection sensitivities of the CNN as a function of SNR of the waveforms showed that these signals were detectable in noise. Although the three datasets were similarly detectable there was some degree of separation between them.
+
+In contrast to typical approaches in signal generation this is the first time a GAN has been used for generating gravitational wave burst data. In the future, as development in GANs and generative machine learning advances it is expected that we will gain greater control over target generation of features. 
+
+Going forward it will also be important to extend our models to treat longer waveforms, higher sampling rates and conditioning on additional classes. One such class of interest wold be "glitch'' data. High amplitude short duration, peaks in the output of LIGO detectors that are internal sources of noise rather than of astrophysical origin. Using a GAN to model these would aid in the understanding of these glitches and could help to remove them in order to get the cleanest data stream possible. 
 
 Having the ability to quickly
 generate new waveforms is essential to test current detection schemes and their
