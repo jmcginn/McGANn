@@ -509,15 +509,10 @@ where $\hat{y}$ is the network prediction and $y$ is the true output. While trai
  \label{equation:GANloss}
  \end{equation}
 where $p_{\text{\text{data}}}(\mathbf{x})$ is the distribution of real data and $p_{\text{z}}(\mathbf{z})$ is the distribution of the latent space. 
-\begin{figure}[!h]
-    \centering
-    \includegraphics{figures/BCE-loss.png}
-    \caption{Binary cross-entropy plotted as a function of possible predicted probabilities in the case where the true label $y$ is 1 for a sample size of 512.}
-    \label{fig:BCE_loss}
-\end{figure}
+
 \subsection{Training stages}
 %
-Training a GAN is involves updating both the discriminator and generator in stages. First, the discriminator is updated on real instances from the training set. We set the true label $y=1$ and calculate the loss with respect to the predictions $\hat{y}$ via \cref{equation:GANloss}. Stochastic gradient descent is used to minimize the loss which has reduced to $L_D(\textrm{real}) = -\log(\hat{y})$. The discriminator is then trained on fake instances taken from the generator where we set $y=0$ and minimize $L_D(\textrm{fake}) = -\log(1-\hat{y})$. To train the generator, we use a composite model of the generator and discriminator and allow the gradients to flow through this entire model. At this step we set the labels for the generator as real $y=1$ and minimize $L_G = -\log(\hat{y})$. The act of switching the labels and minimizing this form of loss is identical to the previously mentioned generator loss but is beneficial as in practice this function provides more useful gradients. This tweak to the generator loss is called non-saturating generator loss and was reported in the original GAN paper \cite{Goodfellow2014}. It was also shown in that paper that if the generator and discriminator can no longer improve, then the discriminator can no longer distinguish between real and fake i.e. $D(x) = \frac{1}{2}$. In \cref{fig:BCE_loss} we show how the binary-cross entropy varies with probability inputs when the real label is set to 1. We can see that for optimal training of the discriminator of 0.5 the binary cross entropy sits around 0.7. One could then say that the optimal generator loss during training is 0.7 however in practice the generator loss may be higher due to the continually alternating training method.
+Training a GAN is involves updating both the discriminator and generator in stages. First, the discriminator is updated on real instances from the training set. We set the true label $y=1$ and calculate the loss with respect to the predictions $\hat{y}$ via \cref{equation:GANloss}. Stochastic gradient descent is used to minimize the loss which has reduced to $L_D(\textrm{real}) = -\log(\hat{y})$. The discriminator is then trained on fake instances taken from the generator where we set $y=0$ and minimize $L_D(\textrm{fake}) = -\log(1-\hat{y})$. To train the generator, we use a composite model of the generator and discriminator and allow the gradients to flow through this entire model. At this step we set the labels for the generator as real $y=1$ and minimize $L_G = -\log(\hat{y})$. The act of switching the labels and minimizing this form of loss is identical to the previously mentioned generator loss but is beneficial as in practice this function provides more useful gradients. This tweak to the generator loss is called non-saturating generator loss and was reported in the original GAN paper \cite{Goodfellow2014}. It was also shown in that paper that if the generator and discriminator can no longer improve, then the discriminator can no longer distinguish between real and fake i.e. $D(x) = \frac{1}{2}$. 
 
 As \acp{GAN} are trained by updating one model at the expense of the other, they can be hard to train. GANs attempting to replicate complicated structures that do not
 have the necessary architecture either struggle to produce results at all or
@@ -732,7 +727,7 @@ a new signals composed of weighted elements of each training class.
     \includegraphics[width=\textwidth]{figures/generations/blip.png}
     \includegraphics[width=\textwidth]{figures/generations/bbh.png}
     \caption{\ac{GAN} Generated waveforms plotted as a function of time. The latent space inputs for each panel is randomised and each row is assigned one of the five class vectors. By row: sine-Gaussian, Ringdown,
-white noise burst, Gaussian pulse, binary black hole merger. On the first four rows each x axis is zoomed for ease of viewing, while the last row shows the full one second.}
+white noise burst, Gaussian pulse, binary black hole merger. On the first four rows each x axis is zoomed for ease of viewing.}
 \label{fig:gen_signals} 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -858,15 +853,10 @@ In this approach the input to the \ac{CNN} is a 2x1024 time series which is pass
 \subsection{Results}
 In~\cref{fig:eff_curves} we compare the \ac{CNN} results between the three
 datasets, we train three \acp{CNN} on the vertex, simplex and uniform data sets
-and use these models to make predictions on the other unseen datasets. We make
-a comparison by fixing the fraction of samples incorrectly identified as
-signals (false alarm rate) and plotting this versus the optimal SNR of the
-signals.~\chris{this last sentence isn't quite right} 
+and use these models to make predictions on the other unseen testing data. The top plot is tested on the vertex data and shows that each model confidently classifies all data at 100\% for SNR$>$13. At smaller SNRs the vertex and simplex perform similarly, however, the uniform data performs slightly worse. We would expect that when these models are tested on vertex data that everything should be classified at high SNR as the vertex data is a subset of the uniform and vertex. The middle plot shows the results of the CNNs trained on simplex data.  As expected the simplex and vertex models recover 100\% detection at higher SNRs while the vertex trained model fails this test. This is explained when we consider that the simplex data is a subset of uniform while the vertex data is not. The final plot tests the models on uniform data and show again at high SNRs both simplex and uniform are 100\% detectable as a consequence of our previous subset argument. The vertex test is not fully detectable and further supports our premise that the vertex data, which is based on the modelled training data is distinguishable to both unmodelled datasets. 
 
-These results for a \ac{CNN} trained on vertex signals shows clear delineation from other two classes at snr$>$10. For the simplex trained network, the simplex dataset narrowly outperforms the other two sets and, finally, the uniform trained network shows similar performance on all datasets. The \ac{CNN} is
-robust enough to capture the differences between the datasets and shows that
-the GAN can generate a variety of unmodeled waveforms that can be used in
-future testing. 
+The three tests shown previously show that the vertex model only manages full detection when tested on itself. The uniform model performs best in all cases and that it contains signals from the vertex and simplex samples, suggesting that this way of sampling the class space as input to the generator creates a good variety of unmodelled generations. 
+
 
 \begin{comment}
 \begin{itemize}
@@ -877,61 +867,23 @@ future testing.
 \end{comment}
 
 \begin{figure}[h!] % "[t!]" placement specifier just for this example
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\linewidth]{figures/conditional_trained.png}
-\caption{}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.48\textwidth}
+\centering
+\begin{subfigure}{0.7\textwidth}
 \includegraphics[width=\linewidth]{figures/efficiency_curve_vtest.png}
-\caption{}
 \end{subfigure}
 
-\medskip
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\linewidth]{figures/simplex_trained.png}
-\caption{}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.48\textwidth}
+\begin{subfigure}{0.7\textwidth}
+\centering
 \includegraphics[width=\linewidth]{figures/efficiency_curve_stest.png}
-\caption{}
 \end{subfigure}
 
-\medskip
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\linewidth]{figures/uniform_trained.png}
-\caption{}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.48\textwidth}
+\begin{subfigure}{0.7\textwidth}
+\centering
 \includegraphics[width=\linewidth]{figures/efficiency_curve_utest.png}
-\caption{}
 \end{subfigure}
 
-\caption{Efficiency curves comparing the performance of the \acp{CNN}. The true alarm probability is plotted as a function of the optimal SNR of the signals. (a), (c), (e) show a CNN trained on
-vertex generations (top), simplex generations (middle), uniform
-generations (bottom) for a fixed false alarm rate of $10^{-3}$ and tested on all three data sets. (b), (d), (f) show fix the testing set vertex (top), simplex (middle), uniform (bottom) and show the performance of three trained CNNs on the different data sets.}  \jordan{This shows both comparisons of the models v test data and test data v models.} \label{fig:eff_curves}
-\end{figure}
-
-\begin{figure}[h!] % "[t!]" placement specifier just for this example
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\linewidth]{figures/efficiency_curve_vtest.png}
-\caption{}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\linewidth]{figures/efficiency_curve_stest.png}
-\caption{}
-\end{subfigure}
-
-\medskip
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\linewidth]{figures/efficiency_curve_utest.png}
-\caption{}
-\end{subfigure}\hspace*{\fill}
-\begin{subfigure}{0.48\textwidth}
-\includegraphics[width=\linewidth]{figures/efficiency_curve_mix_text.png}
-\caption{}
-\end{subfigure}
-
-\caption{Efficiency curves comparing the performance of the \acp{CNN}. The true alarm probability is plotted as a function of the optimal SNR of the signals. Plots (a), (b), (c) fix the testing set vertex (top), simplex (middle), uniform (bottom) and show the performance of three trained CNNs on the different data sets for a fixed false alarm rate of $10^{-3}$. Plot (d) shows CNNs trained on vertex, an even mixture of vertex and simplex and an even mixture of vertex and uniform and tested against the vertex dataset}  \jordan{This shows just the trained models v a test set with additional "mixture plot"} \label{fig:eff_curves}
+\caption{Efficiency curves comparing the performance of the \acp{CNN}. The true alarm probability is plotted as a function of the optimal SNR of the signals. Each plot shows the performance of a CNN trained on vertex, simplex and uniform datasets tested on vertex (top), simplex (middle), uniform (bottom).}
+\label{fig:eff_curves}
 \end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
