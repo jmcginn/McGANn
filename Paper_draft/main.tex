@@ -726,13 +726,13 @@ a new signals composed of weighted elements of each training class.
     \includegraphics[width=\textwidth]{figures/generations/wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/blip.png}
     \includegraphics[width=\textwidth]{figures/generations/bbh.png}
-    \caption{\ac{GAN} Generated waveforms plotted as a function of time. The latent space inputs for each panel is randomised and each row is assigned one of the five class vectors. By row: sine-Gaussian, Ringdown,
-white noise burst, Gaussian pulse, binary black hole merger. On the first four rows each x axis is zoomed for ease of viewing.}
+    \caption{\ac{GAN} Generated waveforms plotted as a function of time. The latent space inputs for each panel are randomised and each row is assigned one of the five class vectors. By row: sine-Gaussian, Ringdown,
+white noise burst, Gaussian pulse, binary black hole merger. For ease of viewing, the $x$-axis for all panels spans the mid 50\% of the output range.}
 \label{fig:gen_signals} 
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Known class signal generation}
-In \cref{fig:gen_signals} we show conditional signal generations using our generator network. We can see the generations are of very good quality and appear like they could plausibly have come from the training set. We can also see that the model has learned the overall characteristics of the five training classes and is able to disentangle each class and associate them with the conditional input. Additionally, as the latent variable changes as do the parameters within each class. For instance \cref{fig:gen_signals} shows how signals vary in frequency, central epoch, decays and phase. The GANs ability to generate a variety of signals for various latent input indicate stable training and no mode collapse. 
+In \cref{fig:gen_signals} we show conditional signal generations using our generator network. We can see the generations are of very good quality and appear as though they could have plausibly come from the training set. We can also see that the model has learned the overall characteristics of the five training classes and is able to disentangle each class and associate them with the conditional input. Additionally, as the latent variable changes we see indirect evidence of variation within the parameter space for a given class. For instance \cref{fig:gen_signals} shows how signals vary in frequency, central epoch, decay timescale, and phase. The \acp{GAN} ability to generate a variety of signals for various latent space input indicates stable training and no mode collapse. 
 \begin{figure}[!h]
     \centering
     \includegraphics[width=\textwidth]{figures/generations/z_interp_sg.png}
@@ -740,25 +740,20 @@ In \cref{fig:gen_signals} we show conditional signal generations using our gener
     \includegraphics[width=\textwidth]{figures/generations/z_interp_wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_blip.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_bbh.png}
-    \caption{Generated interpolated waveforms plotted as a function of time. For each interpolation two points were randomly chosen in the latent space and the between panels are linearly interpolated vectors between these two points. Each row keeps on of the class vetors constant throughout the latent space interpolation.}
+    \caption{\ac{GAN} generated interpolated waveforms plotted as a function of time showing latent-space interpolations. For each interpolation two different points were randomly chosen in the latent space and represent the first last panels in each row. The panels between represent signals generated using linearly interpolated vectors between these two points. Each row keeps its class vector constant throughout the latent space interpolation. By row: sine-Gaussian, Ringdown, white noise burst, Gaussian pulse, binary black hole merger. For ease of viewing, the $x$-axis for all panels spans the mid 50\% of the output range.}
     \label{fig:z_interp}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Interpolation within the latent space}
 %
-% expain what we are planning to show here
+% explain what we are planning to show here
 %
- We have shown that the generator produces quality signals and that the model responds well to randomly sampled Gaussian latent vectors. We now assume that during training the generator has learned a mapping from a Gaussian latent space to signal space and that this mapping is smooth. To test this, we fix the class vector input and linearly interpolate between two randomly chosen point in the latent space. In \cref{fig:z_interp} we show the generated waveforms, with the class vectors held constant along each row. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth traversable, space.
+ We have shown that the generator produces quality signals and that the model responds well to randomly sampled Gaussian latent vectors. We now assume that during training the generator has learned a mapping from a Gaussian latent space to signal space and that this mapping is a smooth function of the underlying latent space. To verify this, we fix the class vector input and linearly interpolate between two randomly chosen points in the latent space (different for each class). In \cref{fig:z_interp} we show the generated waveforms, with the class vectors held constant along each row. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth traversable, space. We note that the relationship between the latent space location and the physical signal parameters are hidden from us, and hence the initial and final latent space locations (moving left to right in \cref{fig:z_interp}) simply represent random possible signals learned from the training set prior. During training the network should have learned how to smoothly represent the underlying features of a signal as a function of latent space location. For example, the linearly interpolated transition through the latent space for the Gaussian pulse signal shows a shift to earlier epoch and larger decay timescale. In contrast, the transition for the Ringdown signal appears to pass through a localised region of latent-space consistent with higher central frequency. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Interpolation between pairs of classes}
 
-While the \ac{GAN} is trained on distinct one-hot encoded classes, we may test arbitrary points in the 5-dimensional class space to produce indistinct or hybrid waveforms. In order to explore the class space we keep the latent vector constant and
-interpolate through the 5 classes. We construct a path between two waveforms
-and show in \cref{fig:c_interp} that the space is populated enough to allow for transitions between
-classes.  Sine-Gaussian to ringdown performs well in interpolation with each
-signal being a plausible burst GW. It is obvious that the GAN has clustered
-these two groups during training as they share many characteristics. The other
-signals have sharper transitions but still retain plausible looking waveforms.
+While the \ac{GAN} is trained on distinct one-hot encoded classes, we may test arbitrary points in the 5-dimensional class space to produce indistinct or hybrid waveforms. In order to explore the class-space, in \cref{fig:c_interp} we show results where the latent vector is held constant but we instead linearly
+interpolate within the one-hot encoded class-space between pairs of the well-defined training class locations. In this scenario we highlight that the \ac{GAN} has not yet probed this intermediate class-space during its training and therefore we are reliant on the generator having learned any underlying class space relationships between the 5 training classes. The results show that for each case that the generated signals show distinct characteristics of the respective class pairs at most stages of the transition. We note that transitions in some cases appear to be rather abrupt, e.g., between the Gaussian pulse and the \ac{BBH}, \chris{but we point out that this feature, whilst not uncommon, is a strong function of the random latent-space location.}
 %
 \begin{figure}[!h]
     \centering
@@ -766,22 +761,20 @@ signals have sharper transitions but still retain plausible looking waveforms.
     \includegraphics[width=\textwidth]{figures/generations/rd-wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/wnb-blip.png}
     \includegraphics[width=\textwidth]{figures/generations/blip-bbh.png}
-    \caption{Generated class interpolated waveforms as a function of time. A single latent space vector is used for all generations and is chosen randomly in the latent space. Each row shows generations using linearly interpolated classes as inputs to the generator. By row top to bottom: Sine-Gaussian to Ringdown, Ringdown to white noise burst, Gaussian pulse to BBH.}
+    \caption{\ac{GAN} generated class interpolated waveforms as a function of time showing class-space interpolations. A single latent space vector is used for all generations and is chosen randomly in the latent space. Each row shows generations using linearly interpolated classes as inputs to the generator. By row top to bottom: Sine-Gaussian to Ringdown, Ringdown to white noise burst, Gaussian pulse to BBH.\chris{add class vectors on each panel}}
     \label{fig:c_interp}
 \end{figure}
 %
 \subsection{General points within the class space}
-We have shown that the \acp{GAN} latent space and class space has structure that can be navigated through with interpolation between pairs of signals. Taking a step further, we can sample from the class space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class space. The methods we use are divided into the following: 
+We have shown that the \acp{GAN} latent-space and class-space have structure that can be navigated via interpolation between pairs of locations within each respective space. Taking a step further, we can sample from the class-space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class-space. The methods we use are divided into the following: 
 %
 \begin{itemize}
 %
-\item {\bf Vertex}: Points that lie at the corners of the five dimensional class space.
-These signals are the closest to the training set.
+\item {\bf Vertex}: Points that lie at the corners of the five dimensional class space. These class-space locations are equivalent to the training set locations and are our closest generated representation of the training set.
 %
-\item {\bf Uniform}: Each of the entries in the class vector is sampled from a uniform distribution U[0,1].
-
+\item {\bf Uniform}: Each of the entries in the class vector is sampled from a uniform distribution U[0,1]. This is equivalent to sampling uniformly within the 5-dimensional one-hit encoding hyper-cube.
 %
-\item {\bf Simplex}: This class vector we define as uniformly sampled points on a simplex, which is a generalization of a triangle in k-dimensions. We sample uniformly on the k=4 simplex that is embedded in the 5 dimensional class hyper cube. In practice we use the equivalent of sampling points from a k=4 Dirichlet distribution and then normalizing.
+\item {\bf Simplex}: This class vector we define as uniformly sampled points on a simplex, which is a generalization of a triangle in $k$-dimensions. We sample uniformly on the $k=4$ simplex that is embedded in the 5-dimensional class hyper cube. In practice we use the equivalent of sampling points from a $k=4$ Dirichlet distribution.
 %
 \end{itemize}
 
