@@ -638,7 +638,7 @@ defined in~\cref{Tab:training_parms} and a sample of training waveforms are show
 
 \begin{table}[!h]
 \centering
-\caption{The parameters used in generating the training data. Each parameter is drawn uniformly in the below ranges. \michael{You've used a mix of - and N/A, are they the same thing or do they indicate something different?}}
+\caption{The parameters used in generating the training data. Each parameter is drawn uniformly in the below ranges. \michael{You've used a mix of - and N/A, are they the same thing or do they indicate something different?} \jordan{I changed N/A to "-" as they do really mean the same thing.}}
 %\footnotesize
 \begin{tabular}{@{} l l l l l l }
 \br
@@ -647,8 +647,8 @@ defined in~\cref{Tab:training_parms} and a sample of training waveforms are show
  & (Hz) & (s) & (s) & ($\textrm{M}_{\odot}$) \\
 \mr
 Sine-Gaussian & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & -  \\  
-Ringdown & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A \\
-white noise burst & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & N/A  \\
+Ringdown & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & - \\
+white noise burst & 70 - 250 & 0.004 - 0.03 & 0.4 - 0.6 & -  \\
 Gaussian pulse & - & 0.004 - 0.03 & 0.4 - 0.6 & -  \\
 BBH & - & - & - & 30 - 70  \\
  \br
@@ -709,7 +709,7 @@ label, the GAN is able to generate burst-like waveforms generalised from the
 training set. We set out by describing the quality of generated waveforms and
 how they compare to the training set. We then explore the structure of the
 latent and class spaces by interpolating between points in these spaces. We
-test two methods of sampling \michael{Might be confused, but don't we use three methods: vertex, simplex and uniform?}  from the class space that can be used to generate new signals composed of weighted elements of each training class.
+test three methods of sampling from the class space that can be used to generate new signals composed of weighted elements of each training class.
 
 \begin{figure}[!h]
     \centering
@@ -718,7 +718,7 @@ test two methods of sampling \michael{Might be confused, but don't we use three 
     \includegraphics[width=\textwidth]{figures/generations/wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/blip.png}
     \includegraphics[width=\textwidth]{figures/generations/bbh.png}
-    \caption{\ac{GAN} Generated waveforms plotted as a function of time. The latent space inputs for each panel are randomised and each row is assigned one of the five class vectors. By row: sine-Gaussian, Ringdown,
+    \caption{\ac{GAN} Generated waveforms plotted as a function of time. The latent space inputs for each panel are randomised and each row is assigned one of the five class vectors. By row: sine-Gaussian, ringdown,
 white noise burst, Gaussian pulse, binary black hole merger. For ease of viewing, the $x$-axis for all panels spans the mid 50\% of the output range. \michael{I think we mentioned increasing the y-axis limits a little so it's clearer the signals end at $\pm 1$}}
 \label{fig:gen_signals} 
 \end{figure}
@@ -732,7 +732,7 @@ In \cref{fig:gen_signals} we show conditional signal generations using our gener
     \includegraphics[width=\textwidth]{figures/generations/z_interp_wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_blip.png}
     \includegraphics[width=\textwidth]{figures/generations/z_interp_bbh.png}
-    \caption{\ac{GAN} generated interpolated waveforms plotted as a function of time showing latent-space interpolations. For each interpolation two different points were randomly chosen in the latent space and represent the first last panels in each row. The panels between represent signals generated using linearly interpolated vectors between these two points. Each row keeps its class vector constant throughout the latent space interpolation. By row: sine-Gaussian, Ringdown, white noise burst, Gaussian pulse, binary black hole merger. For ease of viewing, the $x$-axis for all panels spans the mid 50\% of the output range.}
+    \caption{\ac{GAN} generated interpolated waveforms plotted as a function of time showing latent space interpolations. For each interpolation two different points were randomly chosen in the latent space and represent the first last panels in each row. The panels between represent signals generated using linearly interpolated vectors between these two points. Each row keeps its class vector constant throughout the latent space interpolation. By row: sine-Gaussian, ringdown, white noise burst, Gaussian pulse, binary black hole merger. For ease of viewing, the $x$-axis for all panels spans the mid 50\% of the output range.}
     \label{fig:z_interp}
 \end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -740,12 +740,12 @@ In \cref{fig:gen_signals} we show conditional signal generations using our gener
 %
 % explain what we are planning to show here
 %
- We have shown that the generator produces quality signals and that the model responds well to randomly sampled Gaussian latent vectors. We now assume that during training the generator has learned a mapping from a Gaussian latent space to signal space and that this mapping is a smooth function of the underlying latent space. To verify this, we fix the class vector input and linearly interpolate between two randomly chosen points in the latent space (different for each class). In \cref{fig:z_interp} we show the generated waveforms, with the class vectors held constant along each row. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth traversable, space. We note that the relationship between the latent space location and the physical signal parameters is intractable, and hence the initial and final latent space locations (moving left to right in \cref{fig:z_interp}) simply represent random possible signals learned from the training set prior. During training the network should have learned how to smoothly represent the underlying features of a signal as a function of latent space location. For example, the linearly interpolated transition through the latent space for the Gaussian pulse signal shows a shift to earlier epoch and larger decay timescale. In contrast, the transition for the Ringdown \michael{Ringdown is sometimes capatilised and sometimes not, not sure what convention we're using} signal appears to pass through a localised region of latent-space consistent with higher central frequency. 
+ We have shown that the generator produces quality signals and that the model responds well to randomly sampled Gaussian latent vectors. We now assume that during training the generator has learned a mapping from a Gaussian latent space to signal space and that this mapping is a smooth function of the underlying latent space. To verify this, we fix the class vector input and linearly interpolate between two randomly chosen points in the latent space (different for each class). In \cref{fig:z_interp} we show the generated waveforms, with the class vectors held constant along each row. We can see that each plot shows plausible waveforms suggesting that the generator has constructed a smooth traversable, space. We note that the relationship between the latent space location and the physical signal parameters is intractable, and hence the initial and final latent space locations (moving left to right in \cref{fig:z_interp}) simply represent random possible signals learned from the training set prior. During training the network should have learned how to smoothly represent the underlying features of a signal as a function of latent space location. For example, the linearly interpolated transition through the latent space for the Gaussian pulse signal shows a shift to earlier epoch and larger decay timescale. In contrast, the transition for the ringdown signal appears to pass through a localised region of latent space consistent with higher central frequency. 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{Interpolation between pairs of classes}
 
-While the \ac{GAN} is trained on distinct one-hot encoded classes, we may test arbitrary points in the \ndimensional{5} class space to produce indistinct or hybrid waveforms. In order to explore the class-space, in \cref{fig:c_interp} we show results where the latent vector is held constant but we instead linearly
-interpolate within the one-hot encoded class-space between pairs of the well-defined training class locations. In this scenario we highlight that the \ac{GAN} has not yet probed this intermediate class-space during its training and therefore we are reliant on the generator having learned any underlying class space relationships between the 5 training classes. The results show that for each case that the generated signals show distinct characteristics of the respective class pairs at most stages of the transition. We note that transitions in some cases appear to be rather abrupt, e.g., between the Gaussian pulse and the \ac{BBH}, \chris{but we point out that this feature, whilst not uncommon, is a strong function of the random latent-space location.} \michael{We sometimes hyphenate class space and sometimes don't}
+While the \ac{GAN} is trained on distinct one-hot encoded classes, we may test arbitrary points in the \ndimensional{5} class space to produce indistinct or hybrid waveforms. In order to explore the class space, in \cref{fig:c_interp} we show results where the latent vector is held constant but we instead linearly
+interpolate within the one-hot encoded class space between pairs of the well-defined training class locations. In this scenario we highlight that the \ac{GAN} has not yet probed this intermediate class space during its training and therefore we are reliant on the generator having learned any underlying class space relationships between the 5 training classes. The results show that for each case that the generated signals show distinct characteristics of the respective class pairs at most stages of the transition. We note that transitions in some cases appear to be rather abrupt, e.g., between the Gaussian pulse and the \ac{BBH}, \chris{but we point out that this feature, whilst not uncommon, is a strong function of the random latent space location.} \michael{We sometimes hyphenate class space and sometimes don't}
 %
 \begin{figure}[!h]
     \centering
@@ -753,16 +753,16 @@ interpolate within the one-hot encoded class-space between pairs of the well-def
     \includegraphics[width=\textwidth]{figures/generations/rd-wnb.png}
     \includegraphics[width=\textwidth]{figures/generations/wnb-blip.png}
     \includegraphics[width=\textwidth]{figures/generations/blip-bbh.png}
-    \caption{\ac{GAN} generated class interpolated waveforms as a function of time showing class-space interpolations. A single latent space vector is used for all generations and is chosen randomly in the latent space. Each row shows generations using linearly interpolated classes as inputs to the generator. By row top to bottom: Sine-Gaussian to Ringdown, Ringdown to white noise burst, Gaussian pulse to BBH.\chris{add class vectors on each panel}}
+    \caption{\ac{GAN} generated class interpolated waveforms as a function of time showing class space interpolations. A single latent space vector is used for all generations and is chosen randomly in the latent space. Each row shows generations using linearly interpolated classes as inputs to the generator. By row top to bottom: Sine-Gaussian to ringdown, ringdown to white noise burst, Gaussian pulse to BBH.\chris{add class vectors on each panel}}
     \label{fig:c_interp}
 \end{figure}
 %
 \subsection{General points within the class space}
-We have shown that the \acp{GAN} latent-space and class-space \michael{Same comment about hyphenation for latent space.} have structure that can be navigated via interpolation between pairs of locations within each respective space. Taking a step further, we can sample from the class-space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class-space. The methods we use are divided into the following: 
+We have shown that the \acp{GAN} latent space and class space \michael{Same comment about hyphenation for latent space.} have structure that can be navigated via interpolation between pairs of locations within each respective space. Taking a step further, we can sample from the class space in novel ways to create new inputs for the generator. These new points are categorised by the method used to sample from the class space. The methods we use are divided into the following: 
 %
 \begin{itemize}
 %
-\item {\bf Vertex}: Points that lie at the corners of the \ndimensional{5} class space. These class-space locations are equivalent to the training set locations and are our closest generated representation of the training set.
+\item {\bf Vertex}: Points that lie at the corners of the \ndimensional{5} class space. These class space locations are equivalent to the training set locations and are our closest generated representation of the training set.
 %
 \item {\bf Simplex}: This class vector we define as uniformly sampled points on a simplex, which is a generalization of a triangle in $k$-dimensions. We sample uniformly on the $k=4$ simplex that is embedded in the \ndimensional{5} class hyper-cube. In practice we use the equivalent of sampling points from a $k=4$ Dirichlet distribution. It is useful to think of the simplex as the hyper-plane that intersects all 5 training classes. It is a subspace of the Uniform method.  
 %
@@ -770,9 +770,9 @@ We have shown that the \acp{GAN} latent-space and class-space \michael{Same comm
 %
 \end{itemize}
 
-The vertex points are the most straightforward where one element of the class vector contains one and the other elements are zero. these points are equivalent to the class vectors that the \ac{GAN} is trained on e.g., $\mathbf{c} = [1,0,0,0,0]$ would correspond to a sine-Gaussian generation. Uniform class vectors with each element sampled from a uniform distribution are equivalent to a random draw from a \ndimensional{5} hyper-cube. Uniformly sampling generates class-space locations up to a maximum distance of unity from the closest class e.g. $[0,0,0,0,0]$ is of distance 1 away from all classes (as is $[1,1,1,1,1]$ \michael{Isn't this point further? $\sqrt{(1-1)^2 + 1^2 + 1^2 + 1^2 + 1^2} = \sqrt{4} = 2$?}). For simplex class vectors, we sample from the simplest hyper-surface that intersects all the classes and has a symmetry such that no training class location (any vertex) is favoured over any other. For our \ndimensional{5} case this corresponds to a 4-simplex manifold. Sampling from the simplex can be seen as sampling from the simplest space that spans between the training classes.   
+The vertex points are the most straightforward where one element of the class vector contains one and the other elements are zero. these points are equivalent to the class vectors that the \ac{GAN} is trained on e.g., $\mathbf{c} = [1,0,0,0,0]$ would correspond to a sine-Gaussian generation. Uniform class vectors with each element sampled from a uniform distribution are equivalent to a random draw from a \ndimensional{5} hyper-cube. Uniformly sampling generates class space locations up to a maximum distance of unity from the closest class e.g. $[0,0,0,0,0]$ is of distance 1 away from all classes (as is $[1,1,1,1,1]$ \michael{Isn't this point further? $\sqrt{(1-1)^2 + 1^2 + 1^2 + 1^2 + 1^2} = \sqrt{4} = 2$?}). For simplex class vectors, we sample from the simplest hyper-surface that intersects all the classes and has a symmetry such that no training class location (any vertex) is favoured over any other. For our \ndimensional{5} case this corresponds to a 4-simplex manifold. Sampling from the simplex can be seen as sampling from the simplest space that spans between the training classes.   
 
-In \cref{fig:simplexd_samples} we show generations conditioned on class vectors drawn randomly from the 4-simplex. There are large variations in the signals with some having characteristics strongly resembling the training classes, although this can be partially explained through the random draws from the simplex as there is finite probability that one class entry will dominate over the others (i.e., the class-space location is close to a vertex). For instance the generations that look more like sine-Gaussians than hybrid waveforms generally have a larger value placed in the first class-space element than others. Similarly \cref{fig:uniform_samples} shows generations conditioned on class vectors drawn uniformly in the unit hyper-cube. These types of generations tend to exhibit more noise and some tend to be generated with very low amplitude prior to being re-scaled to have maximum amplitude of unity. Both methods of generating hybrid waveforms, however, do produce signals that appear to share characteristics from the training set but still be distinct in signal morphology. Upon inspection of a larger collection of waveform generations from both methods we do see a tendency for the uniform hyper-cube approach to generate a wider variety of hybrid waveforms that are more visually distinct from the training set. This is to be expected given that the simplex class-space is a subset of the hyper-cube and does not explore regions of the class-space as far from the training set vertices.
+In \cref{fig:simplexd_samples} we show generations conditioned on class vectors drawn randomly from the 4-simplex. There are large variations in the signals with some having characteristics strongly resembling the training classes, although this can be partially explained through the random draws from the simplex as there is finite probability that one class entry will dominate over the others (i.e., the class space location is close to a vertex). For instance the generations that look more like sine-Gaussians than hybrid waveforms generally have a larger value placed in the first class space element than others. Similarly \cref{fig:uniform_samples} shows generations conditioned on class vectors drawn uniformly in the unit hyper-cube. These types of generations tend to exhibit more noise and some tend to be generated with very low amplitude prior to being re-scaled to have maximum amplitude of unity. Both methods of generating hybrid waveforms, however, do produce signals that appear to share characteristics from the training set but still be distinct in signal morphology. Upon inspection of a larger collection of waveform generations from both methods we do see a tendency for the uniform hyper-cube approach to generate a wider variety of hybrid waveforms that are more visually distinct from the training set. This is to be expected given that the simplex class space is a subset of the hyper-cube and does not explore regions of the class space as far from the training set vertices.
 
 \begin{comment}
 ~\chris{Also, discuss the corresponding figure! There has to be comment on the
@@ -814,7 +814,7 @@ Worth a try?}
 In this section we develop a basic search analysis using a \ac{CNN} in order to compare the sensitivity of such a search to different \ac{GAN} generated waveforms in additive noise. We train a \ac{CNN} to perform simple classification and to distinguish between two classes: signals in additive Gaussian noise and Gaussian noise only. We are primarily interested in the relative sensitivity as a function of the types of waveforms used for training the network. We are also interested in how these differently trained networks perform when applied to data from waveform generations not used in the training process.
 
 \subsection{Noisy datasets} 
-We use three classes of waveforms: vertex, uniform, and simplex cases generated using our \ac{GAN} method. We then construct noisy time-series data from each waveform representing measurements from the 2 LIGO detector sites, Hanford (H1) and Livingston (L1). For each training set we generate $2\times 10^5$ signals and apply antenna responses and sky location dependent relative time delays using routines provided within LALsuite \cite{lalsuite}. The generated waveforms are used to represent the plus-polarisation component of signal only and the polarisation angles are drawn uniformly in the range $[0,2\pi]$ and sky positions are sampled isotropically. Time delays between detectors are computed relative to the Earth centre. All of the training data used is whitened using the Advanced LIGO design sensitivity \ac{PSD}\chris{add reference}, such that there is equal noise power at each frequency. Signal network \acp{SNR} is drawn uniformly in the range $[1,16]$ and is controlled by an amplitude scaling applied to the waveform. Each 1 second duration time-series input to the \ac{CNN} is represented by a \ndimensional{1} 1024 sample vector with 2 channels representing each detector. Example time-series from each detector for a single signal is shown in \cref{fig:cnn_training}. The network is trained to be able to identify whether or not a measurement contains a signal and therefore 50\% of the training data have time-series containing signals and 50\% have only noise. We randomly divide the data into the 3 standard sets (training, validation, and test data) where 40\% is used for training, 10\% used for validation, and 50\% is used for testing in order to achieve suitably low false-alarm rates. For the Uniform and Simplex datasets samples are drawn uniformly from their respective spaces. For the vertex data-set the 5 different vertex locations in class-space are sampled with equal probability.  
+We use three classes of waveforms: vertex, uniform, and simplex cases generated using our \ac{GAN} method. We then construct noisy time-series data from each waveform representing measurements from the 2 LIGO detector sites, Hanford (H1) and Livingston (L1). For each training set we generate $2\times 10^5$ signals and apply antenna responses and sky location dependent relative time delays using routines provided within LALsuite \cite{lalsuite}. The generated waveforms are used to represent the plus-polarisation component of signal only and the polarisation angles are drawn uniformly in the range $[0,2\pi]$ and sky positions are sampled isotropically. Time delays between detectors are computed relative to the Earth centre. All of the training data used is whitened using the Advanced LIGO design sensitivity \ac{PSD}\chris{add reference}, such that there is equal noise power at each frequency. Signal network \acp{SNR} is drawn uniformly in the range $[1,16]$ and is controlled by an amplitude scaling applied to the waveform. Each 1 second duration time-series input to the \ac{CNN} is represented by a \ndimensional{1} 1024 sample vector with 2 channels representing each detector. Example time-series from each detector for a single signal is shown in \cref{fig:cnn_training}. The network is trained to be able to identify whether or not a measurement contains a signal and therefore 50\% of the training data have time-series containing signals and 50\% have only noise. We randomly divide the data into the 3 standard sets (training, validation, and test data) where 40\% is used for training, 10\% used for validation, and 50\% is used for testing in order to achieve suitably low false-alarm rates. For the Uniform and Simplex datasets samples are drawn uniformly from their respective spaces. For the vertex data-set the 5 different vertex locations in class space are sampled with equal probability.  
 
 \begin{figure}[ht!]
     \centering
@@ -919,30 +919,30 @@ the approach.
 && Discriminator &&& \\
 \mr
 Operation & Output shape & Kernel size & Stride & Dropout & Activation \\
-Class Input & (5) & N/A & N/A & 0  & N/A \\
-Dense & (1024) & N/A & N/A & 0 & N/A \\
-Signal Input & (1024) & N/A & N/A & 0 &  N/A \\
-Concatenate & (1024, 2) & N/A & N/A & 0 &  N/A \\
+Class Input & (5) & - & - & 0  & - \\
+Dense & (1024) & - & - & 0 & - \\
+Signal Input & (1024) & - & - & 0 &  - \\
+Concatenate & (1024, 2) & - & - & 0 &  - \\
 Convolutional & (512, 64) & 14 & 2 & 0.5 & Leaky ReLU \\
 Convolutional & (256, 128) & 14 & 2 & 0.5 &  Leaky ReLU \\
 Convolutional & (128, 256) & 14 & 2 & 0.5 & Leaky ReLU \\
 Convolutional & (64, 512) & 14 & 2 & 0.5 &  Leaky ReLU \\
-Flatten & (32768) & N/A & N/A & 0 &  N/A \\
-Dense & (1) & N/A & N/A & 0 & sigmoid \\
+Flatten & (32768) & - & - & 0 &  - \\
+Dense & (1) & - & - & 0 & sigmoid \\
 \mr
 && Generator &&& \\
 \mr
 Operation & Output shape & Kernel size & Stride & BN & Activation \\
-Class Input & (5) & N/A & N/A & \ding{55}  & N/A \\
-Latent Input  & (100) & N/A & N/A & \ding{55} & N/A \\
-Concatenate & (105) & N/A & N/A & \ding{55} &  N/A \\
-Dense & (32768) & N/A & N/A & \ding{55} &  ReLu \\
-Reshape & (64, 512) & N/A & N/A & \ding{55} & N/A \\
+Class Input & (5) & - & - & \ding{55}  & - \\
+Latent Input  & (100) & - & - & \ding{55} & - \\
+Concatenate & (105) & - & - & \ding{55} &  - \\
+Dense & (32768) & - & - & \ding{55} &  ReLu \\
+Reshape & (64, 512) & - & - & \ding{55} & - \\
 Transposed Conv & (128, 256) & 18 & 2 & \ding{51} & ReLU \\
 Transposed Conv & (256, 128) & 18 & 2 & \ding{55} &  ReLU \\
 Transposed Conv & (512, 264) & 18 & 2 & \ding{55} & ReLU \\
 Transposed Conv & (1024, 1) & 18 & 2 & \ding{55} & Linear \\
-Reshape & (1024) & N/A & N/A & \ding{55} & N/A \\
+Reshape & (1024) & - & - & \ding{55} & - \\
 \end{tabular*}
 \begin{tabular*}{\textwidth}{@{} l l l l l l}
 \mr
@@ -965,13 +965,13 @@ Reshape & (1024) & N/A & N/A & \ding{55} & N/A \\
 %\hline
 Operation & Output shape & Kernel size & Stride & Dropout & Activation \\
 \mr
-Input & (1024, 2) & N/A  & N/A & N/A & N/A \\
+Input & (1024, 2) & -  & - & - & - \\
 Convolutional & (512, 8) & 5 & 2 & 0 & Swish  \\
 Convolutional & (256, 8) & 5 & 2 & 0 & Swish  \\
 Convolutional & (128, 8) & 5 & 2 & 0 & Swish  \\
 Convolutional & (64, 8) & 5 & 2 & 0 & Swish  \\
-Dense & (100) & 100 & N/A & 0.2 & Linear  \\
-Dense & (1) & 1 & N/A & 0 & sigmoid \\
+Dense & (100) & 100 & - & 0.2 & Swish  \\
+Dense & (1) & 1 & - & 0 & sigmoid \\
 \end{tabular*}\\
 \begin{tabular*}{\textwidth}{@{}l l l l l l}
 \mr
