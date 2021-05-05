@@ -110,13 +110,13 @@
 \usepackage{hyperref} %<--- Load after everything else
 
 \begin{document}
-\title{Generalised gravitational burst generation with Generative Adversarial Networks}
+\title{Generalised gravitational \jordan{wave} burst generation with Generative Adversarial Networks}
 
 \author{
-    J. McGinn \orcidicon{0000-0000-0000-0000},
+    J. McGinn \orcidicon{0000-0001-8910-0881},
     C. Messenger \orcidicon{0000-0001-7488-5022},
-    I.S. Heng \orcidicon{0000-0000-0000-0000},
-    M. J. Williams \orcidicon{0000-0003-2198-2974}
+    M. J. Williams \orcidicon{0000-0003-2198-2974},
+    I. S. Heng \orcidicon{0000-0002-1977-0019}
 }
 
 \address{SUPA, School of Physics and Astronomy, University of Glasgow, Glasgow G12 8QQ, United Kingdom}
@@ -193,7 +193,7 @@ domain and rely on the
 astrophysical burst waveform appearing in multiple detectors at similar times.
 This is only possible if the detector noise is well characterised and the
 candidate signal can be differentiated from systematic or environmental
-glitches. 
+glitches. \jordan{The presence of environmental glitches can often be associated with transient signals detected by various sensors within the LIGO detectors. The detectors record data from many auxiliary channels that are used to monitor instrument and environmental backgrounds. This allows some of the glitches to be catalogued and de-coupled from the gravitational wave data thereby improving data quality. See \cite{Abbott_2016_noise2,Abbott_2020_noise1} for a more detailed explanation of transient noise and detector characterisation.} 
 
 % Discuss the family of burst waveforms currently used and why - not in detail, just
 % an introduction 
@@ -211,7 +211,7 @@ oscillations after a \ac{CBC} merger. A Gaussian pulse: a short exponential incr
 %
 With the expectation that there will be many more GW detections in the
 future, there is a growing need for fast and efficient GW analysis methods
-to match the rising number of detections. While still in its infancy, the application of \ac{ML} to GW analyses has already shown great potential in areas of detection~\cite{Gabbard2017,Gebhard_2019,Krastev_2020}, where these techniques have matched the sensitivity of matched filtering for Advanced LIGO and Advanced Virgo GW searches. Similarly, for unmodelled burst search the flexibility of \ac{ML} algorithms has been shown to be a natural and sensitive approach to detection~\cite{2020arXiv200914611S}. Progress has also been made in identifying and classifying detector noise transients or  ``glitches''~\cite{Bahaadini, George_2018,Razzano_2018, 2020arXiv200801262G} and in Bayesian parameter estimation~\cite{gabbard2019bayesian,Chua:2019,green2020gravitationalwave} where \ac{ML} techniques can recover parameters of a GW signal significantly faster than standard methods. Long duration signals like continuous GW require long observing times and therefore have large amounts of data needing to be processed. Current \ac{ML} approaches~\cite{2020PhRvD.102b2005D, 2019PhRvD.100d4009D, 2020arXiv200708207B} are particularly well suited to dealing with this as once trained the searches can be performed quickly.
+to match the rising number of detections. While still in its infancy, the application of \ac{ML} to GW analyses has already shown great potential in areas of detection~\cite{Gabbard2017,Gebhard_2019,Krastev_2020}, where these techniques have matched the sensitivity of matched filtering for Advanced LIGO and Advanced Virgo GW searches. Similarly, for unmodelled burst search the flexibility of \ac{ML} algorithms has been shown to be a natural and sensitive approach to detection~\cite{2020arXiv200914611S, PhysRevD.103.063011}. Progress has also been made in identifying and classifying detector noise transients or  ``glitches''~\cite{Bahaadini, George_2018,Razzano_2018, 2020arXiv200801262G} as well as glitch classification through Gravity Spy \cite{gravityspy_2017}, a combination of machine learning and crowdsourcing. In Bayesian parameter estimation~\cite{gabbard2019bayesian,Chua:2019,green2020gravitationalwave} where \ac{ML} techniques can recover parameters of a GW signal significantly faster than standard methods. Long duration signals like continuous GW require long observing times and therefore have large amounts of data needing to be processed. Current \ac{ML} approaches~\cite{2020PhRvD.102b2005D, 2019PhRvD.100d4009D, 2020arXiv200708207B} are particularly well suited to dealing with this as once trained the searches can be performed quickly.
 
 % What this paper does on GANs in 1 paragraph - the point of the paper
 %
@@ -360,7 +360,7 @@ generator (fake).
 During training, the discriminator and generator are updated using batches of data. Random latent vectors are given to the generator to produce a batch of fake samples and an equal batch of real samples is taken from the training data. The discriminator makes predictions on the real and fake samples and the model is updated through minimising the binary cross-entropy function \cite{Goodfellow-et-al-2016}
 %
 \begin{equation}
-    L = y \log(\hat{y}) - (1 - y) \log(1-\hat{y}),
+    L = y \log(\hat{y}) + (1 - y) \log(1-\hat{y}),
     \label{eqn:crossentropy}
 \end{equation}
 where $\hat{y}$ is the network prediction and $y$ is the true output. While training the discriminator, $D$, on real data, we set $y = 1$ and $\hat{y} = D(\mathbf{x})$ which from \cref{eqn:crossentropy} gives $L(D(\mathbf{x}),1) = \log(D(\mathbf{x}))$. While training on fake data produced by the generator, $G$, $y = 0$ and $\hat{y} = D(G(\mathbf{z}))$ and so, $L(D(G(\mathbf{z})),0) = \log(1-(D(G(\mathbf{z}))))$. Since the objective of the discriminator is to correctly classify fake and real data these equations should be maximised, while the goal of the generator should be to minimize these equations. This gives what is know as the \ac{GAN} value function as
@@ -378,7 +378,7 @@ Training a GAN involves updating both the discriminator and generator in stages.
 As \acp{GAN} are trained by updating one model at the expense of the other, they can be hard to train. GANs attempting to replicate complicated structures that do not
 have the necessary architecture either struggle to produce results at all or
 fall into the common failure mode know as mode collapse; where the generator
-produces a small variety of samples or simply memorises the training set. The goal of \ac{GAN} training is to find an equilibrium between the two models, if this cannot be found then it is said that the \ac{GAN} has failed to converge. One way to diagnose problems, such as mode collapse, when training \acp{GAN} is to keep track of the loss and accuracy over time. Loss plots, for example, as seen in \cref{fig:lossplot} can help to identify common failure modes or to check if the \ac{GAN} has indeed converged. Accuracy is another metric that may be used to monitor convergence and is defined as the number of correct predictions made divided by total number of predictions. There is currently no notion of early stopping in \acp{GAN}, instead, training is halted after convergence and by visually inspecting the generations. 
+produces a small variety of samples or simply memorises the training set. The goal of \ac{GAN} training is to find an equilibrium between the two models, if this cannot be found then it is said that the \ac{GAN} has failed to converge. One way to diagnose problems, such as mode collapse, when training \acp{GAN} is to keep track of the loss and accuracy over time. \jordan{A Loss plots, for example, like the one used for this work} \cref{fig:lossplot} can help to identify common failure modes or to check if the \ac{GAN} has indeed converged. Accuracy is another metric that may be used to monitor convergence and is defined as the number of correct predictions made divided by total number of predictions. There is currently no notion of early stopping in \acp{GAN}, instead, training is halted after convergence and by visually inspecting the generations. 
 \begin{figure}[h!]
     \centering
     \includegraphics[width=0.85\textwidth]{figures/losses.png}
@@ -469,8 +469,8 @@ such that the cosine of the angles lies uniformly in the range [-1,1] and we onl
 The location of the peak amplitude of the waveforms (corresponding to the
 mid-points of all but the ringdown and \ac{BBH} classes) are randomly drawn from a uniform distribution to
 be within $[0.4, 0.6]$ seconds from the start of the 1 second time interval and all
-training waveforms are sampled at 1024 Hz.  The parameter prior ranges are
-defined in~\cref{Tab:training_parms} and a sample of training waveforms are shown in \cref{fig:training_waveforms}. All training data is rescaled such that their amplitudes peak at 1.
+training waveforms are sampled at 1024 Hz.  \jordan{While in principle GANs are able to generate high fidelity images of the order 1024x1024x3, we choose 1024 Hz due to memory constraints, however, the information content in the burst generations will be broadly similar to a more typical 4000Hz sampling rate and we found that at higher sampling rates the GAN became unstable. Mention other GANs as proof that they become unstable and need fancy things like PGAN?}. The parameter prior ranges are
+defined in~\cref{Tab:training_parms} and a sample of training waveforms are shown in \cref{fig:training_waveforms}. \jordan{These priors are based on LIGO burst group injections with Q's calculated from choosing frequency as the limiting factor. The other paramters can then be evaluated based on the Q relation. For the BBH waveforms we restrict the mass to be above 30 as lower mass systems would produce longer duration waveforms than typical bursts.} All training data is rescaled such that their amplitudes peak at 1.
 \begin{table}[!h]
 \centering
 \caption{The parameters used in generating the training data. Each parameter is drawn uniformly in the below ranges.}
@@ -492,7 +492,7 @@ BBH & - & - & - & 30 - 70  \\
 \end{table}
 \normalsize
 
-With the exception of the binary black hole waveforms, the signal classes described above are analytic proxy waveforms to gravitational wave signals expected from various burst gravitational wave sources. For example, numerical relativity simulations show that rapidly rotating stellar core collapse emit gravitational waves that look like sine gaussians with small time constants (low Q). Additionally, gravitational waves from hyperbolic black hole encounters look very similar to sine gaussians and gaussian pulses. Ringdown signals can be emitted by excited isolated neutron stars, for example, after a pulsar glitch and white noise burst signals mimic the stochastic nature of gravitational wave signals emitted by neutrino driven stellar core collapse.
+With the exception of the binary black hole waveforms, the signal classes described above are analytic proxy waveforms to gravitational wave signals expected from various burst gravitational wave sources. For example, numerical relativity simulations show that rapidly rotating stellar core collapse emit gravitational waves that look like sine gaussians with small time constants (low Q). Additionally, gravitational waves from hyperbolic black hole encounters look very similar to sine gaussians and gaussian pulses. Ringdown signals can be emitted by excited isolated neutron stars, for example, after a pulsar glitch and white noise burst signals mimic the stochastic nature of gravitational wave signals emitted by neutrino driven stellar core collapse. \jordan{The classes of signals (and their suitability?) considered in this work are also described in \cite{PhysRevD.100.024017}}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Architecture details}
@@ -699,7 +699,7 @@ In contrast to typical approaches in signal generation this is the first time a 
 
 % Supernova waveforms
 % 
-Another waveform class of interest are those of Supernovae, for which some of our hybrid \ac{GAN} generated waveforms share common features (see Figs.~\ref{fig:simplexd_samples} and~\ref{fig:uniform_samples}). Since Supernovae simulations are extremely computationally costly their are relatively few $\mathcal{O}(100s)$ waveforms available for training. This makes \acp{GAN} an attractive prospect for generating entirely new pseudo-realistic waveform realisations consistent with the prior distribution defined by the training set. The conditional aspect of our \ac{GAN} implementation could also allow the user to specify particular desired physical properties of the generated waveforms. For this Supernovae application specifically, we mention the benefit of extending our current method beyond modelling only a single polarisation.  
+%Another waveform class of interest are those of Supernovae, for which some of our hybrid \ac{GAN} generated waveforms share common features (see Figs.~\ref{fig:simplexd_samples} and~\ref{fig:uniform_samples}). Since Supernovae simulations are extremely computationally costly their are relatively few $\mathcal{O}(100s)$ waveforms available for training. This makes \acp{GAN} an attractive prospect for generating entirely new pseudo-realistic waveform realisations consistent with the prior distribution defined by the training set. The conditional aspect of our \ac{GAN} implementation could also allow the user to specify particular desired physical properties of the generated waveforms. For this Supernovae application specifically, we mention the benefit of extending our current method beyond modelling only a single polarisation.  
 
 % Final statement
 %
