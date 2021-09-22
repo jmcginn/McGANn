@@ -5,39 +5,50 @@ from numpy import ones
 from numpy import asarray
 from numpy.random import randn
 from numpy.random import randint
-from keras.optimizers import Adam
-import keras.backend as K
-from keras.models import Model
-from keras.layers import Input
-from keras.layers import Dense
-from keras.layers import Reshape
-from keras.layers import Flatten
-from keras.layers import Conv1D, BatchNormalization
-from keras.layers import Conv2D,Conv2DTranspose
-from keras.layers import Activation, LeakyReLU
-from keras.layers import Dropout, SpatialDropout1D
-from keras.layers import Embedding
-from keras.layers import Concatenate
-from keras.layers.core import Lambda
-from keras.utils import to_categorical
-from generate_training_data import *
+from tensorflow.keras.optimizers import Adam
+import tensorflow.keras.backend as K
+from tensorflow.keras.models import Model
+from tensorflow.keras.layers import Input
+from tensorflow.keras.layers import Dense
+from tensorflow.keras.layers import Reshape
+from tensorflow.keras.layers import Flatten
+from tensorflow.keras.layers import Conv1D, BatchNormalization
+from tensorflow.keras.layers import Conv2D,Conv2DTranspose
+from tensorflow.keras.layers import Activation, LeakyReLU
+from tensorflow.keras.layers import Dropout, SpatialDropout1D
+from tensorflow.keras.layers import Embedding
+from tensorflow.keras.layers import Concatenate
+from tensorflow.keras.layers import Lambda
+from tensorflow.keras.utils import to_categorical
+from GAN_training_data import *
 import matplotlib.pyplot as plt
+import seaborn as sns
 plt.style.use('seaborn-white')
+sns.set_palette('colorblind')
 
-os.environ["CUDA_VISIBLE_DEVICES"] = '1'
+plt.rcParams.update({'font.size': 24})
+plt.rcParams['mathtext.fontset'] = 'stix'
+plt.rcParams['font.family'] = 'STIXGeneral'
 
-from keras.backend.tensorflow_backend import set_session
 import tensorflow as tf
-config = tf.ConfigProto()
-config.gpu_options.allow_growth = True  # dynamically grow the memory used on   the GPU
-sess = tf.Session(config=config)
-set_session(sess)  # set this TensorFlow session as the default session for     Keras
+print("Num GPUs Available: ", len(tf.config.list_physical_devices('GPU')))
 
-batch_size = 128
-loss_dir = '/data/www.astro/2107829/onehot_CGAN/losses.png'
-gen_dir = "/data/www.astro/2107829/onehot_CGAN/generations/generation%s.png"
-train_dir = "/data/www.astro/2107829/onehot_CGAN/training/training%s.png"
-gen_model_dir = "/data/www.astro/2107829/onehot_CGAN/models/cgan_generator%s.h5"
+gpus = tf.config.list_physical_devices('GPU')
+if gpus:
+  # Restrict TensorFlow to only use the first GPU
+  try:
+    tf.config.set_visible_devices(gpus[1], 'GPU')
+    logical_gpus = tf.config.list_logical_devices('GPU')
+    print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+  except RuntimeError as e:
+    # Visible devices must be set before GPUs have been initialized
+    print(e)
+
+batch_size = 512
+loss_dir = '/data/www.astro/2107829/McGAN/test/losses.png'
+gen_dir = "/data/www.astro/2107829/McGAN/test/generations/generation%s.png"
+train_dir = "/data/www.astro/2107829/McGAN/test/training/training%s.png"
+gen_model_dir = "/data/www.astro/2107829/McGAN/test/models/cgan_generator%s.h5"
 
 ############
 ## Models ##
@@ -61,20 +72,23 @@ def define_discriminator(in_shape=1024,n_classes=5):
     fe = Conv1D(64, 14, strides=2, padding='same')(merge)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = SpatialDropout1D(0.5)(fe)
-    fe = BatchNormalization()(fe)
+
     fe = Conv1D(128, 14, strides=2, padding='same')(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = SpatialDropout1D(0.5)(fe)
+
     fe = Conv1D(256, 14, strides=2, padding='same')(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = SpatialDropout1D(0.5)(fe)
+
     fe = Conv1D(512, 14, strides=2, padding='same')(fe)
     fe = LeakyReLU(alpha=0.2)(fe)
     fe = SpatialDropout1D(0.5)(fe)
+
     # flatten feature map
     fe = Flatten()(fe)
     # Dropout
-    #fe = Dropout(0.4)(fe)
+    #fe = Dropout(0.5)(fe)
     # output
     out_layer = Dense(1, activation='sigmoid')(fe)
     # define model
@@ -92,22 +106,26 @@ def define_generator(latent_dim, n_classes=5):
 
     x = Concatenate()([in_lat, in_label])
 
-    n_nodes = 256 * 128
+    n_nodes = 64 * 512
     merge = Dense(n_nodes)(x)
     merge = Activation('relu')(merge)
 
     # Add dimension as there's no 1DTranspose
     merge = Reshape((64,1,512))(merge)
     # upsample
-    gen = Conv2DTranspose(512, kernel_size=(18,1), strides=(1,1), padding='same')(merge)
-    gen = Activation('relu')(gen)
-    gen = BatchNormalization()(gen)
+    #gen = Conv2DTranspose(512, kernel_size=(18,1), strides=(1,1), padding='same')(merge)
+    #gen = Activation('relu')(gen)
+    #gen = BatchNormalization()(gen)
+
     gen = Conv2DTranspose(256, kernel_size=(18,1), strides=(2,1), padding='same')(merge)
     gen = Activation('relu')(gen)
+
     gen = Conv2DTranspose(128, kernel_size=(18,1), strides=(2,1), padding='same')(gen)
     gen = Activation('relu')(gen)
+
     gen = Conv2DTranspose(64, kernel_size=(18,1), strides=(2,1), padding='same')(gen)
     gen = Activation('relu')(gen)
+
     gen = Conv2DTranspose(1, kernel_size=(18,1), strides=(2,1), padding='same')(gen)
     gen = Activation('linear')(gen)
    # output
@@ -193,24 +211,38 @@ def generate_fake_samples(generator, latent_dim, n_samples):
 ###########
 ## Plots ##
 ###########
-def plot_loss(epoch):
-    fig, axs = plt.subplots(2,1,figsize=(10, 8))
-    axs[0].plot(accuracy1, 'r', label='Accuracy on real')
-    axs[0].plot(accuracy2,'g', label='Accuracy on fake')
-    axs[0].set_xlabel('Iteration')
-    axs[0].set_ylabel('Accuracy')
-    axs[0].grid()
-    axs[0].legend()
 
-    axs[1].plot(d_losses, label='Discriminitive loss')
-    axs[1].plot(g_losses, label='Generative loss')
-    axs[1].set_xlabel('Iteration')
-    axs[1].set_ylabel('Loss')
-    #axs[1].set_ylim(0,2)
-    #axs[1].set_yscale('log')
-    axs[1].grid()
-    axs[1].legend()
-    plt.savefig(loss_dir)
+def smooth(scalars, weight):  # Weight between 0 and 1
+    last = scalars[0]  # First value in the plot (first timestep)
+    smoothed = list()
+    for point in scalars:
+        smoothed_val = last * weight + (1 - weight) * point  # Calculate smoothed value
+        smoothed.append(smoothed_val)                        # Save it
+        last = smoothed_val                                  # Anchor the last smoothed value
+
+    return smoothed
+
+def plot_loss(epoch,):
+    fig, ax1 = plt.subplots(figsize=(12,8))
+
+    ax1.set_xlabel('Epoch')
+    ax1.set_ylabel('Loss')
+    ax1.plot(d_losses, 'C0', linestyle='-', label='Discriminitive loss')
+    ax1.plot(g_losses, 'C1', linestyle='--', label='Generative loss')
+    ax1.grid()
+
+    ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+    ax2.set_ylim(0,1)
+    ax2.set_ylabel('Accuracy')  # we already handled the x-label with ax1
+    ax2.plot(accuracy1, 'C2', linestyle='-.', label='Accuracy on real')
+    ax2.plot(accuracy2,'C4', linestyle=':', label='Accuracy on fake')
+    ax2.grid()
+
+    fig.tight_layout()  # otherwise the right y-label is slightly clipped
+    fig.legend(loc='upper center', bbox_to_anchor=(0.5, 1.1),
+          ncol=2)
+    fig.savefig(loss_dir, bbox_inches='tight', dpi=300)
     plt.close()
 
 def save_gen_plot(epoch,g_model, n_row, n_col):
@@ -234,7 +266,7 @@ def save_gen_plot(epoch,g_model, n_row, n_col):
         axs[i].plot(t,X[i],'#ee0000', linewidth=0.5)
         axs[i].grid()
         axs[i].set_xlim(0.3,0.7)
-    plt.tight_layout()
+    #plt.tight_layout()
     plt.savefig(gen_dir % epoch,dpi=300)
     plt.close()
 
@@ -264,12 +296,16 @@ d_losses = []
 accuracy1 = []
 accuracy2 = []
 
-def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=1000, n_batch=128):
+def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=500, n_batch=512):
     # take a batch from the data
     bat_per_epo = int(dataset[0].shape[0] / n_batch)
     # half for training half for checking
     half_batch = int(n_batch / 2)
     for i in range(n_epochs):
+        running_g = []
+        running_d = []
+        running_a1 = []
+        running_a2 = []
         # enumerate batches over the trainig set, probably wont need this loop if generating on the go
         for j in range(bat_per_epo):
             # get real images
@@ -286,12 +322,17 @@ def train(g_model, d_model, gan_model, dataset, latent_dim, n_epochs=1000, n_bat
             y_gan = ones((n_batch,1))
             # update the generator via discriminator's error
             g_loss = gan_model.train_on_batch([z_input, labels_input], y_gan)
-            print('>%d, %d%d, d1=%.3f, d2=%.3f g=%.3f, a1=%.3f, a1=%.3f' %
+            print('>%d, %d%d, d1=%.3f, d2=%.3f g=%.3f, a1=%.3f, a2=%.3f' %
                     (i+1, j+1, bat_per_epo, d_loss1, d_loss2, g_loss, acc1, acc2))
-            g_losses.append(g_loss)
-            d_losses.append(d_loss2)
-            accuracy1.append(acc1)
-            accuracy2.append(acc2)
+            running_g.append(g_loss)
+            running_d.append(d_loss2)
+            running_a1.append(acc1)
+            running_a2.append(acc2)
+
+        g_losses.append(np.mean(running_g))
+        d_losses.append(np.mean(running_d))
+        accuracy1.append(np.mean(running_a1))
+        accuracy2.append(np.mean(running_a2))
         save_gen_plot(i,g_model,4,5)
         save_training_plot(i,X_real)
         plot_loss(i)
