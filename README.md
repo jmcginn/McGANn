@@ -6,7 +6,7 @@ McGAN is a conditional Generative Adversarial Network for generating Gravitation
 
 Dependency's are found in [requirements.txt](https://github.com/jmcginn/McGANn/blob/master/cGAN/requirements.txt)
 
-Current version working on Python 3.9.7 and Tensorflow 2.6.0. Use of a GPU is highly encouraged. 
+Current version working on Python 3.9.7 and Tensorflow 2.6.0. Use of a GPU is recommended.
 
 ## Usage
 Git clone the repo to your desired directory. Change the following paths in [McGANn.py](https://github.com/jmcginn/McGANn/blob/master/cGAN/McGAN.py) to where you would like the plots saved:
